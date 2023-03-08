@@ -1,12 +1,9 @@
 package nl.itvitae.coachem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Entity
 @Getter
@@ -18,13 +15,13 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Date time;
+    private String time;
 
     @ManyToOne
-    @JoinColumn(name="trainee_id")
+    @JoinColumn(name = "trainee_id")
     private Person trainee;
 
     @ManyToOne
-    @JoinColumn(name="attendee_id")
+    @JoinColumn(name = "attendee_id")
     private Person attendee;
 }

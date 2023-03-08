@@ -1,7 +1,6 @@
 package nl.itvitae.coachem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,18 +26,18 @@ public class Person {
     private String phonenumber;
     private String role;
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private InfoChange infoChange;
 
-    @OneToMany(mappedBy="trainee")
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Evaluation> evaluated;
 
-    @OneToMany(mappedBy = "attendee")
+    @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
     private List<Evaluation> evaluater;
 
-    @OneToMany(mappedBy="trainee")
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Invite> inviter;
 
-    @OneToMany(mappedBy = "invited")
+    @OneToMany(mappedBy = "invited", cascade = CascadeType.ALL)
     private List<Invite> invited;
 }

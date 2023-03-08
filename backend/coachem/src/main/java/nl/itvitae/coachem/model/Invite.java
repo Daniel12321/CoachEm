@@ -5,10 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -20,13 +16,13 @@ public class Invite {
     private Long id;
 
     private Boolean accepted;
-    private Date time;
+    private String time;
 
     @ManyToOne
-    @JoinColumn(name="trainee_id")
+    @JoinColumn(name = "trainee_id")
     private Person trainee;
 
     @ManyToOne
-    @JoinColumn(name="invited_id")
+    @JoinColumn(name = "invited_id")
     private Person invited;
 }
