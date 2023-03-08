@@ -6,24 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class InfoChange {
+public class Evaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String email;
-    private String name;
-    private String address;
-    private String city;
-    private String zipcode;
-    private String phonenumber;
+    private Date time;
 
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    @ManyToOne
+    @JoinColumn(name="trainee_id")
+    private Person trainee;
+
+    @ManyToOne
+    @JoinColumn(name="attendee_id")
+    private Person attendee;
 }
