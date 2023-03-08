@@ -24,6 +24,7 @@ public class InfoChange {
     private String zipcode;
     private String phonenumber;
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
 }

@@ -26,7 +26,6 @@ public class Person {
     private String phonenumber;
     private String role;
 
-    @OneToOne
-    @JoinColumn(name = "person_id")
+    @OneToOne(mappedBy = "person")
     private InfoChange infoChange;
 }
