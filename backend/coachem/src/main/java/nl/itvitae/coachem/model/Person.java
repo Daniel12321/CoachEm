@@ -27,5 +27,6 @@ public class Person {
     private String role;
 
     @OneToOne
+    @JoinColumn(name = "person_id")
     private InfoChange infoChange;
 }
