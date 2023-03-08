@@ -17,6 +17,6 @@ public class Skill {
     private String name;
     private Boolean type;
 
-    @OneToMany
+    @OneToMany(mappedBy = "TraineeSkill")
     private List<TraineeSkill> TraineeSkills = new ArrayList<>();
 }
