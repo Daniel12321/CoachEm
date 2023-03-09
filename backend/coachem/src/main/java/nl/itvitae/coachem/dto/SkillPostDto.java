@@ -1,11 +1,9 @@
 package nl.itvitae.coachem.dto;
 
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
-import nl.itvitae.coachem.models.TraineeSkill;
+import nl.itvitae.coachem.model.TraineeSkill;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

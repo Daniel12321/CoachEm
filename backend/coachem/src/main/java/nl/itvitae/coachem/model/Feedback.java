@@ -1,4 +1,4 @@
-package nl.itvitae.coachem.models;
+package nl.itvitae.coachem.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,8 +16,11 @@ public class Feedback {
     private String text;
 
     @ManyToOne
+    @JoinColumn(name="traineeSkill_id")
     TraineeSkill traineeSkill;
 
-
+    @ManyToOne
+    @JoinColumn(name="person_id")
+    Person person;
 
 }

@@ -2,7 +2,7 @@ package nl.itvitae.coachem.mapper;
 
 import nl.itvitae.coachem.dto.SkillGetDto;
 import nl.itvitae.coachem.dto.SkillPostDto;
-import nl.itvitae.coachem.models.Skill;
+import nl.itvitae.coachem.model.Skill;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

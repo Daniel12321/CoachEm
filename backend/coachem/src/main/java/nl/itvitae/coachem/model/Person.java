@@ -1,7 +1,6 @@
 package nl.itvitae.coachem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,4 +40,7 @@ public class Person {
 
     @OneToMany(mappedBy = "invited")
     private List<Invite> invited;
+
+    @OneToMany(mappedBy = "person")
+    private List<TraineeSkill> traineeSkill;
 }

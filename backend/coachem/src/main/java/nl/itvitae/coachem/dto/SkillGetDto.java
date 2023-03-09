@@ -1,6 +1,6 @@
 package nl.itvitae.coachem.dto;
 
-import nl.itvitae.coachem.models.TraineeSkill;
+import nl.itvitae.coachem.model.TraineeSkill;
 
 import java.util.List;
 
