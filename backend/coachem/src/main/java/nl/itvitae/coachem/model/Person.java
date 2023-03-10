@@ -46,4 +46,22 @@ public class Person {
     @JsonIgnore
     @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites;
+
+    public Person(String email, String password, String name, String role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+    }
+
+    public Person(String email, String password, String name, String address, String city, String zipcode, String phonenumber, String role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.phonenumber = phonenumber;
+        this.role = role;
+    }
 }
