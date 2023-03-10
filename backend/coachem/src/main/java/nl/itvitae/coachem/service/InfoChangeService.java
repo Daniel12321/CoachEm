@@ -28,12 +28,18 @@ public class InfoChangeService {
         infoChanges.forEach(infoChange -> dtos.add(mapper.get(infoChange)));
         return dtos;
     }
+
     public InfoChangeDto addInfoChangeRequest(Long id, InfoChangeDto infoChangeDto) {
-        if(personRepository.findById(id).isEmpty()){
+        if (personRepository.findById(id).isEmpty()) {
             return null;
         }
         Person person = personRepository.findById(id).get();
         InfoChange infoChange = mapper.post(infoChangeDto);
+        if (person.getInfoChange() != null) {
+            infoChange = mapper.update(mapper.get(infoChange), person.getInfoChange());
+            infoChangeRepository.save(infoChange);
+            return mapper.get(infoChange);
+        }
         infoChange.setPerson(person);
         infoChangeRepository.save(infoChange);
         person.setInfoChange(infoChange);
@@ -41,14 +47,15 @@ public class InfoChangeService {
         return mapper.get(infoChange);
     }
 
-    public void deleteInfoChangeById(Long id) {
-        if(infoChangeRepository.findById(id).isEmpty()){
-            return;
+    public boolean deleteInfoChangeById(Long id) {
+        if (!infoChangeRepository.existsById(id)) {
+            return false;
         }
         InfoChange infoChange = infoChangeRepository.findById(id).get();
         Person person = infoChange.getPerson();
         person.setInfoChange(null);
         personRepository.save(person);
         infoChangeRepository.deleteById(id);
+        return true;
     }
 }

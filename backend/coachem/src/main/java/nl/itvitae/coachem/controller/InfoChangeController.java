@@ -3,6 +3,7 @@ package nl.itvitae.coachem.controller;
 import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.service.InfoChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,17 +16,21 @@ public class InfoChangeController {
     private InfoChangeService infoChangeService;
 
     @GetMapping("/all")
-    public List<InfoChangeDto> getAllInfoChanges(){
+    public List<InfoChangeDto> getAllInfoChanges() {
         return infoChangeService.getAllInfoChanges();
     }
 
     @PostMapping("/new/{personid}")
-    public InfoChangeDto addInfoChangeRequest(@PathVariable(value = "personid") Long id, @RequestBody InfoChangeDto infoChangeDto) {
-        return infoChangeService.addInfoChangeRequest(id, infoChangeDto);
+    public InfoChangeDto addInfoChangeRequest(@PathVariable(value = "personid") Long personId, @RequestBody InfoChangeDto infoChangeDto) {
+        return infoChangeService.addInfoChangeRequest(personId, infoChangeDto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteInfoChangeById(@PathVariable(value = "id") long id){
-        infoChangeService.deleteInfoChangeById(id);
+    @DeleteMapping("/delete/{infochangeid}")
+    public ResponseEntity<Void> deleteInfoChangeById(@PathVariable(value = "infochangeid") Long infoChangeId) {
+        if (infoChangeService.deleteInfoChangeById(infoChangeId)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

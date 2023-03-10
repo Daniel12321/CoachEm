@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,25 +23,24 @@ public class EvaluationService {
     @Autowired
     private EvaluationDto.Mapper mapper;
 
-    public List<EvaluationDto> getEvaluationsByPersonId(long id) {
-        if (personRepository.findById(id).isEmpty()) {
-            return null;
-        }
-        Person person = personRepository.findById(id).get();
-        Iterable<Evaluation> evaluations = evaluationRepository.findAll();
-        List<EvaluationDto> dtos = new ArrayList<>();
-        evaluations.forEach(evaluation -> {
-            if (evaluation.getTrainee() == person || evaluation.getAttendee() == person) {
-                dtos.add(mapper.get(evaluation));
-            }
-        });
-        return dtos;
+    public List<EvaluationDto> getEvaluationsByTraineeId(Long personId) {
+        return evaluationRepository.findByTraineeId(personId)
+                .stream()
+                .map(mapper::get)
+                .toList();
     }
 
-    public EvaluationDto addEvaluation(EvaluationDto evaluationDto, long attendeeId, long traineeId) {
+    public List<EvaluationDto> getEvaluationsByAttendeeId(Long personId) {
+        return evaluationRepository.findByAttendeeId(personId)
+                .stream()
+                .map(mapper::get)
+                .toList();
+    }
+
+    public EvaluationDto addEvaluation(EvaluationDto evaluationDto, Long attendeeId, Long traineeId) {
         if (evaluationDto.time() == null ||
                 personRepository.findById(attendeeId).isEmpty() ||
-                personRepository.findById(traineeId).isEmpty()){
+                personRepository.findById(traineeId).isEmpty()) {
             return null;
         }
         Person attendee = personRepository.findById(attendeeId).get();
@@ -58,7 +56,11 @@ public class EvaluationService {
         return mapper.get(evaluation);
     }
 
-    public void deleteEvaluation(Long id) {
+    public boolean deleteEvaluationById(Long id) {
+        if (!evaluationRepository.existsById(id)) {
+            return false;
+        }
         evaluationRepository.deleteById(id);
+        return true;
     }
 }

@@ -27,22 +27,23 @@ public class Person {
     private String phonenumber;
     private String role;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private InfoChange infoChange;
 
-    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Evaluation> evaluatedTrainees;
 
-    @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
     private List<Evaluation> evaluatingAttendees;
 
-    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
     private List<Invite> sentInvites;
 
-    @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites;
 }

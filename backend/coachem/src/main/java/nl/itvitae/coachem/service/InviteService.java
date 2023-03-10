@@ -22,44 +22,28 @@ public class InviteService {
     @Autowired
     private InviteDto.Mapper mapper;
 
-    public List<InviteDto> getReceivedInvitesByPersonId(long id) {
-        if (personRepository.findById(id).isEmpty()) {
-            return null;
-        }
-        Person person = personRepository.findById(id).get();
-        Iterable<Invite> invites = inviteRepository.findAll();
-        List<InviteDto> dtos = new ArrayList<>();
-        invites.forEach(invite -> {
-            if (invite.getInvitedPerson() == person) {
-                dtos.add(mapper.get(invite));
-            }
-        });
-        return dtos;
+    public List<InviteDto> getReceivedInvitesByPersonId(Long personId) {
+        return inviteRepository.findByInvitedPersonId(personId)
+                .stream()
+                .map(mapper::get)
+                .toList();
     }
 
-    public List<InviteDto> getSentInvitesByPersonId(long id) {
-        if (personRepository.findById(id).isEmpty()) {
-            return null;
-        }
-        Person person = personRepository.findById(id).get();
-        Iterable<Invite> invites = inviteRepository.findAll();
-        List<InviteDto> dtos = new ArrayList<>();
-        invites.forEach(invite -> {
-            if (invite.getInviter() == person) {
-                dtos.add(mapper.get(invite));
-            }
-        });
-        return dtos;
+    public List<InviteDto> getSentInvitesByPersonId(Long personId) {
+        return inviteRepository.findByInviterId(personId)
+                .stream()
+                .map(mapper::get)
+                .toList();
     }
 
-    public InviteDto addInvite(InviteDto inviteDto, long inviterId, Long invitedId) {
+    public InviteDto addInvite(InviteDto inviteDto, Long inviteSenderId, Long inviteReceiverId) {
         if (inviteDto.time() == null ||
-                personRepository.findById(inviterId).isEmpty() ||
-                personRepository.findById(invitedId).isEmpty()) {
+                personRepository.findById(inviteSenderId).isEmpty() ||
+                personRepository.findById(inviteReceiverId).isEmpty()) {
             return null;
         }
-        Person inviter = personRepository.findById(inviterId).get();
-        Person invited = personRepository.findById(invitedId).get();
+        Person inviter = personRepository.findById(inviteSenderId).get();
+        Person invited = personRepository.findById(inviteReceiverId).get();
         Invite invite = mapper.post(inviteDto);
         invite.setAccepted(false);
         invite.setInvitedPerson(invited);
@@ -72,7 +56,7 @@ public class InviteService {
         return mapper.get(invite);
     }
 
-    public void acceptInviteRequest(long inviteId) {
+    public void acceptInviteRequest(Long inviteId) {
         if (inviteRepository.findById(inviteId).isPresent()) {
             Invite invite = inviteRepository.findById(inviteId).get();
             invite.setAccepted(true);
@@ -80,7 +64,11 @@ public class InviteService {
         }
     }
 
-    public void deleteInviteById(long id) {
-        inviteRepository.deleteById(id);
+    public boolean deleteInviteById(Long inviteId) {
+        if (!inviteRepository.existsById(inviteId)) {
+            return false;
+        }
+        inviteRepository.deleteById(inviteId);
+        return true;
     }
 }

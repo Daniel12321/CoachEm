@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.service;
 
+import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,10 +22,12 @@ public class PersonService {
     @Autowired
     private InfoChangeRepository infoChangeRepository;
     @Autowired
-    InfoChangeService infoChangeService;
-
+    private InfoChangeService infoChangeService;
     @Autowired
     private PersonDto.Mapper mapper;
+
+    @Autowired
+    private InfoChangeDto.Mapper infoChangeMapper;
 
     public List<PersonDto> getAllPersons() {
         Iterable<Person> people = personRepository.findAll();
@@ -45,11 +49,11 @@ public class PersonService {
         return mapper.get(person);
     }
 
-    public PersonDto acceptInfoChange(Long id) {
-        if(infoChangeRepository.findById(id).isEmpty()){
-            return null;
+    public Optional<PersonDto> acceptInfoChange(Long infoChangeId) {
+        if (infoChangeRepository.findById(infoChangeId).isEmpty()) {
+            return Optional.empty();
         }
-        InfoChange infoChange = infoChangeRepository.findById(id).get();
+        InfoChange infoChange = infoChangeRepository.findById(infoChangeId).get();
         Person person = infoChange.getPerson();
         PersonDto personDto = new PersonDto(
                 null,
@@ -60,11 +64,16 @@ public class PersonService {
                 infoChange.getZipcode(),
                 infoChange.getPhonenumber(),
                 person.getRole());
-        infoChangeService.deleteInfoChangeById(id);
-        return mapper.get(mapper.update(personDto, person));
+        infoChangeService.deleteInfoChangeById(infoChangeId);
+        person = personRepository.save(mapper.update(personDto, person));
+        return Optional.of(mapper.get(person));
     }
 
-    public void deletePersonById(Long id) {
+    public boolean deletePersonById(Long id) {
+        if (!personRepository.existsById(id)) {
+            return false;
+        }
         personRepository.deleteById(id);
+        return true;
     }
 }
