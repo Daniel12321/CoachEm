@@ -5,11 +5,11 @@ import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.repository.InfoChangeRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +23,10 @@ public class InfoChangeService {
     private PersonRepository personRepository;
 
     public List<InfoChangeDto> getAllInfoChanges() {
-        Iterable<InfoChange> infoChanges = infoChangeRepository.findAll();
-        List<InfoChangeDto> dtos = new ArrayList<>();
-        infoChanges.forEach(infoChange -> dtos.add(mapper.get(infoChange)));
-        return dtos;
+        return ListUtil.toList(infoChangeRepository.findAll())
+                .stream()
+                .map(mapper::get)
+                .toList();
     }
 
     public InfoChangeDto addInfoChangeRequest(Long id, InfoChangeDto infoChangeDto) {

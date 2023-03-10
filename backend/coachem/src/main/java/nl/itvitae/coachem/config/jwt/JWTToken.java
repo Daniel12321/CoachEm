@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 public class JWTToken {
 
-    // TODO: Store in properties
+    // TODO: Store in properties.yml
     private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final Key REFRESH_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long EXP_ADD_DAY = 1000 * 60 * 60;
@@ -33,7 +33,7 @@ public class JWTToken {
         return Jwts.builder()
                 .setSubject(((UserDetails) auth.getPrincipal()).getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXP_ADD_MINUTE))
+                .setExpiration(new Date(System.currentTimeMillis() + EXP_ADD_DAY))
                 .signWith(KEY)
                 .compact();
     }
