@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,14 +31,18 @@ public class Person {
     private InfoChange infoChange;
 
     @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
-    private List<Evaluation> evaluated;
+    @JsonIgnore
+    private List<Evaluation> evaluatedTrainees;
 
     @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
-    private List<Evaluation> evaluater;
+    @JsonIgnore
+    private List<Evaluation> evaluatingAttendees;
 
-    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
-    private List<Invite> inviter;
+    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Invite> sentInvites;
 
-    @OneToMany(mappedBy = "invited", cascade = CascadeType.ALL)
-    private List<Invite> invited;
+    @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Invite> receivedInvites;
 }
