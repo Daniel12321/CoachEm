@@ -11,8 +11,14 @@
 /* Filters */
 
 .skill-filters {
-    min-width: 200px;
+    width: 200px;
     border: solid black 1px;
+}
+
+.skill-filters h2 {
+    font-size: 2.8rem;
+    text-align: center;
+    padding: 8px 0;
 }
 
 .skill-filter {
@@ -20,10 +26,8 @@
     border-top: solid black 1px;
 }
 
-.skill-filter-duration input {
-    /* display: inline-block; */
-    /* max-width: 50%; */
-}
+
+/* Duration Filter */
 
 .skill-filter-duration {
     display: grid;
@@ -31,7 +35,7 @@
     gap: 6px 32px;
 }
 
-.skill-filter-duration > p{
+.skill-filter-duration > p {
     grid-column-start: 1;
     grid-column-end: 3;
 }
@@ -39,17 +43,6 @@
 .skill-filter-duration input {
     max-width: 40%;
 }
-
-.skill-number-input-wrapper label {
-    display: block;
-}
-
-.skill-number-input-wrapper input {
-    display: block;
-    max-width: 32px;
-}
-
-
 
 
 
