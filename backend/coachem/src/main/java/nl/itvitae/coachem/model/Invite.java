@@ -19,10 +19,10 @@ public class Invite {
     private String time;
 
     @ManyToOne
-    @JoinColumn(name = "trainee_id")
-    private Person trainee;
+    @JoinColumn(name = "inviter_id")
+    private Person inviter;
 
     @ManyToOne
-    @JoinColumn(name = "invited_id")
-    private Person invited;
+    @JoinColumn(name = "invited_person_id")
+    private Person invitedPerson;
 }
