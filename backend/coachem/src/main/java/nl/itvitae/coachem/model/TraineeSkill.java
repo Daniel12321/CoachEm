@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nl.itvitae.coachem.model.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +19,18 @@ public class TraineeSkill {
     private Long id;
     private String progress;
     private String report;
-    // Person id traineeSkill TraineeSkill
+
 
     @OneToMany(mappedBy = "traineeSkill")
     private List<Feedback> feedbacks = new ArrayList<Feedback>();
 
-    @ManyToOne
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="skill_id")
     private Skill skill;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="person_id")
     Person person;
 

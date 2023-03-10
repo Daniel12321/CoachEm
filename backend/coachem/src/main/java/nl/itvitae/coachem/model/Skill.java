@@ -1,5 +1,7 @@
 package nl.itvitae.coachem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,9 @@ public class Skill {
     private String name;
     private Boolean type;
 
-    // TODO: 08/03/2023 check of mapped by table naam of class naam hoort te zijn 
-    
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnore
     @OneToMany(mappedBy = "skill")
     private List<TraineeSkill> TraineeSkills = new ArrayList<TraineeSkill>();
 }

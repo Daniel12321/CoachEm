@@ -1,12 +1,13 @@
 package nl.itvitae.coachem.service;
 
-import nl.itvitae.coachem.dto.SkillPostDto;
-import nl.itvitae.coachem.mapper.SkillMapper;
+import nl.itvitae.coachem.dto.SkillDTO;
+import nl.itvitae.coachem.model.Skill;
 import nl.itvitae.coachem.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -16,8 +17,31 @@ public class SkillService {
     SkillRepository skillRepository;
 
     @Autowired
-    nl.itvitae.coachem.mapper.SkillMapper SkillMapper;
+    SkillDTO.Mapper mapper;
 
-    public void newSkill(SkillPostDto skillPostdto) {
+    public SkillDTO newSkill(SkillDTO skillDto) {
+        Skill skill = skillRepository.save(mapper.post(skillDto));
+        return(mapper.get(skill));
     }
+
+    public SkillDTO getSkillById(Long id) {
+        return mapper.get(skillRepository.findById(id).get());
+    }
+
+    public boolean deleteSkillById(Long id) {
+        if (skillRepository.existsById(id)) {
+            skillRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<SkillDTO> updateSkillById(SkillDTO skillDTO, Long id) {
+        if (!skillRepository.existsById(id)) {
+            return Optional.empty();
+        }
+        Skill skill = skillRepository.save(mapper.update(skillDTO, skillRepository.findById(id).get()));
+        return Optional.of(mapper.get(skill));
+    }
+
 }
