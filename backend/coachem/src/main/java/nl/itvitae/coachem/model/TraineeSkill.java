@@ -19,18 +19,20 @@ public class TraineeSkill {
     private Long id;
     private String progress;
     private String report;
+    private String time;
+    private Boolean completed;
 
-
-    @OneToMany(mappedBy = "traineeSkill")
+    //@OneToMany(mappedBy = "traineeSkill")
+    @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks = new ArrayList<Feedback>();
 
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    //@ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="skill_id")
     private Skill skill;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="person_id")
     Person person;
 

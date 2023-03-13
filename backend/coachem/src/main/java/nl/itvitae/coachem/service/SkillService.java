@@ -20,6 +20,8 @@ public class SkillService {
     SkillDTO.Mapper mapper;
 
     public SkillDTO newSkill(SkillDTO skillDto) {
+        if()
+
         Skill skill = skillRepository.save(mapper.post(skillDto));
         return(mapper.get(skill));
     }

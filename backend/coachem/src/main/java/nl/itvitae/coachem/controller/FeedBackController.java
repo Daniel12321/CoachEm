@@ -17,9 +17,11 @@ public class FeedBackController {
 
 
     @PostMapping("/new")
-    public void newFeedback(@RequestBody FeedbackDTO feedBackDTO){
-        feedbackService.newFeedback(feedBackDTO);
+    public FeedbackDTO newFeedback(@RequestBody FeedbackDTO feedBackDTO){
+        return feedbackService.newFeedback(feedBackDTO);
     }
+
+
 
     @GetMapping("/by_id/{id}")
     public FeedbackDTO getFeedbackById(@PathVariable(value = "id")Long id){
@@ -31,6 +33,24 @@ public class FeedBackController {
         return feedbackService.updateFeedbackById(feedbackDTO,id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+//    @PutMapping("/add_person_to_feedback/{feedbackId}/{personId}")
+//    public ResponseEntity<Void> addPersonToFeedback(@PathVariable(value = "feedbackId")Long feedbackId, @PathVariable(value = "personId") Long personId) {
+//        if (feedbackService.addPersonToFeedback(feedbackId, personId)) {
+//            return ResponseEntity.ok().build();
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
+    @PutMapping("/add_traineeskill_to_feedback/{feedbackId}/{traineeSkillId}")
+    public ResponseEntity<Void> addTraineeSkillToFeedback(@PathVariable(value = "feedbackId")Long feedbackId, @PathVariable(value = "traineeSkillId") Long traineeSkillId ){
+        if (feedbackService.addTraineeSkillToFeedback(feedbackId,traineeSkillId)){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+        }
 
     @DeleteMapping("/delete/by_id/{id}")
     public ResponseEntity<Void> deleteFeedbackById(@PathVariable(value = "id") Long id) {

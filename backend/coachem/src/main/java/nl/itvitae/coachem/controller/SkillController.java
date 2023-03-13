@@ -26,7 +26,7 @@ public class SkillController {
     }
 
     @DeleteMapping("/delete/by_id/{id}")
-    public ResponseEntity<Void> deleteSkillById(@PathVariable(value = "id") long id) {
+    public ResponseEntity<Void> deleteSkillById(@PathVariable(value = "id") Long id) {
         if (skillService.deleteSkillById(id)){
             return ResponseEntity.ok().build();
         } else {

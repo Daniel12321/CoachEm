@@ -22,10 +22,14 @@ public class Skill {
     private Long id;
     private String name;
     private Boolean type;
+    private String description;
+    private String time;
+    private Integer duration;
 
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnore
-    @OneToMany(mappedBy = "skill")
+    //@OneToMany(mappedBy = "skill")
+    @OneToMany(mappedBy = "skill",cascade = CascadeType.ALL)
     private List<TraineeSkill> TraineeSkills = new ArrayList<TraineeSkill>();
 }

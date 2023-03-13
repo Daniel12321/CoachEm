@@ -22,6 +22,8 @@ public class TraineeSkillService {
     @Autowired
     SkillRepository skillRepository;
 
+
+
     @Autowired
     TraineeSkillDTO.Mapper mapper;
 
@@ -54,12 +56,16 @@ public class TraineeSkillService {
     }
 
 
-    public void addSkillToTraineeSkill(Long traineeSkillId, long skillId) {
+    public Boolean addSkillToTraineeSkill(Long traineeSkillId, Long skillId) {
+        if(!traineeSkillRepository.existsById(traineeSkillId) || !skillRepository.existsById(skillId)){
+            return false;
+        }
         TraineeSkill tempTraineeSkill = traineeSkillRepository.findById(traineeSkillId).get();
         Skill tempSkill = skillRepository.findById(skillId).get();
         tempTraineeSkill.setSkill(tempSkill);
         tempSkill.getTraineeSkills().add(tempTraineeSkill);
         traineeSkillRepository.save(tempTraineeSkill);
+        return true;
     }
 
 

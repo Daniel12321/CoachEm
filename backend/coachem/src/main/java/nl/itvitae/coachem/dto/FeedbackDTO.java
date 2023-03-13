@@ -4,7 +4,7 @@ import nl.itvitae.coachem.model.Feedback;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.model.TraineeSkill;
 
-public record FeedbackDTO(Long id, TraineeSkill traineeSkill, Person person) {
+public record FeedbackDTO(Long id, TraineeSkill traineeSkill, Person person, String time) {
     @org.mapstruct.Mapper(componentModel = "spring")
     public interface Mapper extends IEntityMapper<Feedback, FeedbackDTO> {    }
 }

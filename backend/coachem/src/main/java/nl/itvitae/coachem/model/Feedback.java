@@ -16,8 +16,10 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String text;
+    private String time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    //@ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="traineeSkill_id")
     TraineeSkill traineeSkill;
 

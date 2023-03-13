@@ -26,8 +26,12 @@ public class TraineeSkillController {
     }
 
     @PutMapping("/add_skill_to_traineeskill/{traineeSkillId}/{skillId}")
-    public void getTraineeSkillById(@PathVariable(value = "traineeSkillId")Long traineeSkillId, @PathVariable(value = "skillId") Long skillId){
-         traineeSkillService.addSkillToTraineeSkill(traineeSkillId, skillId);
+    public ResponseEntity<Void> addSkillToTraineeSkill(@PathVariable(value = "traineeSkillId")Long traineeSkillId, @PathVariable(value = "skillId") Long skillId){
+        if (traineeSkillService.addSkillToTraineeSkill(traineeSkillId, skillId)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/delete/by_id/{id}")

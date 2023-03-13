@@ -41,6 +41,6 @@ public class Person {
     @OneToMany(mappedBy = "invited")
     private List<Invite> invited;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
     private List<TraineeSkill> traineeSkill;
 }

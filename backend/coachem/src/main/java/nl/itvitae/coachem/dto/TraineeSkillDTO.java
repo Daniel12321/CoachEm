@@ -11,7 +11,7 @@ import nl.itvitae.coachem.model.TraineeSkill;
 import java.util.ArrayList;
 import java.util.List;
 
-public record TraineeSkillDTO(Long id, String progress, String report, List<Feedback> feedbacks, Skill skill, Person person) {
+public record TraineeSkillDTO(Long id, String progress, String report, List<Feedback> feedbacks, Skill skill, Person person, String time, Boolean completed) {
     @org.mapstruct.Mapper(componentModel = "spring")
     public interface Mapper extends IEntityMapper<TraineeSkill, TraineeSkillDTO> {    }
 }
