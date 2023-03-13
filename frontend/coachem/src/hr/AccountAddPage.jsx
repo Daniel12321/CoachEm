@@ -15,7 +15,7 @@ export default function AccountAddPage() {
             role: e.target[7].value,
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`http://localhost:8082/api/person/new`, {
+        fetch(`http://localhost:8082/api/person/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
