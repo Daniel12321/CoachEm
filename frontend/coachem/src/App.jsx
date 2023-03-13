@@ -12,10 +12,10 @@ import AccountAddPage from './hr/AccountAddPage';
 import './App.css';
 
 export default function App() {
-    const role = 'trainee';
+    // const role = 'trainee';
     // const role = 'coach';
     // const role = 'manager';
-    // const role = 'hr';
+    const role = 'hr';
 
     return (
         <div className="app">
