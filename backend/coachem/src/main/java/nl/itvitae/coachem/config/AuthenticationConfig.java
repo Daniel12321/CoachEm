@@ -42,8 +42,8 @@ public class AuthenticationConfig {
                     .requestMatchers("/api/auth/**").permitAll()
 //                    .requestMatchers("/api/person/**").hasAuthority("HR")
                     .requestMatchers("/api/skills/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER", "HR")
-                .anyRequest().authenticated()
-//                .anyRequest().permitAll()
+//                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and().build();
     }
 
