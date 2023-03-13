@@ -31,7 +31,7 @@ public class AuthService {
 
         User user = (User) auth.getPrincipal();
 
-        LoginResponseDto resp = new LoginResponseDto(user.getUsername(), JWTToken.of(auth));
+        LoginResponseDto resp = new LoginResponseDto(user.getUsername(), user.getRole(), JWTToken.of(auth));
 //        resp.setRefreshToken(JWTToken.refresh(auth));
 
         return Optional.of(resp);
