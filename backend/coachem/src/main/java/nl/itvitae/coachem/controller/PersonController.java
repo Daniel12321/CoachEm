@@ -25,13 +25,6 @@ public class PersonController {
         return personService.getAllPersons();
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<PersonDto> addPerson(@RequestBody PersonDto personDto) {
-        return personService.addPerson(personDto)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
-    }
-
     @PutMapping("/infochange/{infochangeid}")
     public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable(value = "infochangeid") Long infoChangeId) {
         return personService.acceptInfoChange(infoChangeId)

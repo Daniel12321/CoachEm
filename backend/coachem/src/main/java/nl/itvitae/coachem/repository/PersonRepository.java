@@ -8,6 +8,4 @@ import java.util.Optional;
 
 @Component
 public interface PersonRepository extends CrudRepository<Person, Long> {
-
-    Optional<Person> findByEmail(String email);
 }

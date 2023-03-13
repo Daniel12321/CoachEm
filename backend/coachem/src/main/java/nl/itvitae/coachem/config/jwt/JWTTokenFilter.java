@@ -4,8 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import nl.itvitae.coachem.config.User;
-import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,9 +16,9 @@ import java.util.List;
 
 public class JWTTokenFilter extends OncePerRequestFilter {
 
-    private final PersonRepository repo;
+    private final UserRepository repo;
 
-    public JWTTokenFilter(PersonRepository repo) {
+    public JWTTokenFilter(UserRepository repo) {
         this.repo = repo;
     }
 
@@ -41,7 +40,7 @@ public class JWTTokenFilter extends OncePerRequestFilter {
         }
 
         // Get user identity and set it on the spring security context
-        final var user = this.repo.findByEmail(token.getEmail()).map(User::new).orElse(null);
+        final var user = this.repo.findByEmail(token.getEmail()).orElse(null);
         final var auth = new UsernamePasswordAuthenticationToken(user, null, user == null ? List.of() : user.getAuthorities());
 
         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
