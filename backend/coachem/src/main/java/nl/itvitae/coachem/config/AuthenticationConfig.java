@@ -2,7 +2,7 @@ package nl.itvitae.coachem.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import nl.itvitae.coachem.config.jwt.JWTTokenFilter;
-import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationConfig {
 
     @Bean
-    public JWTTokenFilter jwtTokenFilter(PersonRepository repo) {
+    public JWTTokenFilter jwtTokenFilter(UserRepository repo) {
         return new JWTTokenFilter(repo);
     }
 
@@ -39,8 +39,8 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                    .requestMatchers("/api/auth/**").permitAll()
-//                    .requestMatchers("/api/person/**").hasAuthority("HR")
+                    .requestMatchers("/api/auth/register").hasAuthority("HR")
+                    .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/skills/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER", "HR")
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll()
@@ -53,8 +53,8 @@ public class AuthenticationConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PersonRepository repo) throws Exception {
-        return email -> new User(repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User: %s, not found", email))));
+    public UserDetailsService userDetailsService(UserRepository repo) throws Exception {
+        return email -> repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User: %s, not found", email)));
     }
 
     @Bean

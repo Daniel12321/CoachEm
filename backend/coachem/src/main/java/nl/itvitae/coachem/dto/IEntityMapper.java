@@ -7,7 +7,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 public interface IEntityMapper<E, D> {
 
-    @Mapping(target = "password", ignore = true)
     D get(E e);
 
     @Mapping(target = "id", ignore = true)
