@@ -2,8 +2,12 @@ package nl.itvitae.coachem.repository;
 
 import nl.itvitae.coachem.model.Person;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+import java.util.Optional;
+
+@Component
 public interface PersonRepository extends CrudRepository<Person, Long> {
+
+    Optional<Person> findByEmail(String email);
 }

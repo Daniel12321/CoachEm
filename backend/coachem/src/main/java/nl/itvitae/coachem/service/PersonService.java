@@ -6,47 +6,58 @@ import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.repository.InfoChangeRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class PersonService {
+
     @Autowired
     private PersonRepository personRepository;
+
     @Autowired
     private InfoChangeRepository infoChangeRepository;
+
     @Autowired
     private InfoChangeService infoChangeService;
+
     @Autowired
     private PersonDto.Mapper mapper;
 
     @Autowired
     private InfoChangeDto.Mapper infoChangeMapper;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     public List<PersonDto> getAllPersons() {
-        Iterable<Person> people = personRepository.findAll();
-        List<PersonDto> dtos = new ArrayList<>();
-        people.forEach(person -> dtos.add(mapper.get(person)));
-        return dtos;
+        return ListUtil.toList(personRepository.findAll())
+                .stream()
+                .map(mapper::get)
+                .toList();
     }
 
-    public PersonDto addPerson(PersonDto personDto) {
+    public Optional<PersonDto> addPerson(PersonDto personDto) {
         if (personDto.email() == null ||
                 personDto.name() == null ||
                 personDto.address() == null ||
                 personDto.city() == null ||
                 personDto.zipcode() == null ||
                 personDto.role() == null) {
-            return null;
+            return Optional.empty();
         }
-        Person person = personRepository.save(mapper.post(personDto));
-        return mapper.get(person);
+
+        Person person = mapper.post(personDto);
+        person.setPassword(encoder.encode(person.getPassword()));
+        person = personRepository.save(person);
+        return Optional.of(mapper.get(person));
     }
 
     public Optional<PersonDto> acceptInfoChange(Long infoChangeId) {

@@ -1,7 +1,6 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.PersonDto;
-import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.service.InfoChangeService;
 import nl.itvitae.coachem.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,10 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/person")
 public class PersonController {
+
     @Autowired
     private PersonService personService;
+
     @Autowired
     private InfoChangeService infoChangeService;
 
@@ -25,8 +26,10 @@ public class PersonController {
     }
 
     @PostMapping("/new")
-    public PersonDto addPerson(@RequestBody PersonDto personDto) {
-        return personService.addPerson(personDto);
+    public ResponseEntity<PersonDto> addPerson(@RequestBody PersonDto personDto) {
+        return personService.addPerson(personDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/infochange/{infochangeid}")
@@ -44,5 +47,4 @@ public class PersonController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
