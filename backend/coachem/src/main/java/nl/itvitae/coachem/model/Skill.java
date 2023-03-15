@@ -31,5 +31,5 @@ public class Skill {
     @JsonIgnore
     //@OneToMany(mappedBy = "skill")
     @OneToMany(mappedBy = "skill",cascade = CascadeType.ALL)
-    private List<TraineeSkill> TraineeSkills = new ArrayList<TraineeSkill>();
+    private List<TraineeSkill> traineeSkills = new ArrayList<TraineeSkill>();
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/traineeskill")
+
 public class TraineeSkillController {
 
     @Autowired
@@ -25,9 +26,20 @@ public class TraineeSkillController {
         return traineeSkillService.getTraineeSkillById(id);
     }
 
-    @PutMapping("/add_skill_to_traineeskill/{traineeSkillId}/{skillId}")
+    // TODO: 15/03/2023 // api/traineeskill/1/user/2 
+    
+    @PutMapping("/add_skill_to_traineeskill/traineeskillid{traineeSkillId}/skillid{skillId}")
     public ResponseEntity<Void> addSkillToTraineeSkill(@PathVariable(value = "traineeSkillId")Long traineeSkillId, @PathVariable(value = "skillId") Long skillId){
         if (traineeSkillService.addSkillToTraineeSkill(traineeSkillId, skillId)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/add_user_to_traineeskill/traineeskillid{traineeSkillId}/userid{userId}")
+    public ResponseEntity<Void> addUserToTraineeSkill(@PathVariable(value = "traineeSkillId")Long traineeSkillId, @PathVariable(value = "userId") Long userId){
+        if (traineeSkillService.addUserToTraineeSkill(traineeSkillId, userId)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

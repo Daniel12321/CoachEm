@@ -2,12 +2,10 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.FeedbackDTO;
 import nl.itvitae.coachem.dto.SkillDTO;
-import nl.itvitae.coachem.model.Feedback;
-import nl.itvitae.coachem.model.Person;
-import nl.itvitae.coachem.model.Skill;
-import nl.itvitae.coachem.model.TraineeSkill;
+import nl.itvitae.coachem.model.*;
 import nl.itvitae.coachem.repository.FeedbackRepository;
 import nl.itvitae.coachem.repository.TraineeSkillRepository;
+import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +24,9 @@ public class FeedbackService {
 
     @Autowired
     FeedbackDTO.Mapper mapper;
+
+    @Autowired
+    UserRepository userRepository;
 
     public FeedbackDTO newFeedback(FeedbackDTO feedBackDTO) {
         if(feedBackDTO.time() == null){
@@ -67,16 +68,16 @@ public class FeedbackService {
         return true;
     }
 
-//    public Boolean addPersonToFeedback(Long feedbackId, Long personId) {
-//        if (!feedbackRepository.existsById(feedbackId) || !personRepository.existsById(personId)) {
-//            return false;
-//        }
-//        Feedback tempFeedback = feedbackRepository.findById(feedbackId).get();
-//        Person tempPerson = personRepository.findById(personId).get();
-//        tempFeedback.setPerson(tempPerson);
-//        tempPerson.getFeedbacks().add(tempFeedback);
-//        feedbackRepository.save(tempFeedback);
-//        return true;
-//    }
+    public Boolean addUserToFeedback(Long feedbackId, Long userId) {
+        if (!feedbackRepository.existsById(feedbackId) || !userRepository.existsById(userId)) {
+            return false;
+        }
+        Feedback tempFeedback = feedbackRepository.findById(feedbackId).get();
+        User tempUser = userRepository.findById(userId).get();
+        tempFeedback.setUser(tempUser);
+        tempUser.getFeedbacks().add(tempFeedback);
+        feedbackRepository.save(tempFeedback);
+        return true;
+    }
 
 }

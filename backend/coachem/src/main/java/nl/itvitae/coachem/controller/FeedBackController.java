@@ -31,16 +31,16 @@ public class FeedBackController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @PutMapping("/add_person_to_feedback/{feedbackId}/{personId}")
-//    public ResponseEntity<Void> addPersonToFeedback(@PathVariable(value = "feedbackId")Long feedbackId, @PathVariable(value = "personId") Long personId) {
-//        if (feedbackService.addPersonToFeedback(feedbackId, personId)) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PutMapping("/add_user_to_feedback/feedbackid{feedbackId}/userid{userId}")
+    public ResponseEntity<Void> addUserToFeedback(@PathVariable(value = "feedbackId")Long feedbackId, @PathVariable(value = "userId") Long userId) {
+        if (feedbackService.addUserToFeedback(feedbackId, userId)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-    @PutMapping("/add_traineeskill_to_feedback/{feedbackId}/{traineeSkillId}")
+    @PutMapping("/add_traineeskill_to_feedback/feedbackid{feedbackId}/traineeskillid{traineeSkillId}")
     public ResponseEntity<Void> addTraineeSkillToFeedback(@PathVariable(value = "feedbackId")Long feedbackId, @PathVariable(value = "traineeSkillId") Long traineeSkillId ){
         if (feedbackService.addTraineeSkillToFeedback(feedbackId,traineeSkillId)){
             return ResponseEntity.ok().build();

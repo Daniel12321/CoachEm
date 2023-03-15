@@ -1,9 +1,7 @@
 package nl.itvitae.coachem.model;
 
 import jakarta.annotation.Nonnull;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,6 +25,12 @@ public class User implements UserDetails {
     @Nonnull private String email;
     @Nonnull private String password;
     @Nonnull private String role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<TraineeSkill> traineeSkills = new ArrayList<TraineeSkill>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks = new ArrayList<Feedback>();
 
     public User(String email, String password, String role) {
         this.email = email;

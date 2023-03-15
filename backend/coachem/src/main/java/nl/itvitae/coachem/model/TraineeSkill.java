@@ -30,8 +30,8 @@ public class TraineeSkill {
     private Skill skill;
 
     @ManyToOne
-    @JoinColumn(name="person_id")
-    Person person;
+    @JoinColumn(name="user_id")
+    User user;
 
 
 }

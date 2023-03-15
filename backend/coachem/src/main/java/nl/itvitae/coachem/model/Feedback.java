@@ -22,8 +22,8 @@ public class Feedback {
     @JoinColumn(name="traineeSkill_id")
     TraineeSkill traineeSkill;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="person_id")
-    Person person;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    User user;
 
 }

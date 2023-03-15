@@ -2,10 +2,13 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.SkillDTO;
 import nl.itvitae.coachem.dto.TraineeSkillDTO;
+import nl.itvitae.coachem.model.Feedback;
 import nl.itvitae.coachem.model.Skill;
 import nl.itvitae.coachem.model.TraineeSkill;
+import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.repository.SkillRepository;
 import nl.itvitae.coachem.repository.TraineeSkillRepository;
+import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,9 @@ public class TraineeSkillService {
 
     @Autowired
     SkillRepository skillRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     TraineeSkillDTO.Mapper mapper;
@@ -70,6 +76,16 @@ public class TraineeSkillService {
         return true;
     }
 
-
+    public Boolean addUserToTraineeSkill(Long traineeSkillId, Long userId) {
+        if (!traineeSkillRepository.existsById(traineeSkillId) || !userRepository.existsById(userId)) {
+            return false;
+        }
+        TraineeSkill tempTraineeSkill = traineeSkillRepository.findById(traineeSkillId).get();
+        User tempUser = userRepository.findById(userId).get();
+        tempTraineeSkill.setUser(tempUser);
+        tempUser.getTraineeSkills().add(tempTraineeSkill);
+        traineeSkillRepository.save(tempTraineeSkill);
+        return true;
+    }
 
 }
