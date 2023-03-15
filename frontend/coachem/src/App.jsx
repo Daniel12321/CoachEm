@@ -1,4 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+import { useState } from 'react';
+
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
 import AccountPage from './account/AccountPage';
@@ -12,18 +15,26 @@ import AccountAddPage from './hr/AccountAddPage';
 import './App.css';
 
 export default function App() {
-    // const role = 'trainee';
-    // const role = 'coach';
-    // const role = 'manager';
-    const role = 'hr';
+    const [role, setRole] = useState(localStorage.getItem('user_role'));
+
+    if (!role) {
+        return (
+            <div className="app">
+                <div className="container">
+                    <LoginPage setRole={setRole} />
+                </div>
+            </div>
+        );
+    }
+
+    const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
 
     return (
         <div className="app">
-            <Header loggedIn={true} role={role} />
+            <Header loggedIn={true} role={role.toLowerCase()} />
             <div className="container">
                 <Routes>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/" element={<Navigate to={redir} />} />
                     <Route path="/account" element={<AccountPage />} />
                     <Route path="/skills-all" element={<SkillsPage />} />
                     <Route path="/skills" element={<SkillsPage />} />
