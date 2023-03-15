@@ -14,7 +14,6 @@ public class SkillController {
     @Autowired
     SkillService skillService;
 
-
     @PostMapping("/new")
     public SkillDTO newSkill(@RequestBody SkillDTO skillDTO){
         return skillService.newSkill(skillDTO);

@@ -22,13 +22,15 @@ public class TraineeSkillService {
     @Autowired
     SkillRepository skillRepository;
 
-
-
     @Autowired
     TraineeSkillDTO.Mapper mapper;
 
     public TraineeSkillDTO newTraineeSkill(TraineeSkillDTO traineeSkillDTO) {
-       TraineeSkill traineeSkill = traineeSkillRepository.save(mapper.post(traineeSkillDTO));
+       if(traineeSkillDTO.time() == null || traineeSkillDTO.completed() == null){
+           return null;
+       }
+
+        TraineeSkill traineeSkill = traineeSkillRepository.save(mapper.post(traineeSkillDTO));
        return mapper.get(traineeSkill);
     }
 

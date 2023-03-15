@@ -28,10 +28,12 @@ public class FeedbackService {
     FeedbackDTO.Mapper mapper;
 
     public FeedbackDTO newFeedback(FeedbackDTO feedBackDTO) {
+        if(feedBackDTO.time() == null){
+            return null;
+        }
         Feedback feedback = feedbackRepository.save(mapper.post(feedBackDTO));
         return mapper.get(feedback);
     }
-
 
     public FeedbackDTO getFeedbackById(Long id) {
         return mapper.get(feedbackRepository.findById(id).get());

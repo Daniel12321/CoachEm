@@ -18,7 +18,6 @@ public class Feedback {
     private String text;
     private String time;
 
-    //@ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name="traineeSkill_id")
     TraineeSkill traineeSkill;

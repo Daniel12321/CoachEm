@@ -22,12 +22,9 @@ public class TraineeSkill {
     private String time;
     private Boolean completed;
 
-    //@OneToMany(mappedBy = "traineeSkill")
     @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks = new ArrayList<Feedback>();
 
-
-    //@ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name="skill_id")
     private Skill skill;

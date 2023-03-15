@@ -20,10 +20,18 @@ public class SkillService {
     SkillDTO.Mapper mapper;
 
     public SkillDTO newSkill(SkillDTO skillDto) {
-        if()
+        if(skillDto.name() == null ||
+                skillDto.type() == null ||
+                skillDto.duration() == null ||
+                skillDto.time() == null||
+                skillDto.description() == null)
+        {
+            return null;
+        }
 
         Skill skill = skillRepository.save(mapper.post(skillDto));
         return(mapper.get(skill));
+
     }
 
     public SkillDTO getSkillById(Long id) {

@@ -14,14 +14,11 @@ public class FeedBackController {
 
     @Autowired
     FeedbackService feedbackService;
-
-
+    
     @PostMapping("/new")
     public FeedbackDTO newFeedback(@RequestBody FeedbackDTO feedBackDTO){
         return feedbackService.newFeedback(feedBackDTO);
     }
-
-
 
     @GetMapping("/by_id/{id}")
     public FeedbackDTO getFeedbackById(@PathVariable(value = "id")Long id){
