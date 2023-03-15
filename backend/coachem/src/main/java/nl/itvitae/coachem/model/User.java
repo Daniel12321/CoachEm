@@ -31,6 +31,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<TraineeSkill> traineeSkills = new ArrayList<TraineeSkill>();
 
+    //Todo via de user repository de dto voor trainee skills bouwen
+
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Feedback> feedbacks = new ArrayList<Feedback>();

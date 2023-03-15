@@ -5,7 +5,7 @@ import nl.itvitae.coachem.model.Person;
 
 import java.util.List;
 
-public record InviteDto(Long id, Boolean accepted, String time, Person inviter, Person invitedPerson) {
+public record InviteDto(Long id, Boolean accepted, String time, PersonDto inviter, PersonDto invitedPerson) {
 
     @org.mapstruct.Mapper(componentModel = "spring")
     public interface Mapper extends IEntityMapper<Invite, InviteDto> {

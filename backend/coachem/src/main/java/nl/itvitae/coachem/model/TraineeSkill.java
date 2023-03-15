@@ -32,6 +32,7 @@ public class TraineeSkill {
     private Skill skill;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="user_id")
     User user;
 
