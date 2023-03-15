@@ -1,6 +1,6 @@
 import './LoginPage.css';
 
-export default function LoginPage() {
+export default function LoginPage({ setRole }) {
     const login = (e) => {
         e.preventDefault();
 
@@ -18,6 +18,7 @@ export default function LoginPage() {
             .then((data) => {
                 localStorage.setItem('access_token', data.token);
                 localStorage.setItem('user_role', data.role);
+                setRole(data.role);
             });
     };
 
