@@ -1,0 +1,23 @@
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form input {
+    font-size: 2.4rem;
+    width: max(500px, 40vw);
+    height: 64px;
+    padding: 4px 16px;
+    margin: 2px;
+}
+
+/* Mobile Styling */
+
+@media only screen and (max-width: 767px) {
+    .login-form input {
+        width: 100%;
+    }
+}
