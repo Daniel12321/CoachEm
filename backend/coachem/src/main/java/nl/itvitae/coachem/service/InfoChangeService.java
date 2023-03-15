@@ -3,6 +3,7 @@ package nl.itvitae.coachem.service;
 import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
+import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.repository.InfoChangeRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
 import nl.itvitae.coachem.util.ListUtil;
@@ -29,29 +30,34 @@ public class InfoChangeService {
                 .toList();
     }
 
-    public InfoChangeDto addInfoChangeRequest(Long id, InfoChangeDto infoChangeDto) {
-        if (personRepository.findById(id).isEmpty()) {
+    public InfoChangeDto addInfoChangeRequest(InfoChangeDto dto) {
+        Long id = User.getFromAuth().getId();
+        Person person = personRepository.findById(id).orElse(null);
+
+        if (person == null)
             return null;
-        }
-        Person person = personRepository.findById(id).get();
-        InfoChange infoChange = mapper.post(infoChangeDto);
+
+        InfoChange infoChange = mapper.post(dto);
         if (person.getInfoChange() != null) {
             infoChange = mapper.update(mapper.get(infoChange), person.getInfoChange());
             infoChangeRepository.save(infoChange);
             return mapper.get(infoChange);
         }
+
         infoChange.setPerson(person);
         infoChangeRepository.save(infoChange);
+
         person.setInfoChange(infoChange);
         personRepository.save(person);
+
         return mapper.get(infoChange);
     }
 
     public boolean deleteInfoChangeById(Long id) {
-        if (!infoChangeRepository.existsById(id)) {
+        InfoChange infoChange = infoChangeRepository.findById(id).orElse(null);
+        if (infoChange == null)
             return false;
-        }
-        InfoChange infoChange = infoChangeRepository.findById(id).get();
+
         Person person = infoChange.getPerson();
         person.setInfoChange(null);
         personRepository.save(person);

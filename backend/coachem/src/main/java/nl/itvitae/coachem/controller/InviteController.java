@@ -1,8 +1,6 @@
 package nl.itvitae.coachem.controller;
 
-import nl.itvitae.coachem.dto.EvaluationDto;
 import nl.itvitae.coachem.dto.InviteDto;
-import nl.itvitae.coachem.model.Invite;
 import nl.itvitae.coachem.service.InviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
