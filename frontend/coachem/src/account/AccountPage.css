@@ -1,0 +1,11 @@
+.accountpage form {
+    display: flex;
+    flex-direction: column;
+}
+
+.accountpage form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
