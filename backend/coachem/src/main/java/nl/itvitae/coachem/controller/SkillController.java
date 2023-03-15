@@ -40,7 +40,7 @@ public class SkillController {
         }
     }
 
-    @PutMapping("update/by_id/{id}")
+    @PutMapping("/update/by_id/{id}")
     public ResponseEntity<SkillDTO> updateSkillById(@PathVariable(value = "id") Long id, @RequestBody SkillDTO skillDTO) {
         return skillService.updateSkillById(skillDTO, id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

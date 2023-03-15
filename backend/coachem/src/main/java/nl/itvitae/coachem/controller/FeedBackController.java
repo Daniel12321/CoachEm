@@ -32,7 +32,7 @@ public class FeedBackController {
         return feedbackService.getFeedbackByTraineeSkill(id);
     }
 
-    @PutMapping("update/by_id/{id}")
+    @PutMapping("/update/by_id/{id}")
     public ResponseEntity<FeedbackDTO> updateSkillById(@PathVariable(value = "id") Long id, @RequestBody FeedbackDTO feedbackDTO) {
         return feedbackService.updateFeedbackById(feedbackDTO, id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

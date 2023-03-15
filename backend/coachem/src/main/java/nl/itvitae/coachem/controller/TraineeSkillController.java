@@ -63,7 +63,7 @@ public class TraineeSkillController {
         }
     }
 
-    @PutMapping("update/by_id/{id}")
+    @PutMapping("/update/by_id/{id}")
     public ResponseEntity<TraineeSkillDTO> updateTraineeSkillById(@PathVariable(value = "id") Long id, @RequestBody TraineeSkillDTO traineeSkillDTO) {
         return traineeSkillService.updateTraineeSkillById(traineeSkillDTO, id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

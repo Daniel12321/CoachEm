@@ -27,7 +27,8 @@ public class SkillService {
                 skillDto.type() == null ||
                 skillDto.duration() == null ||
                 skillDto.time() == null ||
-                skillDto.description() == null) {
+                skillDto.description() == null ||
+                skillDto.category() == null) {
             return null;
         }
 
