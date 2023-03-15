@@ -1,0 +1,61 @@
+.skills {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 64px;
+}
+
+
+
+/* Filters */
+
+.skill-filters {
+    width: 200px;
+    border: solid black 1px;
+}
+
+.skill-filters h2 {
+    font-size: 2.8rem;
+    text-align: center;
+    padding: 8px 0;
+}
+
+.skill-filter {
+    padding: 6px 16px;
+    border-top: solid black 1px;
+}
+
+
+/* Duration Filter */
+
+.skill-filter-duration {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 32px;
+}
+
+.skill-filter-duration > p {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.skill-filter-duration input {
+    max-width: 40%;
+}
+
+
+
+/* List */
+
+.skill-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+.skill-item {
+    padding: 8px 16px;
+    border-radius: 4px;
+    background-color: #eefdff;
+}
