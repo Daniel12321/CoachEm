@@ -1,13 +1,9 @@
 package nl.itvitae.coachem.controller;
 
-import nl.itvitae.coachem.dto.EvaluationDto;
 import nl.itvitae.coachem.dto.InviteDto;
-import nl.itvitae.coachem.model.Invite;
-import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.service.InviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +21,8 @@ public class InviteController {
     }
 
     @GetMapping("/receivedinvites/{personid}")
-    public List<InviteDto> getReceivedInvitesByPersonId(/*@PathVariable(value = "personid") Long personId*/) {
-        Long id = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        return inviteService.getReceivedInvitesByPersonId(id);
+    public List<InviteDto> getReceivedInvitesByPersonId(@PathVariable(value = "personid") Long personId) {
+        return inviteService.getReceivedInvitesByPersonId(personId);
     }
 
     @GetMapping("/accept/{inviteid}")
