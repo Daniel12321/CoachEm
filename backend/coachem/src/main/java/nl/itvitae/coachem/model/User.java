@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,9 +27,11 @@ public class User implements UserDetails {
     @Nonnull private String password;
     @Nonnull private String role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<TraineeSkill> traineeSkills = new ArrayList<TraineeSkill>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Feedback> feedbacks = new ArrayList<Feedback>();
 

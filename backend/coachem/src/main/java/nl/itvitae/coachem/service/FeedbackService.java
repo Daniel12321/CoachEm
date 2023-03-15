@@ -1,7 +1,6 @@
 package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.FeedbackDTO;
-import nl.itvitae.coachem.dto.SkillDTO;
 import nl.itvitae.coachem.model.*;
 import nl.itvitae.coachem.repository.FeedbackRepository;
 import nl.itvitae.coachem.repository.TraineeSkillRepository;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,7 @@ public class FeedbackService {
     UserRepository userRepository;
 
     public FeedbackDTO newFeedback(FeedbackDTO feedBackDTO) {
-        if(feedBackDTO.time() == null){
+        if (feedBackDTO.time() == null) {
             return null;
         }
         Feedback feedback = feedbackRepository.save(mapper.post(feedBackDTO));
@@ -78,6 +79,17 @@ public class FeedbackService {
         tempUser.getFeedbacks().add(tempFeedback);
         feedbackRepository.save(tempFeedback);
         return true;
+    }
+
+    public List<FeedbackDTO> getFeedbackByTraineeSkill(Long id) {
+        Iterable<Feedback> feedbacks = feedbackRepository.findByTraineeSkillId(id);
+        System.out.println("iterable list success");
+
+        List<FeedbackDTO> templist = new ArrayList<FeedbackDTO>();
+        feedbacks.forEach(feedback -> {
+            templist.add(mapper.get(feedback));
+        });
+        return templist;
     }
 
 }

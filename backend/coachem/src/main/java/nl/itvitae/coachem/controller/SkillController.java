@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/skill")
@@ -15,18 +17,23 @@ public class SkillController {
     SkillService skillService;
 
     @PostMapping("/new")
-    public SkillDTO newSkill(@RequestBody SkillDTO skillDTO){
+    public SkillDTO newSkill(@RequestBody SkillDTO skillDTO) {
         return skillService.newSkill(skillDTO);
     }
 
     @GetMapping("/by_id/{id}")
-    public SkillDTO getSkillById(@PathVariable(value = "id")Long id){
+    public SkillDTO getSkillById(@PathVariable(value = "id") Long id) {
         return skillService.getSkillById(id);
+    }
+
+    @GetMapping("/all")
+    public List<SkillDTO> getAllSkills() {
+        return skillService.getAllSkills();
     }
 
     @DeleteMapping("/delete/by_id/{id}")
     public ResponseEntity<Void> deleteSkillById(@PathVariable(value = "id") Long id) {
-        if (skillService.deleteSkillById(id)){
+        if (skillService.deleteSkillById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
@@ -34,11 +41,10 @@ public class SkillController {
     }
 
     @PutMapping("update/by_id/{id}")
-    public ResponseEntity<SkillDTO> updateSkillById(@PathVariable(value = "id") Long id, @RequestBody SkillDTO skillDTO){
-        return skillService.updateSkillById(skillDTO,id).map(ResponseEntity::ok)
+    public ResponseEntity<SkillDTO> updateSkillById(@PathVariable(value = "id") Long id, @RequestBody SkillDTO skillDTO) {
+        return skillService.updateSkillById(skillDTO, id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
 
 
 }

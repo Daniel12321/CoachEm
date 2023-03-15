@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class TraineeSkill {
     private String time;
     private Boolean completed;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks = new ArrayList<Feedback>();
 

@@ -1,8 +1,6 @@
 package nl.itvitae.coachem.service;
 
-import nl.itvitae.coachem.dto.SkillDTO;
 import nl.itvitae.coachem.dto.TraineeSkillDTO;
-import nl.itvitae.coachem.model.Feedback;
 import nl.itvitae.coachem.model.Skill;
 import nl.itvitae.coachem.model.TraineeSkill;
 import nl.itvitae.coachem.model.User;
@@ -13,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,12 +32,12 @@ public class TraineeSkillService {
     TraineeSkillDTO.Mapper mapper;
 
     public TraineeSkillDTO newTraineeSkill(TraineeSkillDTO traineeSkillDTO) {
-       if(traineeSkillDTO.time() == null || traineeSkillDTO.completed() == null){
-           return null;
-       }
+        if (traineeSkillDTO.time() == null || traineeSkillDTO.completed() == null) {
+            return null;
+        }
 
         TraineeSkill traineeSkill = traineeSkillRepository.save(mapper.post(traineeSkillDTO));
-       return mapper.get(traineeSkill);
+        return mapper.get(traineeSkill);
     }
 
     public TraineeSkillDTO getTraineeSkillById(Long id) {
@@ -53,7 +53,7 @@ public class TraineeSkillService {
     }
 
     public Optional<TraineeSkillDTO> updateTraineeSkillById(TraineeSkillDTO traineeSkillDTO, Long traineeSkillid) {
-        if(!traineeSkillRepository.existsById(traineeSkillid)){
+        if (!traineeSkillRepository.existsById(traineeSkillid)) {
             return Optional.empty();
         }
         TraineeSkill traineeSkill = traineeSkillRepository.save(
@@ -65,7 +65,7 @@ public class TraineeSkillService {
 
 
     public Boolean addSkillToTraineeSkill(Long traineeSkillId, Long skillId) {
-        if(!traineeSkillRepository.existsById(traineeSkillId) || !skillRepository.existsById(skillId)){
+        if (!traineeSkillRepository.existsById(traineeSkillId) || !skillRepository.existsById(skillId)) {
             return false;
         }
         TraineeSkill tempTraineeSkill = traineeSkillRepository.findById(traineeSkillId).get();
@@ -87,5 +87,15 @@ public class TraineeSkillService {
         traineeSkillRepository.save(tempTraineeSkill);
         return true;
     }
+
+    public List<TraineeSkillDTO> getTraineeSkillByUser(Long id) {
+        Iterable<TraineeSkill> traineeSkills = traineeSkillRepository.findByUserId(id);
+        List<TraineeSkillDTO> templist = new ArrayList<TraineeSkillDTO>();
+        traineeSkills.forEach(traineeSkill -> {
+            templist.add(mapper.get(traineeSkill));
+        });
+        return templist;
+    }
+
 
 }

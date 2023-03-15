@@ -42,8 +42,6 @@ public class Person {
     @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
     private List<Invite> sentInvites;
 
-//    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
-//    private List<TraineeSkill> traineeSkill;
     @JsonIgnore
     @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites;
