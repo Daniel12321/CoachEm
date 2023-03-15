@@ -69,7 +69,6 @@ public class AuthService {
         try {
             this.authManager.authenticate(new UsernamePasswordAuthenticationToken(User.getFromAuth().getEmail(), request.oldPassword()));
         } catch (Exception exc) {
-            System.out.println("Failed auth check");
             return Optional.of(401);
         }
 

@@ -11,7 +11,23 @@ export default function AccountPage() {
 
     const updateInfo = (e) => {
         e.preventDefault();
-        console.log(e);
+
+        const body = {
+            name: e.target[0].value,
+            address: e.target[1].value,
+            city: e.target[2].value,
+            zipcode: e.target[3].value,
+            phonenumber: e.target[4].value,
+        };
+
+        fetch('http://127.0.0.1:8080/api/infochange/new', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        });
     };
 
     const updatePassword = (e) => {
@@ -51,28 +67,28 @@ export default function AccountPage() {
                         type="text"
                         name="address"
                         id="address"
-                        value={info.address}
+                        defaultValue={info.address}
                     />
                     <label htmlFor="city">City</label>
                     <input
                         type="text"
                         name="city"
                         id="city"
-                        value={info.city}
+                        defaultValue={info.city}
                     />
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
                         name="zipcode"
                         id="zipcode"
-                        value={info.zipcode}
+                        defaultValue={info.zipcode}
                     />
                     <label htmlFor="phonenumber">Phonenumber</label>
                     <input
                         type="text"
                         name="phonenumber"
                         id="phonenumber"
-                        value={info.phonenumber}
+                        defaultValue={info.phonenumber}
                     />
                     <input type="submit" value="Update Information" />
                 </form>
