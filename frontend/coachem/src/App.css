@@ -44,9 +44,9 @@ h1 {
 
 /* Mobile styling */
 @media only screen and (max-width: 767px) {
-    h1 {
+    /* h1 {
         margin: 0 0 16px 0;
-    }
+    } */
 
     .container {
         padding: 0 12px;

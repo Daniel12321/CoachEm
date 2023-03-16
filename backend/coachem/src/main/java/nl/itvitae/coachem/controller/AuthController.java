@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.controller;
 
+import nl.itvitae.coachem.dto.PasswordChangeRequestDto;
 import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.dto.auth.LoginRequestDto;
 import nl.itvitae.coachem.dto.auth.LoginResponseDto;
@@ -29,5 +30,11 @@ public class AuthController {
         return this.service.register(request)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PostMapping("/change_password")
+    public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeRequestDto request) {
+        int status = this.service.changePassword(request).orElse(400);
+        return ResponseEntity.status(status).build();
     }
 }

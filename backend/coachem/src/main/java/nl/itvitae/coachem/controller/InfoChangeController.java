@@ -20,9 +20,9 @@ public class InfoChangeController {
         return infoChangeService.getAllInfoChanges();
     }
 
-    @PostMapping("/new/{personid}")
-    public InfoChangeDto addInfoChangeRequest(@PathVariable(value = "personid") Long personId, @RequestBody InfoChangeDto infoChangeDto) {
-        return infoChangeService.addInfoChangeRequest(personId, infoChangeDto);
+    @PostMapping("/new")
+    public InfoChangeDto addInfoChangeRequest(@RequestBody InfoChangeDto dto) {
+        return infoChangeService.addInfoChangeRequest(dto);
     }
 
     @DeleteMapping("/delete/{infochangeid}")
