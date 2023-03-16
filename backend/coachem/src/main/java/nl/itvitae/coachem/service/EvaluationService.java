@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class EvaluationService {
+
     @Autowired
     private EvaluationRepository evaluationRepository;
 
@@ -37,23 +39,17 @@ public class EvaluationService {
                 .toList();
     }
 
-    public EvaluationDto addEvaluation(EvaluationDto evaluationDto, Long attendeeId, Long traineeId) {
-        if (evaluationDto.time() == null ||
-                personRepository.findById(attendeeId).isEmpty() ||
-                personRepository.findById(traineeId).isEmpty()) {
-            return null;
-        }
-        Person attendee = personRepository.findById(attendeeId).get();
-        Person trainee = personRepository.findById(traineeId).get();
-        Evaluation evaluation = mapper.post(evaluationDto);
+    public Optional<EvaluationDto> addEvaluation(EvaluationDto dto, Long attendeeId, Long traineeId) {
+        Person attendee = personRepository.findById(attendeeId).orElse(null);
+        Person trainee = personRepository.findById(traineeId).orElse(null);
+        if (attendee == null || trainee == null)
+            return Optional.empty();
+
+        Evaluation evaluation = mapper.post(dto);
         evaluation.setAttendee(attendee);
         evaluation.setTrainee(trainee);
         evaluation = evaluationRepository.save(evaluation);
-        attendee.getEvaluatingAttendees().add(evaluation);
-        trainee.getEvaluatedTrainees().add(evaluation);
-        personRepository.save(attendee);
-        personRepository.save(trainee);
-        return mapper.get(evaluation);
+        return Optional.of(mapper.get(evaluation));
     }
 
     public boolean deleteEvaluationById(Long id) {

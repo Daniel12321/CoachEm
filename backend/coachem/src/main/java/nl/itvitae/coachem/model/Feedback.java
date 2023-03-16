@@ -18,11 +18,11 @@ public class Feedback {
     private String time;
 
     @ManyToOne
-    @JoinColumn(name="traineeSkill_id")
-    TraineeSkill traineeSkill;
+    @JoinColumn(name="trainee_skill_id")
+    private TraineeSkill traineeSkill;
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    User user;
+    private User user;
 
 }

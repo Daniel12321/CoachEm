@@ -8,5 +8,6 @@ import java.util.List;
 
 @Component
 public interface FeedbackRepository extends CrudRepository<Feedback,Long> {
+
     List<Feedback> findByTraineeSkillId(Long id);
 }
