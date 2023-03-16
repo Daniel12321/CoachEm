@@ -1,8 +1,10 @@
 package nl.itvitae.coachem.dto;
 
-public record UserDto(String email, String role) {
+import nl.itvitae.coachem.model.User;
+
+public record UserDto(Long id, String email, String role) {
 
     @org.mapstruct.Mapper(componentModel = "spring")
-    public interface Mapper {
+    public interface Mapper extends IEntityMapper<User, UserDto> {
     }
 }

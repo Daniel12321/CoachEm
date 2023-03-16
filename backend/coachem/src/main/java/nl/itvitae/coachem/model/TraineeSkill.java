@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class TraineeSkill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,7 +25,7 @@ public class TraineeSkill {
 
     @JsonIgnore
     @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks = new ArrayList<Feedback>();
+    private List<Feedback> feedbacks = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="skill_id")
@@ -33,7 +34,14 @@ public class TraineeSkill {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name="user_id")
-    User user;
+    private User user;
 
-
+    public TraineeSkill(String progress, String report, String time, Boolean completed, Skill skill, User user) {
+        this.progress = progress;
+        this.report = report;
+        this.time = time;
+        this.completed = completed;
+        this.skill = skill;
+        this.user = user;
+    }
 }

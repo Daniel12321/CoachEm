@@ -12,27 +12,30 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/evaluation")
 public class EvaluationController {
+
     @Autowired
     private EvaluationService evaluationService;
 
     @GetMapping("/trainee/{personid}")
-    public List<EvaluationDto> getEvaluationsByTraineeId(@PathVariable(value = "personid") Long personId) {
+    public List<EvaluationDto> getEvaluationsByTraineeId(@PathVariable("personid") Long personId) {
         return evaluationService.getEvaluationsByTraineeId(personId);
     }
 
     @GetMapping("/attendee/{personid}")
-    public List<EvaluationDto> getEvaluationsByAttendeeId(@PathVariable(value = "personid") Long personId) {
+    public List<EvaluationDto> getEvaluationsByAttendeeId(@PathVariable("personid") Long personId) {
         return evaluationService.getEvaluationsByAttendeeId(personId);
     }
 
     @PostMapping("/new/{attendeeid}/{traineeid}")
-    public EvaluationDto addEvaluation(@RequestBody EvaluationDto evaluationDto, @PathVariable(value = "attendeeid") Long attendeeId, @PathVariable(value = "traineeid") Long traineeId) {
-        return evaluationService.addEvaluation(evaluationDto, attendeeId, traineeId);
+    public ResponseEntity<EvaluationDto> addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("attendeeid") Long attendeeId, @PathVariable("traineeid") Long traineeId) {
+        return evaluationService.addEvaluation(evaluation, attendeeId, traineeId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @DeleteMapping("/delete/{evaluationid}")
-    public ResponseEntity<Void> deleteEvaluation(@PathVariable(value = "evaluationid") Long evaluationId) {
-        if (evaluationService.deleteEvaluationById(evaluationId)) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteEvaluation(@PathVariable("id") Long id) {
+        if (evaluationService.deleteEvaluationById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

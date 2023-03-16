@@ -16,12 +16,15 @@ import java.util.List;
 @Service
 @Transactional
 public class InfoChangeService {
+
     @Autowired
     private InfoChangeRepository infoChangeRepository;
-    @Autowired
-    private InfoChangeDto.Mapper mapper;
+
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private InfoChangeDto.Mapper mapper;
 
     public List<InfoChangeDto> getAllInfoChanges() {
         return ListUtil.toList(infoChangeRepository.findAll())

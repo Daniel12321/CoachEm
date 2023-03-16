@@ -14,7 +14,6 @@ public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Boolean accepted;
     private String time;
 

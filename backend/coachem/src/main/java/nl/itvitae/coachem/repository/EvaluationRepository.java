@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface EvaluationRepository extends CrudRepository<Evaluation, Long> {
+
     List<Evaluation> findByTraineeId(Long traineeId);
     List<Evaluation> findByAttendeeId(Long traineeId);
 }
