@@ -39,7 +39,7 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                    .requestMatchers("/api/auth/register").hasAuthority("HR")
+//                    .requestMatchers("/api/auth/register").hasAuthority("HR")
                     .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/skills/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER", "HR")
 //                .anyRequest().authenticated()

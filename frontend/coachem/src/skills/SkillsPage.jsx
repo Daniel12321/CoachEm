@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './SkillsPage.css';
 
 const defCats = [
@@ -31,6 +32,7 @@ const defSkills = [
         name: 'Learn React: Expert',
         category: 'javascript',
         duration: 6,
+        completed: false,
     },
     {
         id: 4,
@@ -38,6 +40,7 @@ const defSkills = [
         name: 'Learn Spring Boot',
         category: 'java',
         duration: 7,
+        completed: false,
     },
     {
         id: 5,
@@ -45,6 +48,7 @@ const defSkills = [
         name: 'Learn Mapstruct',
         category: 'java',
         duration: 1,
+        completed: true,
     },
     {
         id: 6,
@@ -52,6 +56,7 @@ const defSkills = [
         name: 'Learn Java Generics',
         category: 'java',
         duration: 2,
+        completed: true,
     },
     {
         id: 7,
@@ -59,6 +64,7 @@ const defSkills = [
         name: 'Learn SQL basics',
         category: 'sql',
         duration: 4,
+        completed: true,
     },
     {
         id: 8,
@@ -66,6 +72,7 @@ const defSkills = [
         name: 'Learn SQL: Advanced',
         category: 'sql',
         duration: 6,
+        completed: true,
     },
     {
         id: 9,
@@ -73,6 +80,7 @@ const defSkills = [
         name: 'Learn SQL: Expert',
         category: 'sql',
         duration: 6,
+        completed: true,
     },
     {
         id: 10,
@@ -80,16 +88,18 @@ const defSkills = [
         name: 'Learn NoSQL',
         category: 'sql',
         duration: 6,
+        completed: false,
     },
     {
         id: 11,
         type: 'soft',
         name: 'Learn to make personal goals',
         category: 'personal',
+        completed: false,
     },
 ];
 
-export default function SkillsPage() {
+export default function SkillsPage(props) {
     const [skills, setSkills] = useState([]);
     const [categories, setCategories] = useState([]);
 
@@ -143,14 +153,16 @@ export default function SkillsPage() {
                 </div>
                 <div className="skill-list">
                     {filteredSkills.map((skill) => (
-                        <div key={skill.id} className="skill-item">
-                            <h3>{skill.name}</h3>
-                            <p>
-                                Deze skill heeft op dit moment nog geen
-                                omschrijving. Dit moet nog worden toegevoegd.
-                                Komt nog!
-                            </p>
-                        </div>
+                        <Link key={skill.id} to={`/skill/${skill.id}`}>
+                            <div className="skill-item">
+                                <h3>{skill.name}</h3>
+                                <p>
+                                    Deze skill heeft op dit moment nog geen
+                                    omschrijving. Dit moet nog worden
+                                    toegevoegd. Komt nog!
+                                </p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
             </div>
