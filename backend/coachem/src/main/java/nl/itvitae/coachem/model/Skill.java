@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Skill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,7 +24,17 @@ public class Skill {
     private String time;
     private Integer duration;
     private String category;
+
     @JsonIgnore
     @OneToMany(mappedBy = "skill",cascade = CascadeType.ALL)
-    private List<TraineeSkill> traineeSkills = new ArrayList<TraineeSkill>();
+    private List<TraineeSkill> traineeSkills = new ArrayList<>();
+
+    public Skill(String name, Boolean type, String description, String time, Integer duration, String category) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.time = time;
+        this.duration = duration;
+        this.category = category;
+    }
 }

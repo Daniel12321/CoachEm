@@ -1,7 +1,9 @@
 package nl.itvitae.coachem.service;
 
-import nl.itvitae.coachem.dto.FeedbackDTO;
-import nl.itvitae.coachem.model.*;
+import nl.itvitae.coachem.dto.FeedbackDto;
+import nl.itvitae.coachem.model.Feedback;
+import nl.itvitae.coachem.model.TraineeSkill;
+import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.repository.FeedbackRepository;
 import nl.itvitae.coachem.repository.TraineeSkillRepository;
 import nl.itvitae.coachem.repository.UserRepository;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,30 +19,43 @@ import java.util.Optional;
 public class FeedbackService {
 
     @Autowired
-    FeedbackRepository feedbackRepository;
+    private FeedbackRepository feedbackRepository;
 
     @Autowired
-    TraineeSkillRepository traineeSkillRepository;
+    private TraineeSkillRepository traineeSkillRepository;
 
     @Autowired
-    FeedbackDTO.Mapper mapper;
+    private UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private FeedbackDto.Mapper mapper;
 
-    public FeedbackDTO newFeedback(FeedbackDTO feedBackDTO) {
-        if (feedBackDTO.time() == null) {
-            return null;
-        }
-        Feedback feedback = feedbackRepository.save(mapper.post(feedBackDTO));
-        return mapper.get(feedback);
+    public Optional<FeedbackDto> newFeedback(FeedbackDto dto, Long userId, Long traineeSkillId) {
+        if (!dto.isValid())
+            return Optional.empty();
+
+        User user = userRepository.findById(userId).orElse(null);
+        TraineeSkill skill = traineeSkillRepository.findById(traineeSkillId).orElse(null);
+        if (user == null || skill == null)
+            return Optional.empty();
+
+        Feedback feedback = mapper.post(dto);
+        feedback.setUser(user);
+        feedback.setTraineeSkill(skill);
+        return Optional.of(mapper.get(feedbackRepository.save(feedback)));
     }
 
-    public FeedbackDTO getFeedbackById(Long id) {
-        return mapper.get(feedbackRepository.findById(id).get());
+    public Optional<FeedbackDto> getFeedback(Long id) {
+        return feedbackRepository.findById(id).map(mapper::get);
     }
 
-    public boolean deleteFeedbackById(Long id) {
+    public Optional<FeedbackDto> updateFeedback(FeedbackDto dto, Long id) {
+        return feedbackRepository
+                .findById(id)
+                .map(feedback -> mapper.get(feedbackRepository.save(mapper.update(dto, feedback))));
+    }
+
+    public boolean deleteFeedback(Long id) {
         if (feedbackRepository.existsById(id)) {
             feedbackRepository.deleteById(id);
             return true;
@@ -49,47 +63,7 @@ public class FeedbackService {
         return false;
     }
 
-    public Optional<FeedbackDTO> updateFeedbackById(FeedbackDTO feedbackDTO, Long feedbackId) {
-        if (!feedbackRepository.existsById(feedbackId)) {
-            return Optional.empty();
-        }
-        Feedback feedback = feedbackRepository.save(mapper.update(feedbackDTO, feedbackRepository.findById(feedbackId).get()));
-        return Optional.of(mapper.get(feedback));
+    public List<FeedbackDto> getFeedbackByTraineeSkill(Long id) {
+        return feedbackRepository.findByTraineeSkillId(id).stream().map(mapper::get).toList();
     }
-
-    public Boolean addTraineeSkillToFeedback(Long feedbackId, Long traineeSkillId) {
-        if (!feedbackRepository.existsById(feedbackId) || !traineeSkillRepository.existsById(traineeSkillId)) {
-            return false;
-        }
-        Feedback tempFeedback = feedbackRepository.findById(feedbackId).get();
-        TraineeSkill tempTraineeSkill = traineeSkillRepository.findById(traineeSkillId).get();
-        tempFeedback.setTraineeSkill(tempTraineeSkill);
-        tempTraineeSkill.getFeedbacks().add(tempFeedback);
-        feedbackRepository.save(tempFeedback);
-        return true;
-    }
-
-    public Boolean addUserToFeedback(Long feedbackId, Long userId) {
-        if (!feedbackRepository.existsById(feedbackId) || !userRepository.existsById(userId)) {
-            return false;
-        }
-        Feedback tempFeedback = feedbackRepository.findById(feedbackId).get();
-        User tempUser = userRepository.findById(userId).get();
-        tempFeedback.setUser(tempUser);
-        tempUser.getFeedbacks().add(tempFeedback);
-        feedbackRepository.save(tempFeedback);
-        return true;
-    }
-
-    public List<FeedbackDTO> getFeedbackByTraineeSkill(Long id) {
-        Iterable<Feedback> feedbacks = feedbackRepository.findByTraineeSkillId(id);
-        System.out.println("iterable list success");
-
-        List<FeedbackDTO> templist = new ArrayList<FeedbackDTO>();
-        feedbacks.forEach(feedback -> {
-            templist.add(mapper.get(feedback));
-        });
-        return templist;
-    }
-
 }

@@ -26,15 +26,15 @@ public class PersonController {
     }
 
     @PutMapping("/infochange/{infochangeid}")
-    public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable(value = "infochangeid") Long infoChangeId) {
+    public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable("infochangeid") Long infoChangeId) {
         return personService.acceptInfoChange(infoChangeId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{infochangeid}")
-    public ResponseEntity<Void> deletePersonById(@PathVariable(value = "infochangeid") Long infoChangeId) {
-        if (personService.deletePersonById(infoChangeId)) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deletePersonById(@PathVariable("id") Long id) {
+        if (personService.deletePerson(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

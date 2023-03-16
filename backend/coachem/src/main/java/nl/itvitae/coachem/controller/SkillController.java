@@ -1,6 +1,6 @@
 package nl.itvitae.coachem.controller;
 
-import nl.itvitae.coachem.dto.SkillDTO;
+import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,37 +14,40 @@ import java.util.List;
 public class SkillController {
 
     @Autowired
-    SkillService skillService;
+    private SkillService skillService;
 
     @PostMapping("/new")
-    public SkillDTO newSkill(@RequestBody SkillDTO skillDTO) {
-        return skillService.newSkill(skillDTO);
+    public ResponseEntity<SkillDto> newSkill(@RequestBody SkillDto skill) {
+        return skillService.newSkill(skill)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/by_id/{id}")
-    public SkillDTO getSkillById(@PathVariable(value = "id") Long id) {
-        return skillService.getSkillById(id);
+    @GetMapping("/get/{id}")
+    public ResponseEntity<SkillDto> getSkillById(@PathVariable("id") Long id) {
+        return skillService.getSkillById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
-    public List<SkillDTO> getAllSkills() {
+    public List<SkillDto> getAllSkills() {
         return skillService.getAllSkills();
     }
 
-    @DeleteMapping("/delete/by_id/{id}")
-    public ResponseEntity<Void> deleteSkillById(@PathVariable(value = "id") Long id) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<SkillDto> updateSkillById(@PathVariable("id") Long id, @RequestBody SkillDto skill) {
+        return skillService.updateSkillById(skill, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteSkillById(@PathVariable("id") Long id) {
         if (skillService.deleteSkillById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @PutMapping("/update/by_id/{id}")
-    public ResponseEntity<SkillDTO> updateSkillById(@PathVariable(value = "id") Long id, @RequestBody SkillDTO skillDTO) {
-        return skillService.updateSkillById(skillDTO, id).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-
 }

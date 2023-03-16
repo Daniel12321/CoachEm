@@ -2,14 +2,20 @@ package nl.itvitae.coachem.config;
 
 import jakarta.transaction.Transactional;
 import nl.itvitae.coachem.model.Person;
+import nl.itvitae.coachem.model.Skill;
+import nl.itvitae.coachem.model.TraineeSkill;
 import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.repository.SkillRepository;
+import nl.itvitae.coachem.repository.TraineeSkillRepository;
 import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class DefaultUsers {
@@ -19,6 +25,12 @@ public class DefaultUsers {
 
     @Autowired
     private PersonRepository personRepo;
+
+    @Autowired
+    private SkillRepository skillRepo;
+
+    @Autowired
+    private TraineeSkillRepository traineeSkillRepo;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -42,5 +54,8 @@ public class DefaultUsers {
         this.personRepo.save(coachP);
         this.personRepo.save(managerP);
         this.personRepo.save(hrP);
+
+        Skill skill = this.skillRepo.save(new Skill("Learn React: Basics", false, "", "2023-01-01 12:00", 6, "Javascript"));
+        this.traineeSkillRepo.save(new TraineeSkill("", "", "2023:01:01 12:00", false, skill, trainee));
     }
 }
