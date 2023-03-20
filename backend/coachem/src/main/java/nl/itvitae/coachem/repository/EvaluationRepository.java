@@ -10,5 +10,4 @@ import java.util.List;
 public interface EvaluationRepository extends CrudRepository<Evaluation, Long> {
 
     List<Evaluation> findByTraineeId(Long traineeId);
-    List<Evaluation> findByAttendeeId(Long traineeId);
 }

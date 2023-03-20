@@ -39,8 +39,9 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                    .requestMatchers("/api/auth/register").hasAuthority("HR")
+                    .requestMatchers("/error").anonymous() // Allow anonymous access to /error to enable throwing status exceptions
                     .requestMatchers("/api/auth/login").permitAll()
+                    .requestMatchers("/api/auth/register").hasAuthority("HR")
                     .requestMatchers("/api/skills/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER", "HR")
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll()
@@ -53,7 +54,7 @@ public class AuthenticationConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository repo) throws Exception {
+    public UserDetailsService userDetailsService(UserRepository repo) {
         return email -> repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User: %s, not found", email)));
     }
 

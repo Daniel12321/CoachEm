@@ -7,7 +7,7 @@ import LoginPage from './login/LoginPage';
 import AccountPage from './account/AccountPage';
 import SkillsPage from './skills/SkillsPage';
 import SkillPage from './skills/SkillPage';
-import EvaluationsPage from './meetings/EvaluationsPage';
+import EvaluationsPage from './evaluations/EvaluationsPage';
 import InvitationsPage from './invitations/InvitationsPage';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
@@ -16,6 +16,7 @@ import './App.css';
 
 export default function App() {
     const [role, setRole] = useState(localStorage.getItem('user_role'));
+    // const [role, setRole] = useState('trainee');
 
     if (!role) {
         return (
