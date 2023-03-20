@@ -25,6 +25,11 @@ public class PersonController {
         return personService.getAllPersons();
     }
 
+    @GetMapping("/trainees")
+    public List<PersonDto> getAllTrainees() {
+        return personService.getAllTrainees();
+    }
+
     @PutMapping("/infochange/{infochangeid}")
     public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable(value = "infochangeid") Long infoChangeId) {
         return personService.acceptInfoChange(infoChangeId)
