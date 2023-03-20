@@ -2,7 +2,7 @@ package nl.itvitae.coachem.dto;
 
 import nl.itvitae.coachem.model.Feedback;
 
-public record FeedbackDto(Long id, String time, String text, TraineeSkillDto traineeSkill, UserDto user) {
+public record FeedbackDto(Long id, String time, String text, Boolean notified, TraineeSkillDto traineeSkill, UserDto user) {
 
     public boolean isValid() {
         return time != null;
