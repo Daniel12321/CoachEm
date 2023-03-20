@@ -14,17 +14,21 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class TraineeSkill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String progress;
     private String report;
     private String time;
     private Boolean completed;
 
     @JsonIgnore
     @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks = new ArrayList<Feedback>();
+    private List<Feedback> feedbacks = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "traineeSkill", cascade = CascadeType.ALL)
+    private List<Progress> progress = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="skill_id")
@@ -33,7 +37,13 @@ public class TraineeSkill {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name="user_id")
-    User user;
+    private User user;
 
-
+    public TraineeSkill(String progress, String report, String time, Boolean completed, Skill skill, User user) {
+        this.report = report;
+        this.time = time;
+        this.completed = completed;
+        this.skill = skill;
+        this.user = user;
+    }
 }

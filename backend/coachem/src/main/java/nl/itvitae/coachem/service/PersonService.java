@@ -62,7 +62,7 @@ public class PersonService {
         return Optional.of(mapper.get(person));
     }
 
-    public boolean deletePersonById(Long id) {
+    public boolean deletePerson(Long id) {
         if (!personRepository.existsById(id)) {
             return false;
         }

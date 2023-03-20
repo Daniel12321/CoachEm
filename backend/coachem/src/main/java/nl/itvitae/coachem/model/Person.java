@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,20 +32,16 @@ public class Person {
     private InfoChange infoChange;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
-    private List<Evaluation> evaluatedTrainees;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
-    private List<Evaluation> evaluatingAttendees;
+    @ManyToMany(mappedBy = "attendees")
+    private List<Evaluation> evaluations = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
-    private List<Invite> sentInvites;
+    private List<Invite> sentInvites = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
-    private List<Invite> receivedInvites;
+    private List<Invite> receivedInvites = new ArrayList<>();
 
     public Person(String name) {
         this.name = name;

@@ -4,6 +4,7 @@ export default function AccountAddPage() {
     const [password, setPassword] = useState(generatePassword());
 
     function addAccount(e) {
+        e.preventDefault();
         const data = {
             name: e.target[0].value,
             email: e.target[1].value,
@@ -15,10 +16,11 @@ export default function AccountAddPage() {
             role: e.target[7].value,
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`http://localhost:8082/api/person/register`, {
+        fetch(`http://localhost:8080/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
             body: dataJSON,
         })
@@ -65,7 +67,7 @@ export default function AccountAddPage() {
                     <label htmlFor="password">Password: </label>
                     <input
                         id="password"
-                        type="text"
+                        type="password"
                         value={password}
                         maxLength={20}
                         minLength={8}

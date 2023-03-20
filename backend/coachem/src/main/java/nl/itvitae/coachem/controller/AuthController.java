@@ -1,6 +1,6 @@
 package nl.itvitae.coachem.controller;
 
-import nl.itvitae.coachem.dto.PasswordChangeRequestDto;
+import nl.itvitae.coachem.dto.auth.PasswordChangeRequestDto;
 import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.dto.auth.LoginRequestDto;
 import nl.itvitae.coachem.dto.auth.LoginResponseDto;

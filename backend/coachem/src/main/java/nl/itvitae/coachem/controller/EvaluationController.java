@@ -12,30 +12,46 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/evaluation")
 public class EvaluationController {
+
     @Autowired
     private EvaluationService evaluationService;
 
-    @GetMapping("/trainee/{personid}")
-    public List<EvaluationDto> getEvaluationsByTraineeId(@PathVariable(value = "personid") Long personId) {
-        return evaluationService.getEvaluationsByTraineeId(personId);
+    @PostMapping("/new/{traineeid}")
+    public ResponseEntity<EvaluationDto> addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("traineeid") Long traineeId) {
+        return evaluationService.addEvaluation(evaluation, traineeId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/attendee/{personid}")
-    public List<EvaluationDto> getEvaluationsByAttendeeId(@PathVariable(value = "personid") Long personId) {
-        return evaluationService.getEvaluationsByAttendeeId(personId);
+    @PostMapping("/{id}/{attendeeid}")
+    public EvaluationDto addEvaluationAttendee(@PathVariable("id") Long evaluationId, @PathVariable("attendeeid") Long attendeeId) {
+        return evaluationService.addAttendee(evaluationId, attendeeId);
     }
 
-    @PostMapping("/new/{attendeeid}/{traineeid}")
-    public EvaluationDto addEvaluation(@RequestBody EvaluationDto evaluationDto, @PathVariable(value = "attendeeid") Long attendeeId, @PathVariable(value = "traineeid") Long traineeId) {
-        return evaluationService.addEvaluation(evaluationDto, attendeeId, traineeId);
+    @GetMapping("/trainee")
+    public List<EvaluationDto> getEvaluationsAsTrainee() {
+        return evaluationService.getEvaluationsAsTrainee();
     }
 
-    @DeleteMapping("/delete/{evaluationid}")
-    public ResponseEntity<Void> deleteEvaluation(@PathVariable(value = "evaluationid") Long evaluationId) {
-        if (evaluationService.deleteEvaluationById(evaluationId)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/attendee")
+    public List<EvaluationDto> getEvaluationsAsAttendee() {
+        return evaluationService.getEvaluationsAsAttendee();
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<EvaluationDto> updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
+        return evaluationService.updateEvaluation(evaluation, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}/{attendeeid}")
+    public void deleteEvaluationAttendee(@PathVariable("id") Long id, @PathVariable("attendeeid") Long attendeeId) {
+        this.evaluationService.deleteAttendee(id, attendeeId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteEvaluation(@PathVariable("id") Long id) {
+        this.evaluationService.deleteEvaluation(id);
     }
 }

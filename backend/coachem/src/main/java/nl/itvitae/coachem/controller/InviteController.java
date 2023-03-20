@@ -12,32 +12,39 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/invite")
 public class InviteController {
+
     @Autowired
     private InviteService inviteService;
 
-    @GetMapping("/sentinvites/{personid}")
-    public List<InviteDto> getSentInvitesByPersonId(@PathVariable(value = "personid") Long personId) {
+    @GetMapping("/sent/{personid}")
+    public List<InviteDto> getSentInvitesByPersonId(@PathVariable("personid") Long personId) {
         return inviteService.getSentInvitesByPersonId(personId);
     }
 
-    @GetMapping("/receivedinvites/{personid}")
-    public List<InviteDto> getReceivedInvitesByPersonId(@PathVariable(value = "personid") Long personId) {
+    @GetMapping("/received/{personid}")
+    public List<InviteDto> getReceivedInvitesByPersonId(@PathVariable("personid") Long personId) {
         return inviteService.getReceivedInvitesByPersonId(personId);
     }
 
-    @GetMapping("/accept/{inviteid}")
-    public void acceptInviteRequest(@PathVariable(value = "inviteid") Long inviteId) {
-        inviteService.acceptInviteRequest(inviteId);
+    @GetMapping("/accept/{id}")
+    public ResponseEntity<Void> acceptInviteRequest(@PathVariable("id") Long id) {
+        if (inviteService.acceptInviteRequest(id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/new/{invitesenderid}/{invitereceiverid}")
-    public InviteDto addInvite(@RequestBody InviteDto inviteDto, @PathVariable(value = "invitesenderid") Long inviteSenderId, @PathVariable(value = "invitereceiverid") Long inviteReceiverId) {
-        return inviteService.addInvite(inviteDto, inviteSenderId, inviteReceiverId);
+    @PostMapping("/new/{senderid}/{receiverid}")
+    public ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("senderid") Long senderId, @PathVariable("receiverid") Long receiverId) {
+        return inviteService.addInvite(invite, senderId, receiverId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @DeleteMapping("/delete/{inviteid}")
-    public ResponseEntity<Void> deleteInviteById(@PathVariable(value = "inviteid") Long inviteId) {
-        if (inviteService.deleteInviteById(inviteId)) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteInviteById(@PathVariable("id") Long id) {
+        if (inviteService.deleteInviteById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

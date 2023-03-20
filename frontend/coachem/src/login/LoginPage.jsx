@@ -17,8 +17,9 @@ export default function LoginPage({ setRole }) {
             .then((resp) => resp.json())
             .then((data) => {
                 localStorage.setItem('access_token', data.token);
-                localStorage.setItem('user_role', data.role);
-                setRole(data.role);
+                localStorage.setItem('user_role', data.person.user.role);
+                localStorage.setItem('person', JSON.stringify(data.person));
+                setRole(data.person.user.role);
             });
     };
 
