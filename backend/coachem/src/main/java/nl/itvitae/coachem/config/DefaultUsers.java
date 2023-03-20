@@ -15,6 +15,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class DefaultUsers {
 
@@ -53,7 +55,7 @@ public class DefaultUsers {
         this.personRepo.save(managerP);
         this.personRepo.save(hrP);
 
-        Skill skill = this.skillRepo.save(new Skill("Learn React: Basics", false, "", "2023-01-01 12:00:00", 6, "Javascript"));
+        Skill skill = this.skillRepo.save(new Skill("Learn React: Basics", false, "we dont have a description yet but we will get one i promise", "2023-01-01 12:00", 6, "Javascript"));
         this.traineeSkillRepo.save(new TraineeSkill("", "", "2023:01:01 12:00:00", false, skill, trainee));
     }
 }
