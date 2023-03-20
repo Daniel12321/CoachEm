@@ -12,6 +12,6 @@ public interface FeedbackRepository extends CrudRepository<Feedback,Long> {
 
     List<Feedback> findByTraineeSkillId(Long id);
 
-    @Query("SELECT f FROM Feedback f WHERE f.traineeskill.user.id = ?1 AND f.notified = 0")
+    @Query("SELECT f FROM Feedback f WHERE f.traineeSkill.user.id = ?1 AND f.notified = 0")
     List<Feedback> getAllUnseen(Long personId);
 }

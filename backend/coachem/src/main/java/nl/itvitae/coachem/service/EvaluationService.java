@@ -42,6 +42,7 @@ public class EvaluationService {
         Evaluation evaluation = mapper.post(dto);
         evaluation.setTrainee(trainee);
         evaluation.setAttendees(new ArrayList<>());
+        evaluation.setNotified(false);
         evaluation = evaluationRepository.save(evaluation);
         return Optional.of(mapper.get(evaluation));
     }

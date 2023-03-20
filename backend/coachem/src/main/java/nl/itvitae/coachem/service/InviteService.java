@@ -26,14 +26,14 @@ public class InviteService {
     private InviteDto.Mapper mapper;
 
     public List<InviteDto> getReceivedInvitesByPersonId(Long personId) {
-        return inviteRepository.findByInvitedPersonId(personId)
+        return inviteRepository.findByInvitedId(personId)
                 .stream()
                 .map(mapper::get)
                 .toList();
     }
 
     public List<InviteDto> getSentInvitesByPersonId(Long personId) {
-        return inviteRepository.findByInviterId(personId)
+        return inviteRepository.findByTraineeId(personId)
                 .stream()
                 .map(mapper::get)
                 .toList();

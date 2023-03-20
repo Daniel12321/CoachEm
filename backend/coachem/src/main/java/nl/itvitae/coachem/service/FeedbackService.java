@@ -42,6 +42,7 @@ public class FeedbackService {
         Feedback feedback = mapper.post(dto);
         feedback.setUser(user);
         feedback.setTraineeSkill(skill);
+        feedback.setNotified(false);
         return Optional.of(mapper.get(feedbackRepository.save(feedback)));
     }
 

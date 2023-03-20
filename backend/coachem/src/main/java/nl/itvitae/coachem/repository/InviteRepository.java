@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface InviteRepository extends CrudRepository<Invite, Long> {
 
-    List<Invite> findByInviterId(Long personId);
-    List<Invite> findByInvitedPersonId(Long personId);
+    List<Invite> findByTraineeId(Long personId);
+    List<Invite> findByInvitedId(Long personId);
 
     @Query("SELECT i FROM Invite i WHERE i.invited.id = ?1 AND i.accepted = 0")
     List<Invite> getAllUnseen(Long personId);
