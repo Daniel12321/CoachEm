@@ -49,6 +49,14 @@ public class FeedbackService {
         return feedbackRepository.findById(id).map(mapper::get);
     }
 
+    public List<FeedbackDto> getFeedbackByTraineeSkill(Long id) {
+        return feedbackRepository.findByTraineeSkillId(id).stream().map(mapper::get).toList();
+    }
+
+    public List<FeedbackDto> getAllUnseen(Long personId) {
+        return feedbackRepository.getAllUnseen(personId).stream().map(mapper::get).toList();
+    }
+
     public Optional<FeedbackDto> updateFeedback(FeedbackDto dto, Long id) {
         return feedbackRepository
                 .findById(id)
@@ -61,9 +69,5 @@ public class FeedbackService {
             return true;
         }
         return false;
-    }
-
-    public List<FeedbackDto> getFeedbackByTraineeSkill(Long id) {
-        return feedbackRepository.findByTraineeSkillId(id).stream().map(mapper::get).toList();
     }
 }

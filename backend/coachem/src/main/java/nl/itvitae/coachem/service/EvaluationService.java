@@ -80,6 +80,19 @@ public class EvaluationService {
                 .map(mapper::get).toList();
     }
 
+    public List<EvaluationDto> getAllUnseen(Long personId) {
+        return evaluationRepository.getAllUnseen(personId)
+                .stream().map(mapper::get).toList();
+    }
+
+    public List<EvaluationDto> getAllUnseenAttendees(Long personId) {
+        return evaluationAttendeeRepository.getAllUnseen(personId)
+                .stream()
+                .map(EvaluationAttendee::getEvaluation)
+                .map(mapper::get)
+                .toList();
+    }
+
     public Optional<EvaluationDto> updateEvaluation(EvaluationDto dto, Long id) {
         return evaluationRepository
                 .findById(id)

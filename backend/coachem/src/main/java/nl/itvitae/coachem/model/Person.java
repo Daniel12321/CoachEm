@@ -36,11 +36,11 @@ public class Person {
     private List<EvaluationAttendee> evaluations = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Invite> sentInvites = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "invited", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites = new ArrayList<>();
 
     public Person(String name) {
