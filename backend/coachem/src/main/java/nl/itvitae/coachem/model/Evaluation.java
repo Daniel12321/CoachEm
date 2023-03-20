@@ -18,6 +18,7 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String time;
+    private Boolean notified;
 
     @ManyToOne
     @JoinColumn(name = "trainee_id")
