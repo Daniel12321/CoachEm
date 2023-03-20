@@ -30,6 +30,7 @@ export default function AccountUpdatePage() {
 
     
     const updateInfo = (e) => {
+        console.log("update")
         e.preventDefault();
 
         const body = {
@@ -40,7 +41,7 @@ export default function AccountUpdatePage() {
             phonenumber: e.target[4].value,
         };
 
-        fetch('http://127.0.0.1:8080/api/infochange/new', {
+       const res = fetch('http://127.0.0.1:8080/api/infochange/new', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -48,6 +49,8 @@ export default function AccountUpdatePage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         });
+        const data = res.json();
+        console.log(data);
     };
 
     // const updatePassword = (e) => {
