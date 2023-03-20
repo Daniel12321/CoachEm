@@ -50,7 +50,7 @@ export default function AccountsPage() {
                             key={account.id}
                             className="account-item"
                             onClick={() => {
-                                navigate(`/skills/${account.id}`);
+                                navigate(`/account-update/${account.id}`);
                             }}
                         >
                             <h3>{account.name}</h3>

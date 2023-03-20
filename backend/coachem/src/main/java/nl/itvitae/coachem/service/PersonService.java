@@ -77,5 +77,7 @@ public class PersonService {
                 .toList();
     }
 
-
+    public PersonDto getPersonById(Long id) {
+        return mapper.get(personRepository.findById(id).get());
+    }
 }

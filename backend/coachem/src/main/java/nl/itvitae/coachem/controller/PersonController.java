@@ -1,6 +1,7 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.TraineeSkillDTO;
 import nl.itvitae.coachem.service.InfoChangeService;
 import nl.itvitae.coachem.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class PersonController {
     @GetMapping("/trainees")
     public List<PersonDto> getAllTrainees() {
         return personService.getAllTrainees();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDto getPersonById(@PathVariable(value = "id") Long id) {
+        return personService.getPersonById(id);
     }
 
     @PutMapping("/infochange/{infochangeid}")

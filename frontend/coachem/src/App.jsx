@@ -12,6 +12,7 @@ import InvitationsPage from './invitations/InvitationsPage';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
 import AccountAddPage from './hr/AccountAddPage';
+import AccountUpdatePage from './hr/AccountUpdatePage';
 import './App.css';
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
                     <Route path="/trainees" element={<TraineesPage />} />
                     <Route path="/accounts" element={<AccountsPage />} />
                     <Route path="/account-add" element={<AccountAddPage />} />
+                    <Route path="/account-update/:id" element={<AccountUpdatePage />} />
                 </Routes>
             </div>
         </div>
