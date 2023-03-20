@@ -1,7 +1,7 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.PersonDto;
-import nl.itvitae.coachem.dto.TraineeSkillDTO;
+//import nl.itvitae.coachem.dto.TraineeSkillDTO;
 import nl.itvitae.coachem.service.InfoChangeService;
 import nl.itvitae.coachem.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;

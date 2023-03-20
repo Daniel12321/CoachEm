@@ -6,16 +6,16 @@ import { useNavigate } from 'react-router-dom';
 export default function AccountUpdatePage() {
 
   
-    const [trainees, setTrainees] = useState([]);
+    const [account, setAccounts] = useState([]);
 
 
     let { id } = useParams();
     useEffect(() => {
-        getAllTrainees();
+        getAccount();
     }, []);
 
 
-    async function getAllTrainees() {
+    async function getAccount() {
         const res = await fetch(`http://localhost:8080/api/person/${id}`, {
             method: 'GET',
             headers: {
@@ -24,12 +24,11 @@ export default function AccountUpdatePage() {
             },
         });
         const data = await res.json();
-        setTrainees(data);
-        console.log(data)
+        setAccounts(data);
     }
 
     
-    const updateInfo = (e) => {
+    const updateInfo = async (e) => {
         console.log("update")
         e.preventDefault();
 
@@ -41,7 +40,7 @@ export default function AccountUpdatePage() {
             phonenumber: e.target[4].value,
         };
 
-       const res = fetch('http://127.0.0.1:8080/api/infochange/new', {
+       const res = await fetch('http://127.0.0.1:8080/api/infochange/new', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -49,7 +48,7 @@ export default function AccountUpdatePage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         });
-        const data = res.json();
+        const data = await res.json();
         console.log(data);
     };
 
@@ -80,41 +79,41 @@ export default function AccountUpdatePage() {
           
             <div className="personal-info">
                 <h2>Personal Details</h2>
-                <form>
+                <form onSubmit={updateInfo}>
                     <label htmlFor="name">Name</label>
                     <input
                         type="text"
                         name="name"
                         id="name"
-                        defaultValue={trainees.name}
+                        defaultValue={account.name}
                     />
                     <label htmlFor="address">Address</label>
                     <input
                         type="text"
                         name="address"
                         id="address"
-                        defaultValue={trainees.address}
+                        defaultValue={account.address}
                     />
                     <label htmlFor="city">City</label>
                     <input
                         type="text"
                         name="city"
                         id="city"
-                        defaultValue={trainees.city}
+                        defaultValue={account.city}
                     />
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
                         name="zipcode"
                         id="zipcode"
-                        defaultValue={trainees.zipcode}
+                        defaultValue={account.zipcode}
                     />
                     <label htmlFor="phonenumber">Phonenumber</label>
                     <input
                         type="text"
                         name="phonenumber"
                         id="phonenumber"
-                        defaultValue={trainees.phonenumber}
+                        defaultValue={account.phonenumber}
                     />
                     <input type="submit" value="Update Information" />
                 </form>
