@@ -1,7 +1,6 @@
 package nl.itvitae.coachem.service;
 
-import nl.itvitae.coachem.dto.PersonDto;
-import nl.itvitae.coachem.dto.SkillDTO;
+import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.model.Skill;
 import nl.itvitae.coachem.repository.SkillRepository;
 import nl.itvitae.coachem.util.ListUtil;
@@ -17,30 +16,24 @@ import java.util.Optional;
 public class SkillService {
 
     @Autowired
-    SkillRepository skillRepository;
+    private SkillRepository skillRepository;
 
     @Autowired
-    SkillDTO.Mapper mapper;
+    private SkillDto.Mapper mapper;
 
-    public SkillDTO newSkill(SkillDTO skillDto) {
-        if (skillDto.name() == null ||
-                skillDto.type() == null ||
-                skillDto.duration() == null ||
-                skillDto.time() == null ||
-                skillDto.description() == null ||
-                skillDto.category() == null) {
-            return null;
-        }
+    public Optional<SkillDto> newSkill(SkillDto dto) {
+        if (!dto.isValid())
+            return Optional.empty();
 
-        Skill skill = skillRepository.save(mapper.post(skillDto));
-        return (mapper.get(skill));
+        Skill skill = skillRepository.save(mapper.post(dto));
+        return Optional.of(mapper.get(skill));
     }
 
-    public SkillDTO getSkillById(Long id) {
-        return mapper.get(skillRepository.findById(id).get());
+    public Optional<SkillDto> getSkillById(Long id) {
+        return skillRepository.findById(id).map(mapper::get);
     }
 
-    public List<SkillDTO> getAllSkills() {
+    public List<SkillDto> getAllSkills() {
         return ListUtil.toList(skillRepository.findAll())
                 .stream()
                 .map(mapper::get)
@@ -55,12 +48,12 @@ public class SkillService {
         return false;
     }
 
-    public Optional<SkillDTO> updateSkillById(SkillDTO skillDTO, Long id) {
-        if (!skillRepository.existsById(id)) {
+    public Optional<SkillDto> updateSkillById(SkillDto dto, Long id) {
+        Skill skill = skillRepository.findById(id).orElse(null);
+        if (skill == null)
             return Optional.empty();
-        }
-        Skill skill = skillRepository.save(mapper.update(skillDTO, skillRepository.findById(id).get()));
+
+        skill = skillRepository.save(mapper.update(dto, skill));
         return Optional.of(mapper.get(skill));
     }
-
 }

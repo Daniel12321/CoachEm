@@ -8,5 +8,6 @@ import java.util.List;
 
 @Component
 public interface TraineeSkillRepository extends CrudRepository<TraineeSkill,Long> {
+
     List<TraineeSkill> findByUserId(Long user);
 }

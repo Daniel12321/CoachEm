@@ -9,16 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class InviteService {
+
     @Autowired
     private InviteRepository inviteRepository;
+
     @Autowired
     private PersonRepository personRepository;
+
     @Autowired
     private InviteDto.Mapper mapper;
 
@@ -36,39 +39,35 @@ public class InviteService {
                 .toList();
     }
 
-    public InviteDto addInvite(InviteDto inviteDto, Long inviteSenderId, Long inviteReceiverId) {
-        if (inviteDto.time() == null ||
-                personRepository.findById(inviteSenderId).isEmpty() ||
-                personRepository.findById(inviteReceiverId).isEmpty()) {
-            return null;
-        }
-        Person inviter = personRepository.findById(inviteSenderId).get();
-        Person invited = personRepository.findById(inviteReceiverId).get();
-        Invite invite = mapper.post(inviteDto);
+    public Optional<InviteDto> addInvite(InviteDto dto, Long senderId, Long receiverId) {
+        Person inviter = personRepository.findById(senderId).orElse(null);
+        Person invited = personRepository.findById(receiverId).orElse(null);
+        if (inviter == null || invited == null)
+            return Optional.empty();
+
+        Invite invite = mapper.post(dto);
         invite.setAccepted(false);
         invite.setInvitedPerson(invited);
         invite.setInviter(inviter);
+        return Optional.of(mapper.get(inviteRepository.save(invite)));
+    }
+
+    public boolean acceptInviteRequest(Long id) {
+        Invite invite = inviteRepository.findById(id).orElse(null);
+        if (invite == null)
+            return false;
+
+        invite.setAccepted(true);
         inviteRepository.save(invite);
-        inviter.getSentInvites().add(invite);
-        invited.getReceivedInvites().add(invite);
-        personRepository.save(invited);
-        personRepository.save(inviter);
-        return mapper.get(invite);
+
+        return true;
     }
 
-    public void acceptInviteRequest(Long inviteId) {
-        if (inviteRepository.findById(inviteId).isPresent()) {
-            Invite invite = inviteRepository.findById(inviteId).get();
-            invite.setAccepted(true);
-            inviteRepository.save(invite);
-        }
-    }
-
-    public boolean deleteInviteById(Long inviteId) {
-        if (!inviteRepository.existsById(inviteId)) {
+    public boolean deleteInviteById(Long id) {
+        if (!inviteRepository.existsById(id)) {
             return false;
         }
-        inviteRepository.deleteById(inviteId);
+        inviteRepository.deleteById(id);
         return true;
     }
 }

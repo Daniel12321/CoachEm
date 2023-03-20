@@ -41,7 +41,7 @@ const TraineeNav = () => (
     <nav>
         <NavLink to="/skills">Skills</NavLink>
         <NavLink to="/skills-all">New Skills</NavLink>
-        <NavLink to="/meets">Meetings</NavLink>
+        <NavLink to="/evals">Evaluations</NavLink>
         <NavLink to="/invites">Invitations</NavLink>
     </nav>
 );
@@ -50,7 +50,7 @@ const CoachNav = () => (
     <nav>
         <NavLink to="/trainees">Trainees</NavLink>
         <NavLink to="/skills-all">All Skills</NavLink>
-        <NavLink to="/meets">Meetings</NavLink>
+        <NavLink to="/evals">Evaluations</NavLink>
         <NavLink to="/invites">Invitations</NavLink>
     </nav>
 );

@@ -2,10 +2,10 @@ package nl.itvitae.coachem.service;
 
 import jakarta.transaction.Transactional;
 import nl.itvitae.coachem.config.jwt.JWTToken;
-import nl.itvitae.coachem.dto.PasswordChangeRequestDto;
 import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.dto.auth.LoginRequestDto;
 import nl.itvitae.coachem.dto.auth.LoginResponseDto;
+import nl.itvitae.coachem.dto.auth.PasswordChangeRequestDto;
 import nl.itvitae.coachem.dto.auth.RegisterRequestDto;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.model.User;
@@ -43,12 +43,11 @@ public class AuthService {
     public Optional<LoginResponseDto> login(LoginRequestDto request) {
         Authentication auth = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         SecurityContextHolder.getContext().setAuthentication(auth);
-
         User user = (User) auth.getPrincipal();
+        Person person = personRepo.findById(user.getId()).get();
+        PersonDto dto = mapper.get(person);
 
-        LoginResponseDto resp = new LoginResponseDto(user.getUsername(), user.getRole(), JWTToken.of(auth));
-
-        return Optional.of(resp);
+        return Optional.of(new LoginResponseDto(JWTToken.of(auth), dto));
     }
 
     public Optional<PersonDto> register(RegisterRequestDto dto) {

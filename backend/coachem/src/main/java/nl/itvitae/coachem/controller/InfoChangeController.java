@@ -12,6 +12,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/infochange")
 public class InfoChangeController {
+
     @Autowired
     private InfoChangeService infoChangeService;
 
@@ -21,13 +22,13 @@ public class InfoChangeController {
     }
 
     @PostMapping("/new")
-    public InfoChangeDto addInfoChangeRequest(@RequestBody InfoChangeDto dto) {
-        return infoChangeService.addInfoChangeRequest(dto);
+    public InfoChangeDto addInfoChangeRequest(@RequestBody InfoChangeDto infoChange) {
+        return infoChangeService.addInfoChangeRequest(infoChange);
     }
 
-    @DeleteMapping("/delete/{infochangeid}")
-    public ResponseEntity<Void> deleteInfoChangeById(@PathVariable(value = "infochangeid") Long infoChangeId) {
-        if (infoChangeService.deleteInfoChangeById(infoChangeId)) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteInfoChangeById(@PathVariable("id") Long id) {
+        if (infoChangeService.deleteInfoChangeById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
