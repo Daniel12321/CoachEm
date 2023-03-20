@@ -2,7 +2,25 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 
-export default function Header({ loggedIn, role }) {
+function hasNotifications(dto) {
+    if (!dto) {
+        return false;
+    }
+
+    return !(
+        isEmpty(dto.attendees) &&
+        isEmpty(dto.invites) &&
+        isEmpty(dto.evaluations) &&
+        isEmpty(dto.feedback) &&
+        isEmpty(dto.infoChanges)
+    );
+}
+
+function isEmpty(arr) {
+    return arr.length === 0;
+}
+
+export default function Header({ loggedIn, role, notifications }) {
     const nav =
         role === 'trainee' ? (
             <TraineeNav />
@@ -15,13 +33,9 @@ export default function Header({ loggedIn, role }) {
         );
 
     const accountElem = loggedIn ? (
-        <Link className="header-account" to="/account">
-            Account
-        </Link>
+        <Account notifications={notifications} />
     ) : (
-        <Link className="header-account" to="/login">
-            Log in
-        </Link>
+        <LogIn />
     );
 
     return (
@@ -36,6 +50,20 @@ export default function Header({ loggedIn, role }) {
         </div>
     );
 }
+
+function Account({ notifications }) {
+    return (
+        <Link className="header-account" to="/account">
+            {hasNotifications(notifications) ? 'New Notifications!' : 'Account'}
+        </Link>
+    );
+}
+
+const LogIn = () => (
+    <Link className="header-account" to="/login">
+        Log in
+    </Link>
+);
 
 const TraineeNav = () => (
     <nav>

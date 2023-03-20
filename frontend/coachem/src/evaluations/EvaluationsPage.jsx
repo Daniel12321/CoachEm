@@ -25,8 +25,6 @@ export default function EvaluationsPage() {
             .then(setAttendee);
     }, []);
 
-    console.log(trainee);
-
     return (
         <div className="evalpage">
             <h1>Evaluations</h1>
