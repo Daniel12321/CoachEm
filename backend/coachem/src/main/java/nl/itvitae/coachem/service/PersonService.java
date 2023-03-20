@@ -69,4 +69,13 @@ public class PersonService {
         personRepository.deleteById(id);
         return true;
     }
+
+    public List<PersonDto> getAllTrainees() {
+        return ListUtil.toList(personRepository.findByUser_Role("TRAINEE"))
+                .stream()
+                .map(mapper::get)
+                .toList();
+    }
+
+
 }
