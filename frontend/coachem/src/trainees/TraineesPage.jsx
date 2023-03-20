@@ -13,7 +13,7 @@ export default function TraineesPage() {
     }, []);
 
     async function getAllTrainees() {
-        const res = await fetch('http://localhost:8080/api/person/all', {
+        const res = await fetch('http://localhost:8080/api/person/trainees', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
