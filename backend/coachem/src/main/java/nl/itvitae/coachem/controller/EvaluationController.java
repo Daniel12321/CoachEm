@@ -16,29 +16,42 @@ public class EvaluationController {
     @Autowired
     private EvaluationService evaluationService;
 
-    @GetMapping("/trainee/{personid}")
-    public List<EvaluationDto> getEvaluationsByTraineeId(@PathVariable("personid") Long personId) {
-        return evaluationService.getEvaluationsByTraineeId(personId);
-    }
-
-    @GetMapping("/attendee/{personid}")
-    public List<EvaluationDto> getEvaluationsByAttendeeId(@PathVariable("personid") Long personId) {
-        return evaluationService.getEvaluationsByAttendeeId(personId);
-    }
-
-    @PostMapping("/new/{attendeeid}/{traineeid}")
-    public ResponseEntity<EvaluationDto> addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("attendeeid") Long attendeeId, @PathVariable("traineeid") Long traineeId) {
-        return evaluationService.addEvaluation(evaluation, attendeeId, traineeId)
+    @PostMapping("/new/{traineeid}")
+    public ResponseEntity<EvaluationDto> addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("traineeid") Long traineeId) {
+        return evaluationService.addEvaluation(evaluation, traineeId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PostMapping("/{id}/{attendeeid}")
+    public EvaluationDto addEvaluationAttendee(@PathVariable("id") Long evaluationId, @PathVariable("attendeeid") Long attendeeId) {
+        return evaluationService.addAttendee(evaluationId, attendeeId);
+    }
+
+    @GetMapping("/trainee")
+    public List<EvaluationDto> getEvaluationsAsTrainee() {
+        return evaluationService.getEvaluationsAsTrainee();
+    }
+
+    @GetMapping("/attendee")
+    public List<EvaluationDto> getEvaluationsAsAttendee() {
+        return evaluationService.getEvaluationsAsAttendee();
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<EvaluationDto> updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
+        return evaluationService.updateEvaluation(evaluation, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}/{attendeeid}")
+    public void deleteEvaluationAttendee(@PathVariable("id") Long id, @PathVariable("attendeeid") Long attendeeId) {
+        this.evaluationService.deleteAttendee(id, attendeeId);
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteEvaluation(@PathVariable("id") Long id) {
-        if (evaluationService.deleteEvaluationById(id)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteEvaluation(@PathVariable("id") Long id) {
+        this.evaluationService.deleteEvaluation(id);
     }
 }

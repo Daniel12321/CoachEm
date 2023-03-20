@@ -15,8 +15,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class DefaultUsers {
 
@@ -43,9 +41,9 @@ public class DefaultUsers {
         User manager = this.userRepo.save(new User("manager@coachem.nl", encoder.encode("asd"), "MANAGER"));
         User hr = this.userRepo.save(new User("hr@coachem.nl", encoder.encode("asd"), "HR"));
         Person traineeP = new Person("Joris", "Kerkstraat 1", "Amersfoort", "7000AB", null);
-        Person coachP = new Person("Ali B", "Kerkstraat 1", "Amersfoort", "7000AB", null);
-        Person managerP = new Person("Scrum Manager", "Kerkstraat 1", "Amersfoort", "7000AB", null);
-        Person hrP = new Person("Matthijs van Nieuwkerk ", "Kerkstraat 1", "Amersfoort", "7000AB", null);
+        Person coachP = new Person("Coach Jansen", "Kerkstraat 1", "Amersfoort", "7000AB", null);
+        Person managerP = new Person("Manager Piet", "Kerkstraat 1", "Amersfoort", "7000AB", null);
+        Person hrP = new Person("Random HR Persoon ", "Kerkstraat 1", "Amersfoort", "7000AB", null);
         traineeP.setUser(trainee);
         coachP.setUser(coach);
         managerP.setUser(manager);
@@ -55,7 +53,7 @@ public class DefaultUsers {
         this.personRepo.save(managerP);
         this.personRepo.save(hrP);
 
-        Skill skill = this.skillRepo.save(new Skill("Learn React: Basics", false, "", "2023-01-01 12:00", 6, "Javascript"));
-        this.traineeSkillRepo.save(new TraineeSkill("", "", "2023:01:01 12:00", false, skill, trainee));
+        Skill skill = this.skillRepo.save(new Skill("Learn React: Basics", false, "", "2023-01-01 12:00:00", 6, "Javascript"));
+        this.traineeSkillRepo.save(new TraineeSkill("", "", "2023:01:01 12:00:00", false, skill, trainee));
     }
 }

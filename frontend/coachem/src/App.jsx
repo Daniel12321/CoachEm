@@ -7,7 +7,7 @@ import LoginPage from './login/LoginPage';
 import AccountPage from './account/AccountPage';
 import SkillsPage from './skills/SkillsPage';
 import SkillPage from './skills/SkillPage';
-import MeetingsPage from './meetings/MeetingsPage';
+import EvaluationsPage from './evaluations/EvaluationsPage';
 import InvitationsPage from './invitations/InvitationsPage';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
@@ -16,6 +16,7 @@ import './App.css';
 
 export default function App() {
     const [role, setRole] = useState(localStorage.getItem('user_role'));
+    // const [role, setRole] = useState('trainee');
 
     if (!role) {
         return (
@@ -39,7 +40,7 @@ export default function App() {
                     <Route path="/skills-all" element={<SkillsPage />} />
                     <Route path="/skills" element={<SkillsPage />} />
                     <Route path="/skill/:id" element={<SkillPage />} />
-                    <Route path="/meets" element={<MeetingsPage />} />
+                    <Route path="/evals" element={<EvaluationsPage />} />
                     <Route path="/invites" element={<InvitationsPage />} />
                     <Route path="/trainees" element={<TraineesPage />} />
                     <Route path="/accounts" element={<AccountsPage />} />
