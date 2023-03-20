@@ -4,7 +4,7 @@ import nl.itvitae.coachem.model.Evaluation;
 
 import java.util.List;
 
-public record EvaluationDto(Long id, String time, PersonDto trainee, List<PersonDto> attendees) {
+public record EvaluationDto(Long id, String time, PersonDto trainee, List<EvaluationAttendeeDto> attendees) {
 
     @org.mapstruct.Mapper(componentModel = "spring")
     public interface Mapper extends IEntityMapper<Evaluation, EvaluationDto> {

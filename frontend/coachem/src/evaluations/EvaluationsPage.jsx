@@ -25,6 +25,8 @@ export default function EvaluationsPage() {
             .then(setAttendee);
     }, []);
 
+    console.log(trainee);
+
     return (
         <div className="evalpage">
             <h1>Evaluations</h1>
@@ -61,7 +63,7 @@ const Evaluation = ({ evaluation }) => (
             {evaluation.attendees.map((attendee) => (
                 <div key={attendee.id} className="evaluation-attendee">
                     <p>
-                        {attendee.name} ({attendee.user.email})
+                        {attendee.person.name} ({attendee.person.user.email})
                     </p>
                 </div>
             ))}

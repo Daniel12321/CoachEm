@@ -23,12 +23,15 @@ public class Evaluation {
     @JoinColumn(name = "trainee_id")
     private Person trainee;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "evaluationattendee",
-            joinColumns = @JoinColumn(name = "evaluation_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"),
-            uniqueConstraints = @UniqueConstraint(name = "PK_evaluationattendee", columnNames = {"evaluation_id", "user_id"})
-    )
-    private List<Person> attendees = new ArrayList<>();
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "evaluationattendee",
+//            joinColumns = @JoinColumn(name = "evaluation_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id"),
+//            uniqueConstraints = @UniqueConstraint(name = "PK_evaluationattendee", columnNames = {"evaluation_id", "user_id"})
+//    )
+//    private List<Person> attendees = new ArrayList<>();
+
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL)
+    private List<EvaluationAttendee> attendees = new ArrayList<>();
 }
