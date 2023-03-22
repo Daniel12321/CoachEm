@@ -46,6 +46,7 @@ export default function App() {
 
     const logout = () => {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
         setRole(undefined);
     };
 

@@ -21,23 +21,24 @@ header {
 }
 
 header nav {
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: row;
 }
 
 header nav a {
+    height: 100%;
     padding: 8px 24px;
+
+    display: flex;
+    justify-self: center;
+    align-items: center;
+
     transition: all ease-in-out 0.1s;
 }
 
-.active {
+.active, header nav a:hover {
     background-color: #97d0ff;
-}
-
-.header-nav-item:hover {
-    scale: 1.05;
 }
 
 .header-dropdown {
