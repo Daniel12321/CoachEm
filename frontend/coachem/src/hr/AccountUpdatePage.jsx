@@ -2,39 +2,29 @@ import './AccountUpdatePage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-
 export default function AccountUpdatePage() {
-
-  
     const [account, setAccounts] = useState([]);
-
-
-    let { id } = useParams();
+    const { id } = useParams();
+    
     useEffect(() => {
-
         async function getAccount() {
             const res = await fetch(`http://localhost:8080/api/person/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             });
             const data = await res.json();
             setAccounts(data);
         }
-
         getAccount();
     }, [id]);
 
-
-
-
     const updateInfo = async (e) => {
         e.preventDefault();
-
-
-        
         const body = {
             name: e.target[0].value,
             address: e.target[1].value,
@@ -51,14 +41,12 @@ export default function AccountUpdatePage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         });
-
-        e.target[5].value = "saved"
+        e.target[5].value = 'saved';
     };
 
     return (
         <div className="accountpage">
-    <h1>update Page for account {id}</h1>
-          
+            <h1>update Page for account {id}</h1>
             <div className="personal-info">
                 <h2>Personal Details</h2>
                 <form onSubmit={updateInfo}>
@@ -97,10 +85,13 @@ export default function AccountUpdatePage() {
                         id="phonenumber"
                         defaultValue={account.phonenumber}
                     />
-                    <input className="dark-on-hover" type="submit" value="Save Changes" />
+                    <input
+                        className="dark-on-hover"
+                        type="submit"
+                        value="Save Changes"
+                    />
                 </form>
             </div>
-
         </div>
     );
 }
