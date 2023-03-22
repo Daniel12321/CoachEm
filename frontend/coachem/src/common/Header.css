@@ -40,8 +40,65 @@ header nav a {
     scale: 1.05;
 }
 
-.header-account {
-    padding: 12px 32px;
+.header-dropdown {
+    position: relative;
+    display: inline-block;
     background-color: #65baff;
+    padding: 12px 32px;
     border-radius: 8px;
+}
+
+.notification-badge {
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-dropdown-content {
+    translate: -32px;
+    display: none;
+    position: absolute;
+    background-color: #65baff;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 12px 0px;
+    width: 100%;
+    z-index: 1;
+}
+
+.header-dropdown:hover .header-dropdown-content {
+    display: block;
+}
+
+.header-dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    width: 100%;
+    transition: ease-in-out 100ms all;
+}
+
+.header-dropdown-item:hover {
+    background-color: #84c8ff;
+    text-decoration: none;
+}
+
+.notification {
+    background-color: #ff675c;
+}
+
+.notification:hover {
+    background-color: #ff8c84;
 }

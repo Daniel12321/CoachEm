@@ -44,10 +44,15 @@ export default function App() {
 
     const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
 
+    const logout = () => {
+        localStorage.removeItem('access_token');
+        setRole(undefined);
+    };
+
     return (
         <div className="app">
             <Header
-                loggedIn={true}
+                logout={logout}
                 role={role.toLowerCase()}
                 notifications={notifications}
             />
