@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import './EvaluationsPage.css';
 
@@ -35,10 +36,10 @@ export default function EvaluationsPage(props) {
             .then(setAttendee);
     }, []);
 
-    return (
-        <div className="evalpage">
-            <h1>Evaluations</h1>
+    const role = localStorage.getItem('user_role').toLowerCase();
 
+    const evaluationList =
+        role === 'trainee' ? (
             <div className="trainee-evaluationss">
                 <h2>Your Evaluations</h2>
                 {trainee
@@ -47,12 +48,44 @@ export default function EvaluationsPage(props) {
                         <Evaluation key={evalu.id} evaluation={evalu} />
                     ))}
             </div>
+        ) : (
+            ''
+        );
+
+    const person = JSON.parse(localStorage.getItem('person'));
+
+    return (
+        <div className="evalpage">
+            <div className="eval-heading-box">
+                <h1>Evaluations</h1>
+                <div className="current-user">
+                    <h4>
+                        Logged in as {person.name} ({role})
+                    </h4>
+                </div>
+
+                {role !== 'trainee' ? (
+                    <div>
+                        <Link className="new-eval-button" to="/new-eval">
+                            New Evaluation
+                        </Link>
+                    </div>
+                ) : (
+                    ''
+                )}
+            </div>
+
+            {evaluationList}
             <div className="attendee-evaluations">
                 <h2>Attending</h2>
                 {attendee
                     .sort((t1, t2) => t1.time - t2.time)
                     .map((evalu) => (
-                        <Attending key={evalu.id} evaluation={evalu} />
+                        <Attending
+                            key={evalu.id}
+                            evaluation={evalu}
+                            role={role}
+                        />
                     ))}
             </div>
             <div className="new-evaluations"></div>
@@ -79,17 +112,48 @@ const Evaluation = ({ evaluation }) => (
     </div>
 );
 
-const Attending = ({ evaluation }) => (
-    <div className="evaluation">
-        <div className="evaluation-trainee">
-            <h3>Trainee: </h3>
-            <p>
-                {evaluation.trainee.name} ({evaluation.trainee.user.email})
-            </p>
+function Attending({ role, evaluation }) {
+    return (
+        <div className="evaluation">
+            <div className="evaluation-info">
+                <div className="evaluation-trainee">
+                    <h3>Trainee: </h3>
+                    <p>
+                        {evaluation.trainee.name} (
+                        {evaluation.trainee.user.email})
+                    </p>
+                </div>
+                <div className="evaluation-time">
+                    <h3>Time: </h3>
+                    <p>{evaluation.time}</p>
+                </div>
+            </div>
+            <div className="evaluation-attendees">
+                <h3>Attendees:</h3>
+                {evaluation.attendees.map((attendee) => (
+                    <div key={attendee.id} className="evaluation-attendee">
+                        <p>
+                            {attendee.person.name} ({attendee.person.user.email}
+                            )
+                        </p>
+                    </div>
+                ))}
+            </div>
+            {role === 'coach' || role === 'manager' ? (
+                <div className="evaluation-add-attendee">
+                    <form>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" name="email" id="email" />
+                        <input
+                            className="new-attendee-button"
+                            type="submit"
+                            value="Add attendee"
+                        />
+                    </form>
+                </div>
+            ) : (
+                ''
+            )}
         </div>
-        <div className="evaluation-time">
-            <h3>Time: </h3>
-            <p>{evaluation.time}</p>
-        </div>
-    </div>
-);
+    );
+}
