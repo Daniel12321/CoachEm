@@ -1,7 +1,7 @@
 import './AccountUpdatePage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 
 export default function AccountUpdatePage() {
 
@@ -11,28 +11,30 @@ export default function AccountUpdatePage() {
 
     let { id } = useParams();
     useEffect(() => {
+
+        async function getAccount() {
+            const res = await fetch(`http://localhost:8080/api/person/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+            });
+            const data = await res.json();
+            setAccounts(data);
+        }
+
         getAccount();
-    }, []);
+    }, [id]);
 
 
-    async function getAccount() {
-        const res = await fetch(`http://localhost:8080/api/person/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        });
-        const data = await res.json();
-        setAccounts(data);
-    }
 
-    
+
     const updateInfo = async (e) => {
-        console.log(id)
-        console.log("update")
         e.preventDefault();
 
+
+        
         const body = {
             name: e.target[0].value,
             address: e.target[1].value,
@@ -41,11 +43,7 @@ export default function AccountUpdatePage() {
             phonenumber: e.target[4].value,
         };
 
-        console.log(e.target[5].value = "saved")
-
-        console.log(body);
-        //const res = await fetch(`http://127.0.0.1:8080/api/infochange/new`, {
-        const res = await fetch(`http://127.0.0.1:8080/api/person/update/${id}`, {
+        fetch(`http://127.0.0.1:8080/api/person/update/${id}`, {
             method: 'PUT',
             body: JSON.stringify(body),
             headers: {
@@ -53,34 +51,13 @@ export default function AccountUpdatePage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         });
-        const data = await res.json();
-        console.log(data);
+
+        e.target[5].value = "saved"
     };
-
-    // const updatePassword = (e) => {
-    //     e.preventDefault();
-
-    //     const body = {
-    //         oldPassword: e.target[0].value,
-    //         newPassword1: e.target[1].value,
-    //         newPassword2: e.target[2].value,
-    //     };
-
-    //     fetch('http://127.0.0.1:8080/api/auth/change_password', {
-    //         method: 'POST',
-    //         body: JSON.stringify(body),
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-    //         },
-    //     }).then((resp) => console.log(resp.status));
-    // };
 
     return (
         <div className="accountpage">
-              
-    
-    <h1>update Page for accountt {id}</h1>
+    <h1>update Page for account {id}</h1>
           
             <div className="personal-info">
                 <h2>Personal Details</h2>
@@ -120,7 +97,7 @@ export default function AccountUpdatePage() {
                         id="phonenumber"
                         defaultValue={account.phonenumber}
                     />
-                    <input class="dark-on-hover" type="submit" value="Save Changes" />
+                    <input className="dark-on-hover" type="submit" value="Save Changes" />
                 </form>
             </div>
 

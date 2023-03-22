@@ -11,23 +11,22 @@ export default function AccountUpdatePage() {
 
 
     let { id } = useParams();
+
     useEffect(() => {
+        async function getAccount() {
+            const res = await fetch(`http://localhost:8080/api/person/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+            });
+            const data = await res.json();
+            setAccounts(data);
+        }
+
         getAccount();
-    }, []);
-
-
-    async function getAccount() {
-        const res = await fetch(`http://localhost:8080/api/person/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        });
-        const data = await res.json();
-        setAccounts(data);
-    }
-
+    }, [id]);
     
     const updateInfo = async (e) => {
         console.log("update")
@@ -36,30 +35,11 @@ export default function AccountUpdatePage() {
 
     };
 
-    // const updatePassword = (e) => {
-    //     e.preventDefault();
-
-    //     const body = {
-    //         oldPassword: e.target[0].value,
-    //         newPassword1: e.target[1].value,
-    //         newPassword2: e.target[2].value,
-    //     };
-
-    //     fetch('http://127.0.0.1:8080/api/auth/change_password', {
-    //         method: 'POST',
-    //         body: JSON.stringify(body),
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-    //         },
-    //     }).then((resp) => console.log(resp.status));
-    // };
-
     return (
         <div className="accountpage">
               
     
-    <h1>update Page for accountt {id}</h1>
+    <h1>update Page for account {id}</h1>
           
             <div className="personal-info">
                 <h2>Personal Details</h2>

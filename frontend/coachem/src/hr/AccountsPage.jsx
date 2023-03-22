@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './AccountsPage.css';
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 
 export default function AccountsPage() {
     const [accounts, setAccounts] = useState([]);
