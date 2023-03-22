@@ -27,9 +27,8 @@ public class Evaluation {
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL)
     private List<EvaluationAttendee> attendees = new ArrayList<>();
 
-    public Evaluation(String time, Person trainee, List<Person> attendees) {
+    public Evaluation(String time, Person trainee) {
         this.time = time;
         this.trainee = trainee;
-        this.attendees = attendees;
     }
 }

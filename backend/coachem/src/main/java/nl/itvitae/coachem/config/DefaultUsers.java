@@ -48,6 +48,9 @@ public class DefaultUsers {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private EvaluationAttendeeRepository evaluationAttendeeRepo;
+
     @EventListener
     @Transactional
     public void onAppLaunch(ApplicationReadyEvent event) {
@@ -95,9 +98,8 @@ public class DefaultUsers {
         feedbackRepo.save(new Feedback("fix it", "2023/03/07", traineeskill, coach));
         feedbackRepo.save(new Feedback("good work", "2023/03/07", traineeskill2, coach));
 
-        List<Person> attendees = new ArrayList<>();
-        attendees.add(coachP);
-        evaluationRepo.save(new Evaluation("2023/03/07 12:00", traineeP, attendees));
+        Evaluation evaluation = evaluationRepo.save(new Evaluation("2023/03/07 12:00", traineeP));
+        EvaluationAttendee evaluationAttendee = evaluationAttendeeRepo.save(new EvaluationAttendee(evaluation, coachP));
 
         inviteRepo.save(new Invite(false, "2023/03/07 12:00", traineeP, coachP));
         inviteRepo.save(new Invite(false, "2023/03/07 12:00", traineeP, managerP));
