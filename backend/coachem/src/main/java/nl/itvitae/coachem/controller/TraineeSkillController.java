@@ -25,7 +25,7 @@ public class TraineeSkillController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("get/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<TraineeSkillDto> getTraineeSkillById(@PathVariable("id") Long id) {
         return traineeSkillService.getTraineeSkillById(id)
                 .map(ResponseEntity::ok)

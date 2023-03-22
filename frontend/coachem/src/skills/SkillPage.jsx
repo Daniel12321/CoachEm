@@ -10,6 +10,7 @@ export default function SkillPage() {
     const [progress, setProgress] = useState([]);
     const role = localStorage.getItem('user_role');
     const person = JSON.parse(localStorage.getItem('person'));
+
     let trainee;
     if (role === 'TRAINEE') {
         trainee = true;
@@ -158,12 +159,16 @@ export default function SkillPage() {
             .catch((error) => console.log(error));
         setProgress(progress.filter((p) => progress[index] !== p));
     }
-
+    if (!skill || !skill.category) {
+        return '';
+    }
     return (
         <div className="skill-page">
             <div className="skill-page__info">
                 <h1>{skill.name}</h1>
-                <p className="singleskill-cat">category: {skill.category}</p>
+                <p className="singleskill-cat">
+                    category: {skill.category.name}
+                </p>
                 <p>
                     <b>Type:</b> {skill.type ? 'hard' : 'soft'} skill
                 </p>
