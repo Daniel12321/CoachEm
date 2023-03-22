@@ -93,12 +93,6 @@ export default function SkillsPage(props) {
         ? FilterTraineeSkills(traineeSkills)
         : FilterSkills(skills);
 
-    // if (type !== 'any') {
-    //     filteredSkills = filteredSkills.filter(
-    //         (s) => !(type && type !== (s.skill.type ? 'hard' : 'soft'))
-    //     );
-    // }
-
     return (
         <div className="skills-page">
             <h1>Skills Dashboard</h1>
