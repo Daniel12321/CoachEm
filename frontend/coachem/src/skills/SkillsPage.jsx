@@ -98,14 +98,14 @@ export default function SkillsPage(props) {
         }
     }
 
-    const filterTraineeSkills = (trainee) =>
+    const FilterTraineeSkills = (trainee) =>
         trainee.filter((s) => filterSkills(s.skill));
 
-    const filterSkills = (skills2) => skills2.filter((s) => filterSkills(s));
+    const FilterSkills = (skills2) => skills2.filter((s) => filterSkills(s));
 
     let filteredSkills = ownSkills
-        ? filterTraineeSkills(traineeSkills)
-        : filterSkills(skills);
+        ? FilterTraineeSkills(traineeSkills)
+        : FilterSkills(skills);
 
     return (
         <div className="skills-page">
