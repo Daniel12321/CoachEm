@@ -30,7 +30,6 @@ export default function SkillsPage(props) {
             .then((resp) => resp.json())
             .then((data) => {
                 setCategories(data);
-                console.log(data);
             })
             .catch((error) => console.log(error));
     }, []);
@@ -46,7 +45,6 @@ export default function SkillsPage(props) {
                 .then((resp) => resp.json())
                 .then((data) => {
                     setTraineeSkills(data);
-                    console.log(data);
                 })
                 .catch((error) => console.log(error));
         } else {
@@ -59,14 +57,12 @@ export default function SkillsPage(props) {
                 .then((resp) => resp.json())
                 .then((data) => {
                     setSkills(data);
-                    console.log(data);
                 })
                 .catch((error) => console.log(error));
         }
     }, [ownSkills]);
 
     function filterSkills(skill) {
-        console.log(skill.name);
         if (skill !== null) {
             return (
                 !(
