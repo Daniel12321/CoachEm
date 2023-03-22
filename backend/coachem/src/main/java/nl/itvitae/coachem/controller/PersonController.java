@@ -30,6 +30,11 @@ public class PersonController {
         return personService.getAllTrainees();
     }
 
+    @GetMapping("/{id}")
+    public PersonDto getPersonById(@PathVariable(value = "id") Long id) {
+        return personService.getPersonById(id);
+    }
+
     @PutMapping("/infochange/{infochangeid}")
     public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable("infochangeid") Long infoChangeId) {
         return personService.acceptInfoChange(infoChangeId)
@@ -44,5 +49,12 @@ public class PersonController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PersonDto> updatePersonById(@PathVariable("id") Long id, @RequestBody PersonDto person){
+        return personService.updatePersonById(person, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

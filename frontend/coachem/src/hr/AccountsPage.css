@@ -1,0 +1,59 @@
+.accounts {
+    display: flex;
+    flex-direction: row;
+    justify-content:start;
+    align-items: flex-start;
+    gap: 64px;
+}
+
+/* Filters */
+
+.account-filters {
+    width: 200px;
+    border: solid black 1px;
+}
+
+.account-filters h2 {
+    font-size: 2.8rem;
+    text-align: center;
+    padding: 8px 0;
+}
+
+.account-filter {
+    padding: 6px 16px;
+    border-top: solid black 1px;
+}
+
+
+/* Duration Filter */
+
+.account-filter-duration {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 32px;
+}
+
+.account-filter-duration > p {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.account-filter-duration input {
+    max-width: 40%;
+}
+
+
+
+/* List */
+
+.account-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.account-item {
+    padding: 8px 16px;
+    border-radius: 4px;
+    background-color: #eefdff;
+}
