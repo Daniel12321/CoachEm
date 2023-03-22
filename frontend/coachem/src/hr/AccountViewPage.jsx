@@ -42,7 +42,7 @@ export default function AccountUpdatePage() {
     <h1>update Page for account {id}</h1>
           
             <div className="personal-info">
-                <h2>Personal Details</h2>
+                <h2>Personal Detailsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h2>
                 <form onSubmit={updateInfo}>
                     <label htmlFor="name" >Name</label>
                     <input
