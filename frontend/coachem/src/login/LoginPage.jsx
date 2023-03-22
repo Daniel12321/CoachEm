@@ -1,6 +1,6 @@
 import './LoginPage.css';
 
-export default function LoginPage({ setRole }, props) {
+export default function LoginPage({ setRole, logout }) {
     const login = (e) => {
         e.preventDefault();
 
@@ -16,7 +16,7 @@ export default function LoginPage({ setRole }, props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
