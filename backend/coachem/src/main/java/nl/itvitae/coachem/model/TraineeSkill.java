@@ -39,7 +39,7 @@ public class TraineeSkill {
     @JoinColumn(name="user_id")
     private User user;
 
-    public TraineeSkill(String progress, String report, String time, Boolean completed, Skill skill, User user) {
+    public TraineeSkill(String report, String time, Boolean completed, Skill skill, User user) {
         this.report = report;
         this.time = time;
         this.completed = completed;
