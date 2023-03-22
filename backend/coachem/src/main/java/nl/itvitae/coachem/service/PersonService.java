@@ -4,6 +4,7 @@ import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
+import nl.itvitae.coachem.model.Skill;
 import nl.itvitae.coachem.repository.InfoChangeRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
 import nl.itvitae.coachem.util.ListUtil;
@@ -80,4 +81,17 @@ public class PersonService {
     public PersonDto getPersonById(Long id) {
         return mapper.get(personRepository.findById(id).get());
     }
+
+
+    public Optional<PersonDto> updatePersonById(PersonDto personDto, Long id) {
+        Person person = personRepository.findById(id).orElse(null);
+        if (person == null)
+            return Optional.empty();
+
+        person = personRepository.save(mapper.update(personDto, person));
+        return Optional.of(mapper.get(person));
+    }
+
+
+
 }

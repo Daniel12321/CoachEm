@@ -7,6 +7,7 @@ export default function AccountUpdatePage() {
 
   
     const [account, setAccounts] = useState([]);
+    const navigate = useNavigate();
 
 
     let { id } = useParams();
@@ -29,32 +30,10 @@ export default function AccountUpdatePage() {
 
     
     const updateInfo = async (e) => {
-        console.log(id)
         console.log("update")
         e.preventDefault();
 
-        const body = {
-            name: e.target[0].value,
-            address: e.target[1].value,
-            city: e.target[2].value,
-            zipcode: e.target[3].value,
-            phonenumber: e.target[4].value,
-        };
 
-        console.log(e.target[5].value = "saved")
-
-        console.log(body);
-        //const res = await fetch(`http://127.0.0.1:8080/api/infochange/new`, {
-        const res = await fetch(`http://127.0.0.1:8080/api/person/update/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        });
-        const data = await res.json();
-        console.log(data);
     };
 
     // const updatePassword = (e) => {
@@ -85,42 +64,50 @@ export default function AccountUpdatePage() {
             <div className="personal-info">
                 <h2>Personal Details</h2>
                 <form onSubmit={updateInfo}>
-                    <label htmlFor="name">Name</label>
+                    <label htmlFor="name" >Name</label>
                     <input
                         type="text"
                         name="name"
                         id="name"
                         defaultValue={account.name}
+                        readonly="readonly"
                     />
-                    <label htmlFor="address">Address</label>
+                    <label htmlFor="address" readonly>Address</label>
                     <input
                         type="text"
                         name="address"
                         id="address"
                         defaultValue={account.address}
+                        readonly="readonly"
                     />
-                    <label htmlFor="city">City</label>
+                    <label htmlFor="city" readonly>City</label>
                     <input
                         type="text"
                         name="city"
                         id="city"
                         defaultValue={account.city}
+                        readonly="readonly"
                     />
-                    <label htmlFor="zipcode">Zipcode</label>
+                    <label htmlFor="zipcode" readonly>Zipcode</label>
                     <input
                         type="text"
                         name="zipcode"
                         id="zipcode"
                         defaultValue={account.zipcode}
+                        readonly="readonly"
                     />
-                    <label htmlFor="phonenumber">Phonenumber</label>
+                    <label htmlFor="phonenumber" readonly>Phonenumber</label>
                     <input
                         type="text"
                         name="phonenumber"
                         id="phonenumber"
                         defaultValue={account.phonenumber}
+                        readonly="readonly"
                     />
-                    <input class="dark-on-hover" type="submit" value="Save Changes" />
+                    <input type="submit" value="Enable edditing"                          
+                       onClick={() => {
+                                navigate(`/account-update/${id}`);
+                            }}/>
                 </form>
             </div>
 
