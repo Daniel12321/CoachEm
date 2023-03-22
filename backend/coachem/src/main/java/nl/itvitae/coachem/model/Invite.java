@@ -24,4 +24,11 @@ public class Invite {
     @ManyToOne
     @JoinColumn(name = "invited_id")
     private Person invited;
+
+    public Invite(Boolean accepted, String time, Person trainee, Person invited) {
+        this.accepted = accepted;
+        this.time = time;
+        this.trainee = trainee;
+        this.invited = invited;
+    }
 }

@@ -61,8 +61,14 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Navigate to={redir} />} />
                     <Route path="/account" element={<AccountPage />} />
-                    <Route path="/skills-all" element={<SkillsPage />} />
-                    <Route path="/skills" element={<SkillsPage />} />
+                    <Route
+                        path="/skills-all"
+                        element={<SkillsPage ownSkills={false} />}
+                    />
+                    <Route
+                        path="/skills"
+                        element={<SkillsPage ownSkills={true} />}
+                    />
                     <Route path="/skill/:id" element={<SkillPage />} />
                     <Route path="/evals" element={<EvaluationsPage />} />
                     <Route path="/invites" element={<InvitationsPage />} />

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nl.itvitae.coachem.dto.CategoryDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,16 @@ public class Skill {
     private String description;
     private String time;
     private Integer duration;
-    private String category;
 
     @JsonIgnore
     @OneToMany(mappedBy = "skill",cascade = CascadeType.ALL)
     private List<TraineeSkill> traineeSkills = new ArrayList<>();
 
-    public Skill(String name, Boolean type, String description, String time, Integer duration, String category) {
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
+
+    public Skill(String name, Boolean type, String description, String time, Integer duration, Category category) {
         this.name = name;
         this.type = type;
         this.description = description;

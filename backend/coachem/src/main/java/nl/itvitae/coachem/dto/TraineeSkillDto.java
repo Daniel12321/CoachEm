@@ -1,10 +1,11 @@
 package nl.itvitae.coachem.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.itvitae.coachem.model.TraineeSkill;
 
-public record TraineeSkillDto(Long id, String progress, String report, String time,
+public record TraineeSkillDto(Long id, String report, String time,
                               Boolean completed, SkillDto skill, UserDto user) {
-
+    @JsonIgnore
     public boolean isValid() {
         return time != null && completed != null;
     }
