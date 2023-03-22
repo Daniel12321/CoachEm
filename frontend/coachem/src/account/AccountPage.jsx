@@ -1,6 +1,6 @@
 import './AccountPage.css';
 
-export default function AccountPage() {
+export default function AccountPage(props) {
     const info = {
         name: 'Daniel',
         address: 'Grevengoedlaan 106',
@@ -27,6 +27,11 @@ export default function AccountPage() {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
+        }).then((response) => {
+            if (response.status === 401) {
+                props.logout();
+            }
+            return response.json();
         });
     };
 
@@ -46,7 +51,14 @@ export default function AccountPage() {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
-        }).then((resp) => console.log(resp.status));
+        })
+            .then((resp) => console.log(resp.status))
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            });
     };
 
     return (

@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function AccountUpdatePage() {
+export default function AccountUpdatePage(props) {
     const [account, setAccounts] = useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
-    
+
     useEffect(() => {
         async function getAccount() {
             const res = await fetch(`http://localhost:8080/api/person/${id}`, {
@@ -19,6 +19,9 @@ export default function AccountUpdatePage() {
                     )}`,
                 },
             });
+            if (res.status === 401) {
+                props.logout();
+            }
             const data = await res.json();
             setAccounts(data);
         }
