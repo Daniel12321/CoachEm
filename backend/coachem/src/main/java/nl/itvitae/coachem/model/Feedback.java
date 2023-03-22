@@ -25,4 +25,10 @@ public class Feedback {
     @JoinColumn(name="user_id")
     private User user;
 
+    public Feedback(String text, String time, TraineeSkill traineeSkill, User user) {
+        this.text = text;
+        this.time = time;
+        this.traineeSkill = traineeSkill;
+        this.user = user;
+    }
 }

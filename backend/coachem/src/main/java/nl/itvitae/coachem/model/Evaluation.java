@@ -31,4 +31,10 @@ public class Evaluation {
             uniqueConstraints = @UniqueConstraint(name = "PK_evaluationattendee", columnNames = {"evaluation_id", "user_id"})
     )
     private List<Person> attendees = new ArrayList<>();
+
+    public Evaluation(String time, Person trainee, List<Person> attendees) {
+        this.time = time;
+        this.trainee = trainee;
+        this.attendees = attendees;
+    }
 }
