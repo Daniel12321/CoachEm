@@ -25,9 +25,15 @@ export default function SkillsPage(props) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then((data) => {
                 setCategories(data);
             })
@@ -40,9 +46,17 @@ export default function SkillsPage(props) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             })
-                .then((resp) => resp.json())
+                .then((response) => {
+                    if (response.status === 401) {
+                        props.logout();
+                    }
+                    return response.json();
+                })
                 .then((data) => {
                     setTraineeSkills(data);
                 })
@@ -52,9 +66,17 @@ export default function SkillsPage(props) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             })
-                .then((resp) => resp.json())
+                .then((response) => {
+                    if (response.status === 401) {
+                        props.logout();
+                    }
+                    return response.json();
+                })
                 .then((data) => {
                     setSkills(data);
                 })
@@ -70,16 +92,8 @@ export default function SkillsPage(props) {
                     !skill.name.toLowerCase().includes(name.toLowerCase())
                 ) &&
                 !(category && category !== skill.category.name) &&
-                !(
-                    minDuration &&
-                    minDuration !== 0 &&
-                    minDuration > skill.duration
-                ) &&
-                !(
-                    maxDuration &&
-                    maxDuration !== 0 &&
-                    maxDuration < skill.duration
-                )
+                !(minDuration && minDuration > skill.duration) &&
+                !(maxDuration && maxDuration < skill.duration)
             );
         }
     }

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './SkillPage.css';
 
-export default function SkillPage() {
+export default function SkillPage(props) {
     const { id } = useParams();
     const [skill, setSkill] = useState([]);
     const [traineeSkill, setTraineeSkill] = useState([]);
@@ -23,9 +23,15 @@ export default function SkillPage() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then((data) => {
                 setSkill(data.skill);
                 setTraineeSkill(data);
@@ -38,9 +44,15 @@ export default function SkillPage() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then(setFeedback)
             .catch((error) => console.log(error));
     }, []);
@@ -50,9 +62,15 @@ export default function SkillPage() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then(setProgress)
             .catch((error) => console.log(error));
     }, []);
@@ -73,12 +91,13 @@ export default function SkillPage() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
             body: dataJSON,
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to add feedbacks');
+                if (response.status === 401) {
+                    props.logout();
                 }
                 return response.json();
             })
@@ -106,12 +125,13 @@ export default function SkillPage() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
             body: dataJSON,
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to add feedbacks');
+                if (response.status === 401) {
+                    props.logout();
                 }
                 return response.json();
             })
@@ -129,13 +149,17 @@ export default function SkillPage() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             }
         )
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to remove feedback');
+                if (response.status === 401) {
+                    props.logout();
                 }
+                return response.json();
             })
             .catch((error) => console.log(error));
         setFeedback(feedback.filter((f) => feedback[index] !== f));
@@ -148,13 +172,17 @@ export default function SkillPage() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             }
         )
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to remove progress');
+                if (response.status === 401) {
+                    props.logout();
                 }
+                return response.json();
             })
             .catch((error) => console.log(error));
         setProgress(progress.filter((p) => progress[index] !== p));

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function AccountAddPage() {
+export default function AccountAddPage(props) {
     const [password, setPassword] = useState(generatePassword());
 
     function addAccount(e) {
@@ -25,9 +25,10 @@ export default function AccountAddPage() {
             body: dataJSON,
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to add account');
+                if (response.status === 401) {
+                    props.logout();
                 }
+                return response.json();
             })
             .catch((error) => console.log(error));
     }

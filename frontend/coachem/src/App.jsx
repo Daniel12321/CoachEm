@@ -60,21 +60,46 @@ export default function App() {
             <div className="container">
                 <Routes>
                     <Route path="/" element={<Navigate to={redir} />} />
-                    <Route path="/account" element={<AccountPage />} />
+                    <Route
+                        path="/account"
+                        element={<AccountPage logout={logout} />}
+                    />
                     <Route
                         path="/skills-all"
-                        element={<SkillsPage ownSkills={false} />}
+                        element={
+                            <SkillsPage ownSkills={false} logout={logout} />
+                        }
                     />
                     <Route
                         path="/skills"
-                        element={<SkillsPage ownSkills={true} />}
+                        element={
+                            <SkillsPage ownSkills={true} logout={logout} />
+                        }
                     />
-                    <Route path="/skill/:id" element={<SkillPage />} />
-                    <Route path="/evals" element={<EvaluationsPage />} />
-                    <Route path="/invites" element={<InvitationsPage />} />
-                    <Route path="/trainees" element={<TraineesPage />} />
-                    <Route path="/accounts" element={<AccountsPage />} />
-                    <Route path="/account-add" element={<AccountAddPage />} />
+                    <Route
+                        path="/skill/:id"
+                        element={<SkillPage logout={logout} />}
+                    />
+                    <Route
+                        path="/evals"
+                        element={<EvaluationsPage logout={logout} />}
+                    />
+                    <Route
+                        path="/invites"
+                        element={<InvitationsPage logout={logout} />}
+                    />
+                    <Route
+                        path="/trainees"
+                        element={<TraineesPage logout={logout} />}
+                    />
+                    <Route
+                        path="/accounts"
+                        element={<AccountsPage logout={logout} />}
+                    />
+                    <Route
+                        path="/account-add"
+                        element={<AccountAddPage logout={logout} />}
+                    />
                 </Routes>
             </div>
         </div>

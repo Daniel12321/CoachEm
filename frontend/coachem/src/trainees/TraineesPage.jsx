@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './TraineesPage.css';
 import { useNavigate, useNavigation } from 'react-router-dom';
 
-export default function TraineesPage() {
+export default function TraineesPage(props) {
     const [trainees, setTrainees] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -19,6 +19,11 @@ export default function TraineesPage() {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
+        }).then((response) => {
+            if (response.status === 401) {
+                props.logout();
+            }
+            return response.json();
         });
         const data = await res.json();
         setTrainees(data);

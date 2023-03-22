@@ -1,6 +1,6 @@
 import './LoginPage.css';
 
-export default function LoginPage({ setRole }) {
+export default function LoginPage({ setRole }, props) {
     const login = (e) => {
         e.preventDefault();
 
@@ -14,8 +14,14 @@ export default function LoginPage({ setRole }) {
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then((data) => {
+                console.log(data);
                 localStorage.setItem('access_token', data.token);
                 localStorage.setItem('user_role', data.person.user.role);
                 localStorage.setItem('person', JSON.stringify(data.person));

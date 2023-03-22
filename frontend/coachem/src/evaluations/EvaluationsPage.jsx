@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import './EvaluationsPage.css';
 
-export default function EvaluationsPage() {
+export default function EvaluationsPage(props) {
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
@@ -13,7 +13,12 @@ export default function EvaluationsPage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then(setTrainee);
         fetch(`http://127.0.0.1:8080/api/evaluation/attendee`, {
             headers: {
@@ -21,7 +26,12 @@ export default function EvaluationsPage() {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((resp) => resp.json())
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
             .then(setAttendee);
     }, []);
 
