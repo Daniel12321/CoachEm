@@ -24,4 +24,10 @@ public class Progress {
     @ManyToOne
     @JoinColumn(name="trainee_skill_id")
     private TraineeSkill traineeSkill;
+
+    public Progress(String text, String time, TraineeSkill traineeSkill){
+        this.text = text;
+        this.time = time;
+        this.traineeSkill = traineeSkill;
+    }
 }

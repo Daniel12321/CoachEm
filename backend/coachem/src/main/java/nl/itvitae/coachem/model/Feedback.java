@@ -16,6 +16,7 @@ public class Feedback {
     private Long id;
     private String text;
     private String time;
+    private Boolean notified;
 
     @ManyToOne
     @JoinColumn(name="trainee_skill_id")
@@ -25,4 +26,10 @@ public class Feedback {
     @JoinColumn(name="user_id")
     private User user;
 
+    public Feedback(String text, String time, TraineeSkill traineeSkill, User user) {
+        this.text = text;
+        this.time = time;
+        this.traineeSkill = traineeSkill;
+        this.user = user;
+    }
 }

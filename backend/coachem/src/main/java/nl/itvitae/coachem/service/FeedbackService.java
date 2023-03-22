@@ -42,11 +42,20 @@ public class FeedbackService {
         Feedback feedback = mapper.post(dto);
         feedback.setUser(user);
         feedback.setTraineeSkill(skill);
+        feedback.setNotified(false);
         return Optional.of(mapper.get(feedbackRepository.save(feedback)));
     }
 
     public Optional<FeedbackDto> getFeedback(Long id) {
         return feedbackRepository.findById(id).map(mapper::get);
+    }
+
+    public List<FeedbackDto> getFeedbackByTraineeSkill(Long id) {
+        return feedbackRepository.findByTraineeSkillId(id).stream().map(mapper::get).toList();
+    }
+
+    public List<FeedbackDto> getAllUnseen(Long personId) {
+        return feedbackRepository.getAllUnseen(personId).stream().map(mapper::get).toList();
     }
 
     public Optional<FeedbackDto> updateFeedback(FeedbackDto dto, Long id) {
@@ -61,9 +70,5 @@ public class FeedbackService {
             return true;
         }
         return false;
-    }
-
-    public List<FeedbackDto> getFeedbackByTraineeSkill(Long id) {
-        return feedbackRepository.findByTraineeSkillId(id).stream().map(mapper::get).toList();
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.itvitae.coachem.model.Category;
 import nl.itvitae.coachem.model.Skill;
 
-public record SkillDto(Long id, String name, Boolean type, String description, String time, Integer duration, CategoryDto categoryDto) {
+public record SkillDto(Long id, String name, Boolean type, String description, String time, Integer duration, CategoryDto category) {
 
     @JsonIgnore
     public boolean isValid() {
@@ -13,7 +13,7 @@ public record SkillDto(Long id, String name, Boolean type, String description, S
                 duration != null &&
                 time != null &&
                 description != null &&
-                categoryDto != null;
+                category != null;
     }
 
     @org.mapstruct.Mapper(componentModel = "spring")

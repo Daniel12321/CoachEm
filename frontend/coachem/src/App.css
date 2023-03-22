@@ -23,10 +23,6 @@ a {
     text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
 h1 {
     font-size: 4.2rem;
     font-weight: 600;

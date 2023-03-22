@@ -2,8 +2,10 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.EvaluationDto;
 import nl.itvitae.coachem.model.Evaluation;
+import nl.itvitae.coachem.model.EvaluationAttendee;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.model.User;
+import nl.itvitae.coachem.repository.EvaluationAttendeeRepository;
 import nl.itvitae.coachem.repository.EvaluationRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,34 +26,39 @@ public class EvaluationService {
     private EvaluationRepository evaluationRepository;
 
     @Autowired
+    private EvaluationAttendeeRepository evaluationAttendeeRepository;
+
+    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
     private EvaluationDto.Mapper mapper;
 
-    public Optional<EvaluationDto> addEvaluation(EvaluationDto dto, Long traineeId) {
-        Person trainee = personRepository.findById(traineeId).orElse(null);
-        if (trainee == null)
-            return Optional.empty();
-
+    public EvaluationDto addEvaluation(EvaluationDto dto, Long traineeId) {
+        Person trainee = personRepository.findById(traineeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainee not found"));
         Evaluation evaluation = mapper.post(dto);
         evaluation.setTrainee(trainee);
         evaluation.setAttendees(new ArrayList<>());
+        evaluation.setNotified(false);
         evaluation = evaluationRepository.save(evaluation);
-        return Optional.of(mapper.get(evaluation));
+
+        return mapper.get(evaluation);
     }
 
-    public EvaluationDto addAttendee(Long id, Long attendeeId) {
+    public EvaluationDto addAttendee(Long id, Long personId) {
         Evaluation evaluation = evaluationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation not found"));
-        Person attendee = personRepository.findById(attendeeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
+        Person person = personRepository.findById(personId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
 
-        if (evaluation.getAttendees().stream().anyMatch(a -> a.getId().equals(attendeeId)))
+        if (evaluationAttendeeRepository.existsByEvaluationIdAndPersonId(id, personId))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That person is already attending that evaluation");
 
-        attendee.getEvaluations().add(evaluation);
+        EvaluationAttendee attendee = new EvaluationAttendee(evaluation, person);
+        evaluationAttendeeRepository.save(attendee);
+
+        person.getEvaluations().add(attendee);
         evaluation.getAttendees().add(attendee);
 
-        personRepository.save(attendee);
+        personRepository.save(person);
         return mapper.get(evaluationRepository.save(evaluation));
     }
 
@@ -63,9 +70,23 @@ public class EvaluationService {
     }
 
     public List<EvaluationDto> getEvaluationsAsAttendee() {
-        return personRepository.findById(User.getFromAuth().getId())
-                .map(Person::getEvaluations).orElse(List.of())
+        return evaluationAttendeeRepository.findByPersonId(User.getFromAuth().getId())
+                .stream()
+                .map(EvaluationAttendee::getEvaluation)
+                .map(mapper::get).toList();
+    }
+
+    public List<EvaluationDto> getAllUnseen(Long personId) {
+        return evaluationRepository.getAllUnseen(personId)
                 .stream().map(mapper::get).toList();
+    }
+
+    public List<EvaluationDto> getAllUnseenAttendees(Long personId) {
+        return evaluationAttendeeRepository.getAllUnseen(personId)
+                .stream()
+                .map(EvaluationAttendee::getEvaluation)
+                .map(mapper::get)
+                .toList();
     }
 
     public Optional<EvaluationDto> updateEvaluation(EvaluationDto dto, Long id) {
@@ -78,11 +99,7 @@ public class EvaluationService {
         Evaluation evaluation = evaluationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation not found"));
         Person person = personRepository.findById(attendeeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
 
-        evaluation.getAttendees().removeIf(p -> p.getId().equals(person.getId()));
-        person.getEvaluations().removeIf(e -> e.getId().equals(evaluation.getId()));
-
-        personRepository.save(person);
-        evaluationRepository.save(evaluation);
+        evaluationAttendeeRepository.deleteByEvaluationIdAndPersonId(evaluation.getId(), person.getId());
     }
 
     public void deleteEvaluation(Long id) {

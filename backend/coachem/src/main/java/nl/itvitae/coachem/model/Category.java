@@ -22,4 +22,8 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Skill> skills = new ArrayList<>();
+
+    public Category(String name){
+        this.name = name;
+    }
 }

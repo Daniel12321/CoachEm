@@ -2,103 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './SkillsPage.css';
 
-const defCats = [
-    { id: 1, name: 'javascript', title: 'Javascript' },
-    { id: 2, name: 'java', title: 'Java' },
-    { id: 3, name: 'sql', title: 'SQL' },
-    { id: 4, name: 'c#', title: 'C#' },
-    { id: 5, name: 'python', title: 'Python' },
-    { id: 6, name: 'personal', title: 'Personal' },
-];
-
-// const defSkills = [
-//     {
-//         id: 1,
-//         type: 'hard',
-//         name: 'Learn React basics',
-//         category: 'javascript',
-//         duration: 4,
-//     },
-//     {q
-//         id: 2,
-//         type: 'hard',
-//         name: 'Learn React: Advanced',
-//         category: 'javascript',
-//         duration: 5,
-//     },
-//     {
-//         id: 3,
-//         type: 'hard',
-//         name: 'Learn React: Expert',
-//         category: 'javascript',
-//         duration: 6,
-//         completed: false,
-//     },
-//     {
-//         id: 4,
-//         type: 'hard',
-//         name: 'Learn Spring Boot',
-//         category: 'java',
-//         duration: 7,
-//         completed: false,
-//     },
-//     {
-//         id: 5,
-//         type: 'hard',
-//         name: 'Learn Mapstruct',
-//         category: 'java',
-//         duration: 1,
-//         completed: true,
-//     },
-//     {
-//         id: 6,
-//         type: 'hard',
-//         name: 'Learn Java Generics',
-//         category: 'java',
-//         duration: 2,
-//         completed: true,
-//     },
-//     {
-//         id: 7,
-//         type: 'hard',
-//         name: 'Learn SQL basics',
-//         category: 'sql',
-//         duration: 4,
-//         completed: true,
-//     },
-//     {
-//         id: 8,
-//         type: 'hard',
-//         name: 'Learn SQL: Advanced',
-//         category: 'sql',
-//         duration: 6,
-//         completed: true,
-//     },
-//     {
-//         id: 9,
-//         type: 'hard',
-//         name: 'Learn SQL: Expert',
-//         category: 'sql',
-//         duration: 6,
-//         completed: true,
-//     },
-//     {
-//         id: 10,
-//         type: 'hard',
-//         name: 'Learn NoSQL',
-//         category: 'sql',
-//         duration: 6,
-//         completed: false,
-//     },
-//     {
-//         id: 11,
-//         type: 'soft',
-//         name: 'Learn to make personal goals',
-//         category: 'personal',
-//         completed: false,
-//     },
-// ];
-
 export default function SkillsPage(props) {
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
@@ -118,7 +21,20 @@ export default function SkillsPage(props) {
     }
 
     useEffect(() => {
-        setCategories(defCats);
+        fetch(`http://localhost:8080/api/category/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                setCategories(data);
+            })
+            .catch((error) => console.log(error));
+    }, []);
+
+    useEffect(() => {
         if (ownSkills) {
             fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
                 method: 'GET',
@@ -146,68 +62,43 @@ export default function SkillsPage(props) {
         }
     }, [ownSkills]);
 
+    function filterSkills(skill) {
+        if (skill !== null) {
+            return (
+                !(
+                    name &&
+                    !skill.name.toLowerCase().includes(name.toLowerCase())
+                ) &&
+                !(category && category !== skill.category.name) &&
+                !(
+                    minDuration &&
+                    minDuration !== 0 &&
+                    minDuration > skill.duration
+                ) &&
+                !(
+                    maxDuration &&
+                    maxDuration !== 0 &&
+                    maxDuration < skill.duration
+                )
+            );
+        }
+    }
+
     const FilterTraineeSkills = (traineeSkills) =>
-        traineeSkills
-            .filter(
-                (s) =>
-                    !(
-                        name &&
-                        !s.skill.name.toLowerCase().includes(name.toLowerCase())
-                    )
-            )
-            .filter((s) => !(type && type !== (s.skill.type ? 'hard' : 'soft')))
-            .filter(
-                (s) =>
-                    !(category && category !== s.skill.category.toLowerCase())
-            )
-            .filter(
-                (s) =>
-                    !(
-                        minDuration &&
-                        minDuration !== 0 &&
-                        minDuration > s.skill.duration
-                    )
-            )
-            .filter(
-                (s) =>
-                    !(
-                        maxDuration &&
-                        maxDuration !== 0 &&
-                        maxDuration < s.skill.duration
-                    )
-            );
+        traineeSkills.filter((s) => filterSkills(s.skill));
 
-    const FilterSkills = (skills) =>
-        skills
-            .filter(
-                (s) =>
-                    !(
-                        name &&
-                        !s.name.toLowerCase().includes(name.toLowerCase())
-                    )
-            )
-            .filter((s) => !(type && type !== (s.type ? 'hard' : 'soft')))
-            .filter((s) => !(category && category !== s.category.toLowerCase()))
-            .filter(
-                (s) =>
-                    !(
-                        minDuration &&
-                        minDuration !== 0 &&
-                        minDuration > s.duration
-                    )
-            )
-            .filter(
-                (s) =>
-                    !(
-                        maxDuration &&
-                        maxDuration !== 0 &&
-                        maxDuration < s.duration
-                    )
-            );
+    const FilterSkills = (skills) => skills.filter((s) => filterSkills(s));
 
-    const filteredSkills = ownSkills
+    let filteredSkills = ownSkills
         ? FilterTraineeSkills(traineeSkills)
         : FilterSkills(skills);
+
+    if (type !== 'any') {
+        filteredSkills = filteredSkills.filter(
+            (s) => !(type && type !== (s.type ? 'hard' : 'soft'))
+        );
+    }
+
     return (
         <div className="skills-page">
             <h1>Skills Dashboard</h1>
@@ -270,6 +161,16 @@ const TypeFilter = ({ setType }) => (
         <input
             type="radio"
             name="skill-type"
+            id="any"
+            value="any"
+            onChange={(e) => setType(e.target.value)}
+            defaultChecked
+        />
+        <label htmlFor="any">Any</label>
+        <br />
+        <input
+            type="radio"
+            name="skill-type"
             id="soft"
             value="soft"
             onChange={(e) => setType(e.target.value)}
@@ -286,7 +187,6 @@ const TypeFilter = ({ setType }) => (
         <label htmlFor="hard">Hard</label>
     </div>
 );
-
 const CategoryFilter = ({ setCategory, categories }) => (
     <div className="skill-filter skill-filter-category">
         <p>Category</p>
@@ -301,7 +201,7 @@ const CategoryFilter = ({ setCategory, categories }) => (
             </option>
             {categories.map((cat) => (
                 <option key={cat.id} value={cat.name}>
-                    {cat.title}
+                    {cat.name}
                 </option>
             ))}
         </select>

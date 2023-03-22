@@ -18,10 +18,17 @@ public class Invite {
     private String time;
 
     @ManyToOne
-    @JoinColumn(name = "inviter_id")
-    private Person inviter;
+    @JoinColumn(name = "trainee_id")
+    private Person trainee;
 
     @ManyToOne
-    @JoinColumn(name = "invited_person_id")
-    private Person invitedPerson;
+    @JoinColumn(name = "invited_id")
+    private Person invited;
+
+    public Invite(Boolean accepted, String time, Person trainee, Person invited) {
+        this.accepted = accepted;
+        this.time = time;
+        this.trainee = trainee;
+        this.invited = invited;
+    }
 }

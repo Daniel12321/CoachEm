@@ -26,14 +26,14 @@ public class InviteService {
     private InviteDto.Mapper mapper;
 
     public List<InviteDto> getReceivedInvitesByPersonId(Long personId) {
-        return inviteRepository.findByInvitedPersonId(personId)
+        return inviteRepository.findByInvitedId(personId)
                 .stream()
                 .map(mapper::get)
                 .toList();
     }
 
     public List<InviteDto> getSentInvitesByPersonId(Long personId) {
-        return inviteRepository.findByInviterId(personId)
+        return inviteRepository.findByTraineeId(personId)
                 .stream()
                 .map(mapper::get)
                 .toList();
@@ -47,8 +47,8 @@ public class InviteService {
 
         Invite invite = mapper.post(dto);
         invite.setAccepted(false);
-        invite.setInvitedPerson(invited);
-        invite.setInviter(inviter);
+        invite.setTrainee(inviter);
+        invite.setInvited(invited);
         return Optional.of(mapper.get(inviteRepository.save(invite)));
     }
 
@@ -69,5 +69,9 @@ public class InviteService {
         }
         inviteRepository.deleteById(id);
         return true;
+    }
+
+    public List<InviteDto> getAllUnseen(Long personId) {
+        return inviteRepository.getAllUnseen(personId).stream().map(mapper::get).toList();
     }
 }
