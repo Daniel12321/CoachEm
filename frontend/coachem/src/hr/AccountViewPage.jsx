@@ -84,7 +84,7 @@ export default function AccountUpdatePage() {
                         defaultValue={account.phonenumber}
                         readonly="readonly"
                     />
-                    <input type="submit" value="Enable edditing"                          
+                    <input type="submit" value="Enable editing"                          
                        onClick={() => {
                                 navigate(`/account-update/${id}`);
                             }}/>
