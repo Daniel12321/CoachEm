@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
@@ -15,8 +15,22 @@ import AccountAddPage from './hr/AccountAddPage';
 import './App.css';
 
 export default function App() {
+    const [notifications, setNotifications] = useState();
     const [role, setRole] = useState(localStorage.getItem('user_role'));
-    // const [role, setRole] = useState('trainee');
+
+    useEffect(() => {
+        if (role) {
+            fetch('http://127.0.0.1:8080/api/notification/all', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            })
+                .then((resp) => resp.json())
+                .then(setNotifications);
+        }
+    }, [role]);
 
     if (!role) {
         return (
@@ -30,9 +44,19 @@ export default function App() {
 
     const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
 
+    const logout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
+        setRole(undefined);
+    };
+
     return (
         <div className="app">
-            <Header loggedIn={true} role={role.toLowerCase()} />
+            <Header
+                logout={logout}
+                role={role.toLowerCase()}
+                notifications={notifications}
+            />
             <div className="container">
                 <Routes>
                     <Route path="/" element={<Navigate to={redir} />} />

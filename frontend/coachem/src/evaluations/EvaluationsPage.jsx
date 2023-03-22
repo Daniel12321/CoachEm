@@ -61,7 +61,7 @@ const Evaluation = ({ evaluation }) => (
             {evaluation.attendees.map((attendee) => (
                 <div key={attendee.id} className="evaluation-attendee">
                     <p>
-                        {attendee.name} ({attendee.user.email})
+                        {attendee.person.name} ({attendee.person.user.email})
                     </p>
                 </div>
             ))}

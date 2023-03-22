@@ -17,10 +17,8 @@ public class EvaluationController {
     private EvaluationService evaluationService;
 
     @PostMapping("/new/{traineeid}")
-    public ResponseEntity<EvaluationDto> addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("traineeid") Long traineeId) {
-        return evaluationService.addEvaluation(evaluation, traineeId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+    public EvaluationDto addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("traineeid") Long traineeId) {
+        return evaluationService.addEvaluation(evaluation, traineeId);
     }
 
     @PostMapping("/{id}/{attendeeid}")

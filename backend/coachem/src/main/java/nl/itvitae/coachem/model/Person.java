@@ -32,15 +32,15 @@ public class Person {
     private InfoChange infoChange;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "attendees")
-    private List<Evaluation> evaluations = new ArrayList<>();
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<EvaluationAttendee> evaluations = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "inviter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Invite> sentInvites = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "invitedPerson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "invited", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites = new ArrayList<>();
 
     public Person(String name) {

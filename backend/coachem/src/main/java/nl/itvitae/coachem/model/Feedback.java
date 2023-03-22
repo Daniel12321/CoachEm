@@ -16,6 +16,7 @@ public class Feedback {
     private Long id;
     private String text;
     private String time;
+    private Boolean notified;
 
     @ManyToOne
     @JoinColumn(name="trainee_skill_id")

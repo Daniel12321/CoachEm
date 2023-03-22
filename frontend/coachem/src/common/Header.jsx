@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 
-export default function Header({ loggedIn, role }) {
+export default function Header({ logout, role, notifications }) {
     const nav =
         role === 'trainee' ? (
             <TraineeNav />
@@ -14,16 +14,6 @@ export default function Header({ loggedIn, role }) {
             <nav />
         );
 
-    const accountElem = loggedIn ? (
-        <Link className="header-account" to="/account">
-            Account
-        </Link>
-    ) : (
-        <Link className="header-account" to="/login">
-            Log in
-        </Link>
-    );
-
     return (
         <div className="header-wrapper">
             <header>
@@ -31,9 +21,98 @@ export default function Header({ loggedIn, role }) {
                     <img src="" alt="Logo" />
                 </Link>
                 {nav}
-                {accountElem}
+                <Account logout={logout} notifications={notifications} />
             </header>
         </div>
+    );
+}
+
+function arrayCount(arr) {
+    return arr ? arr.length : 0;
+}
+
+function notificationCount(dto) {
+    if (!dto) {
+        return 0;
+    }
+
+    return (
+        arrayCount(dto.attendees) +
+        arrayCount(dto.invites) +
+        arrayCount(dto.evaluations) +
+        arrayCount(dto.feedback) +
+        arrayCount(dto.infoChanges)
+    );
+}
+
+function Account({ logout, notifications }) {
+    const count = notificationCount(notifications);
+    const badge = count ? (
+        <div className="notification-badge">{count}</div>
+    ) : (
+        ''
+    );
+
+    return (
+        <div className="header-dropdown">
+            {'Account'}
+            {badge}
+            <div className="header-dropdown-content">
+                <Link className="header-dropdown-item" to={'/account'}>
+                    Profile
+                </Link>
+                {notifications ? (
+                    <NotificationList notifications={notifications} />
+                ) : (
+                    ''
+                )}
+                <div className="header-dropdown-item" onClick={logout}>
+                    Log out
+                </div>
+            </div>
+        </div>
+    );
+}
+
+const NotificationList = ({ notifications }) => (
+    <>
+        <NotificationItem
+            to="/evals"
+            message="New Evaluation Invites"
+            count={arrayCount(notifications.attendees)}
+        />
+        <NotificationItem
+            to="/evals"
+            message="New Evaluations"
+            count={arrayCount(notifications.evaluations)}
+        />
+        <NotificationItem
+            to="/invite"
+            message="New 360 Invites"
+            count={arrayCount(notifications.invites)}
+        />
+        <NotificationItem
+            to="/skill/1"
+            message="New Feedback"
+            count={arrayCount(notifications.feedback)}
+        />
+        <NotificationItem
+            to="/evals"
+            message="New Info Changes"
+            count={arrayCount(notifications.infoChanges)}
+        />
+    </>
+);
+
+function NotificationItem({ message, count, to }) {
+    if (!count) {
+        return '';
+    }
+
+    return (
+        <Link className="header-dropdown-item notification" to={to}>
+            {message}
+        </Link>
     );
 }
 
