@@ -34,17 +34,15 @@ public class EvaluationService {
     @Autowired
     private EvaluationDto.Mapper mapper;
 
-    public Optional<EvaluationDto> addEvaluation(EvaluationDto dto, Long traineeId) {
-        Person trainee = personRepository.findById(traineeId).orElse(null);
-        if (trainee == null)
-            return Optional.empty();
-
+    public EvaluationDto addEvaluation(EvaluationDto dto, Long traineeId) {
+        Person trainee = personRepository.findById(traineeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainee not found"));
         Evaluation evaluation = mapper.post(dto);
         evaluation.setTrainee(trainee);
         evaluation.setAttendees(new ArrayList<>());
         evaluation.setNotified(false);
         evaluation = evaluationRepository.save(evaluation);
-        return Optional.of(mapper.get(evaluation));
+
+        return mapper.get(evaluation);
     }
 
     public EvaluationDto addAttendee(Long id, Long personId) {
@@ -53,9 +51,6 @@ public class EvaluationService {
 
         if (evaluationAttendeeRepository.existsByEvaluationIdAndPersonId(id, personId))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That person is already attending that evaluation");
-
-//        if (evaluation.getAttendees().stream().anyMatch(a -> a.getAttendee().getId().equals(attendeeId)))
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That person is already attending that evaluation");
 
         EvaluationAttendee attendee = new EvaluationAttendee(evaluation, person);
         evaluationAttendeeRepository.save(attendee);
@@ -105,12 +100,6 @@ public class EvaluationService {
         Person person = personRepository.findById(attendeeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
 
         evaluationAttendeeRepository.deleteByEvaluationIdAndPersonId(evaluation.getId(), person.getId());
-
-//        evaluation.getAttendees().removeIf(p -> p.getId().equals(person.getId()));
-//        person.getEvaluations().removeIf(e -> e.getId().equals(evaluation.getId()));
-//
-//        personRepository.save(person);
-//        evaluationRepository.save(evaluation);
     }
 
     public void deleteEvaluation(Long id) {

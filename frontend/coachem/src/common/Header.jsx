@@ -2,24 +2,6 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 
-// function hasNotifications(dto) {
-//     if (!dto) {
-//         return false;
-//     }
-
-//     return !(
-//         isEmpty(dto.attendees) &&
-//         isEmpty(dto.invites) &&
-//         isEmpty(dto.evaluations) &&
-//         isEmpty(dto.feedback) &&
-//         isEmpty(dto.infoChanges)
-//     );
-// }
-
-// function isEmpty(arr) {
-//     return arr.length === 0;
-// }
-
 export default function Header({ logout, role, notifications }) {
     const nav =
         role === 'trainee' ? (
