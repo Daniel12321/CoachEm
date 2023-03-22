@@ -30,5 +30,6 @@ public class Evaluation {
     public Evaluation(String time, Person trainee) {
         this.time = time;
         this.trainee = trainee;
+        this.notified = false;
     }
 }

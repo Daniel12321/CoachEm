@@ -31,5 +31,6 @@ public class Feedback {
         this.time = time;
         this.traineeSkill = traineeSkill;
         this.user = user;
+        this.notified= false;
     }
 }
