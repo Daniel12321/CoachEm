@@ -19,12 +19,10 @@ export default function TraineesPage(props) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
-        }).then((response) => {
-            if (response.status === 401) {
-                props.logout();
-            }
-            return response.json();
         });
+        if (res.status === 401) {
+            props.logout();
+        }
         const data = await res.json();
         setTrainees(data);
     }
