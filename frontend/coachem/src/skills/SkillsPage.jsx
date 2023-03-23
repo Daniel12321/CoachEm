@@ -98,14 +98,21 @@ export default function SkillsPage(props) {
         }
     }
 
-    const FilterTraineeSkills = (trainee) =>
-        trainee.filter((s) => filterSkills(s.skill));
+    const filterTraineeSkills = (traineeSkills) =>
+        traineeSkills.filter((s) => filterSkills(s.skill));
 
-    const FilterSkills = (skills2) => skills2.filter((s) => filterSkills(s));
+    const filterAllSkills = (allSkills) =>
+        allSkills.filter((s) => filterSkills(s));
 
     let filteredSkills = ownSkills
-        ? FilterTraineeSkills(traineeSkills)
-        : FilterSkills(skills);
+        ? filterTraineeSkills(traineeSkills)
+        : filterAllSkills(skills);
+
+    if (type !== 'any') {
+        filteredSkills = filteredSkills.filter(
+            (s) => !(type && type !== (s.type ? 'hard' : 'soft'))
+        );
+    }
 
     return (
         <div className="skills-page">
