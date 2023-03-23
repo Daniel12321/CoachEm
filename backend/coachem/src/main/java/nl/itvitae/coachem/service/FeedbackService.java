@@ -71,4 +71,8 @@ public class FeedbackService {
         }
         return false;
     }
+
+    public void markAllSeen(Long traineeSkillId) {
+        feedbackRepository.markAllSeen(traineeSkillId, User.getFromAuth().getId());
+    }
 }

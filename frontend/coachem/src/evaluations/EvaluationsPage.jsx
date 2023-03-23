@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './EvaluationsPage.css';
 
-export default function EvaluationsPage({ logout }) {
+export default function EvaluationsPage({ logout, reloadNotifications }) {
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
@@ -34,7 +34,22 @@ export default function EvaluationsPage({ logout }) {
                 return response.json();
             })
             .then(setAttendee);
-    }, []);
+    }, [logout]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                reloadNotifications();
+            }
+        });
+    }, [logout, reloadNotifications]);
 
     const addAttendee = (id, e) => {
         e.preventDefault();
@@ -59,7 +74,7 @@ export default function EvaluationsPage({ logout }) {
             })
             .then((data) => {
                 setAttendee(
-                    attendee.filter((a) => a.id != data.id).concat(data)
+                    attendee.filter((a) => a.id !== data.id).concat(data)
                 );
             });
     };

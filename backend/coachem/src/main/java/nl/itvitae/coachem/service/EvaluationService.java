@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -97,10 +96,17 @@ public class EvaluationService {
                 .toList();
     }
 
-    public Optional<EvaluationDto> updateEvaluation(EvaluationDto dto, Long id) {
+    public EvaluationDto updateEvaluation(EvaluationDto dto, Long id) {
         return evaluationRepository
                 .findById(id)
-                .map(feedback -> mapper.get(evaluationRepository.save(mapper.update(dto, feedback))));
+                .map(feedback -> mapper.get(evaluationRepository.save(mapper.update(dto, feedback))))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation not found"));
+    }
+
+    public void markAllSeen() {
+        Long id = User.getFromAuth().getId();
+        evaluationRepository.markAllSeen(id);
+        evaluationAttendeeRepository.markAllSeen(id);
     }
 
     public void deleteAttendee(Long id, Long attendeeId) {

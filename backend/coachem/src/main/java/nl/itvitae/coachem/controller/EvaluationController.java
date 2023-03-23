@@ -5,7 +5,6 @@ import nl.itvitae.coachem.dto.NewEvaluationAttendeeDto;
 import nl.itvitae.coachem.dto.NewEvaluationDto;
 import nl.itvitae.coachem.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,10 +38,13 @@ public class EvaluationController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<EvaluationDto> updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
-        return evaluationService.updateEvaluation(evaluation, id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public EvaluationDto updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
+        return evaluationService.updateEvaluation(evaluation, id);
+    }
+
+    @PutMapping("/seen")
+    public void markAllSeen() {
+        evaluationService.markAllSeen();
     }
 
     @DeleteMapping("/delete/{id}/{attendeeid}")
