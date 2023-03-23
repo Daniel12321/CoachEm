@@ -66,19 +66,16 @@ export default function EvaluationsPage({ logout }) {
 
     const role = localStorage.getItem('user_role').toLowerCase();
 
-    const evaluationList =
-        role === 'trainee' ? (
-            <div className="trainee-evaluationss">
-                <h2>Your Evaluations</h2>
-                {trainee
-                    .sort((t1, t2) => t1.time - t2.time)
-                    .map((evalu) => (
-                        <Evaluation key={evalu.id} evaluation={evalu} />
-                    ))}
-            </div>
-        ) : (
-            ''
-        );
+    const evaluationList = role === 'trainee' && (
+        <div className="trainee-evaluationss">
+            <h2>Your Evaluations</h2>
+            {trainee
+                .sort((t1, t2) => t1.time - t2.time)
+                .map((evalu) => (
+                    <Evaluation key={evalu.id} evaluation={evalu} />
+                ))}
+        </div>
+    );
 
     const attendingList = (
         <div className="attendee-evaluations">
@@ -108,14 +105,12 @@ export default function EvaluationsPage({ logout }) {
                     </h4>
                 </div>
 
-                {role !== 'trainee' ? (
+                {role !== 'trainee' && (
                     <div>
                         <Link className="new-eval-button" to="/new-eval">
                             New Evaluation
                         </Link>
                     </div>
-                ) : (
-                    ''
                 )}
             </div>
 
@@ -171,7 +166,7 @@ function Attending({ role, evaluation, addAttendee }) {
                     </div>
                 ))}
             </div>
-            {role === 'coach' || role === 'manager' ? (
+            {(role === 'coach' || role === 'manager') && (
                 <div className="evaluation-add-attendee">
                     <form onSubmit={(e) => addAttendee(evaluation.id, e)}>
                         <label htmlFor="email">Email</label>
@@ -183,8 +178,6 @@ function Attending({ role, evaluation, addAttendee }) {
                         />
                     </form>
                 </div>
-            ) : (
-                ''
             )}
         </div>
     );
