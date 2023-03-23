@@ -11,6 +11,14 @@ export default function SkillPage(props) {
     const role = localStorage.getItem('user_role');
     const person = JSON.parse(localStorage.getItem('person'));
 
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+    };
+
     let trainee;
     if (role === 'TRAINEE') {
         trainee = true;
@@ -53,7 +61,9 @@ export default function SkillPage(props) {
                 }
                 return response.json();
             })
-            .then(setFeedback)
+            .then((data) => {
+                setFeedback(sortByDate(feedback.concat(data)));
+            })
             .catch((error) => console.log(error));
     }, []);
 
@@ -71,7 +81,9 @@ export default function SkillPage(props) {
                 }
                 return response.json();
             })
-            .then(setProgress)
+            .then((data) => {
+                setProgress(sortByDate(progress.concat(data)));
+            })
             .catch((error) => console.log(error));
     }, []);
 
@@ -83,7 +95,7 @@ export default function SkillPage(props) {
         const newProgress = [
             {
                 text: e.target[0].value,
-                time: new Date().toLocaleDateString(),
+                time: new Date(),
             },
         ];
         let dataJSON = JSON.stringify(newProgress[0]);
@@ -102,7 +114,7 @@ export default function SkillPage(props) {
                 return response.json();
             })
             .then((data) => {
-                setProgress(progress.concat(data));
+                setProgress(sortByDate(progress.concat(data)));
             })
             .catch((error) => console.log(error));
         e.target[0].value = '';
@@ -116,7 +128,7 @@ export default function SkillPage(props) {
         const newFeedback = [
             {
                 text: e.target[0].value,
-                time: new Date().toLocaleDateString(),
+                time: new Date(),
             },
         ];
 
@@ -136,7 +148,7 @@ export default function SkillPage(props) {
                 return response.json();
             })
             .then((data) => {
-                setFeedback(feedback.concat(data));
+                setFeedback(sortByDate(feedback.concat(data)));
             })
             .catch((error) => console.log(error));
         e.target[0].value = '';
@@ -187,6 +199,30 @@ export default function SkillPage(props) {
             .catch((error) => console.log(error));
         setProgress(progress.filter((p) => progress[index] !== p));
     }
+
+    function completeSkill() {
+        fetch(`http://localhost:8080/api/traineeskill/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+            body: JSON.stringify({ completed: !traineeSkill.completed }),
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
+            .then(setTraineeSkill)
+            .catch((error) => console.log(error));
+    }
+
+    function sortByDate(arr) {
+        return arr.sort((a, b) => new Date(b.time) - new Date(a.time));
+    }
+
     if (!skill || !skill.category) {
         return '';
     }
@@ -200,7 +236,9 @@ export default function SkillPage(props) {
                 <p>
                     <b>Type:</b> {skill.type ? 'hard' : 'soft'} skill
                 </p>
-                <p className="singleskill-date">{skill.time}</p>
+                <p className="singleskill-date">
+                    {new Date(skill.time).toLocaleString('en-EN', options)}
+                </p>
                 <p className="singleskill-desc">
                     <b>Description:</b> {skill.description}
                 </p>
@@ -208,8 +246,24 @@ export default function SkillPage(props) {
                     <b>Duration:</b> {skill.duration} hours
                 </p>
                 <p>
-                    <b>Startdate:</b> {traineeSkill.time}
+                    <b>Startdate:</b>{' '}
+                    {new Date(traineeSkill.time).toLocaleString(
+                        'en-EN',
+                        options
+                    )}
                 </p>
+                <br />
+                <input
+                    id="complete"
+                    type="checkbox"
+                    defaultChecked={traineeSkill.completed}
+                    onChange={() => completeSkill()}
+                    disabled={!trainee}
+                />
+                <label htmlFor="complete">
+                    {' '}
+                    <b>Completed skill</b>
+                </label>
             </div>
             <div className="flex-container">
                 <div>
@@ -229,7 +283,10 @@ export default function SkillPage(props) {
                                             : 'nocomment-date'
                                     }
                                 >
-                                    {prog.time}
+                                    {new Date(prog.time).toLocaleString(
+                                        'en-EN',
+                                        options
+                                    )}
                                 </p>
                                 <p className="text">{prog.text}</p>
                                 {trainee && (
@@ -274,7 +331,11 @@ export default function SkillPage(props) {
                                             : 'nocomment-date'
                                     }
                                 >
-                                    {feedb.time} {person.name}
+                                    {new Date(feedb.time).toLocaleString(
+                                        'en-EN',
+                                        options
+                                    )}{' '}
+                                    {person.name}
                                 </p>
                                 <p className="text">{feedb.text}</p>
                                 {!trainee && (
