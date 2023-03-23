@@ -1,7 +1,7 @@
 .trainees {
     display: flex;
     flex-direction: row;
-    justify-content:start;
+    justify-content:flex-start;
     align-items: flex-start;
     gap: 64px;
 }

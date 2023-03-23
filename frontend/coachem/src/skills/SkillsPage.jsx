@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+
 import './SkillsPage.css';
 
+
 export default function SkillsPage(props) {
+
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -13,14 +16,16 @@ export default function SkillsPage(props) {
     const [category, setCategory] = useState();
     const [minDuration, setMinDuration] = useState();
     const [maxDuration, setMaxDuration] = useState();
-
     const person = JSON.parse(localStorage.getItem('person'));
+    const { id } = useParams();
 
-    if (props.ownSkills !== ownSkills) {
-        setOwnSkills(props.ownSkills);
-    }
+
+if (props.ownSkills !== ownSkills) {
+    setOwnSkills(props.ownSkills);
+}
 
     useEffect(() => {
+        console.log("useffect1")
         fetch(`http://localhost:8080/api/category/all`, {
             method: 'GET',
             headers: {
@@ -38,11 +43,10 @@ export default function SkillsPage(props) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [props]);
 
-    useEffect(() => {
-        if (ownSkills) {
-            fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
+    function getSkillById (id){
+        fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,28 +65,58 @@ export default function SkillsPage(props) {
                     setTraineeSkills(data);
                 })
                 .catch((error) => console.log(error));
+         
+    }
+
+    useEffect(() => {
+        if(id){
+            getSkillById(id)
         } else {
-            fetch(`http://localhost:8080/api/skill/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            })
-                .then((response) => {
-                    if (response.status === 401) {
-                        props.logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setSkills(data);
-                })
-                .catch((error) => console.log(error));
+            getSkillById(person.id)
         }
-    }, [ownSkills]);
+        // (ownSkills) {
+        //     fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization: `Bearer ${localStorage.getItem(
+        //                 'access_token'
+        //             )}`,
+        //         },
+        //     })
+        //         .then((response) => {
+        //             if (response.status === 401) {
+        //                 props.logout();
+        //             }
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             setTraineeSkills(data);
+        //         })
+        //         .catch((error) => console.log(error));
+        // } else 
+        // {
+        //     fetch(`http://localhost:8080/api/skill/all`, {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization: `Bearer ${localStorage.getItem(
+        //                 'access_token'
+        //             )}`,
+        //         },
+        //     })
+        //         .then((response) => {
+        //             if (response.status === 401) {
+        //                 props.logout();
+        //             }
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             setSkills(data);
+        //         })
+        //         .catch((error) => console.log(error));
+        // }
+    }, [ownSkills, props, id]);
 
     function filterSkills(skill) {
         if (skill !== null) {
@@ -103,11 +137,18 @@ export default function SkillsPage(props) {
 
     const FilterSkills = (skills2) => skills2.filter((s) => filterSkills(s));
 
+
+
     let filteredSkills = ownSkills
         ? FilterTraineeSkills(traineeSkills)
         : FilterSkills(skills);
 
-    return (
+        if (type !== 'any') {
+            filteredSkills = filteredSkills.filter(
+                (s) => !(type && type !== (s.type ? 'hard' : 'soft'))
+            );
+        }
+        return (
         <div className="skills-page">
             <h1>Skills Dashboard</h1>
             <div className="skills">
@@ -149,7 +190,10 @@ export default function SkillsPage(props) {
             </div>
         </div>
     );
+    
 }
+
+
 
 const NameFilter = ({ setName }) => (
     <div className="skill-filter skill-filter-name">

@@ -9,25 +9,27 @@ export default function TraineesPage(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getAllTrainees();
-    }, []);
+        async function getAllTrainees() {
+            fetch('http://localhost:8080/api/person/trainees', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+            }).then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            }).then(data => setTrainees(data)) ;
+            
+        }
 
-    async function getAllTrainees() {
-        const res = await fetch('http://localhost:8080/api/person/trainees', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        }).then((response) => {
-            if (response.status === 401) {
-                props.logout();
-            }
-            return response.json();
-        });
-        const data = await res.json();
-        setTrainees(data);
-    }
+
+        getAllTrainees();
+    }, [props]);
+
+
 
     const filteredTrainees = trainees
         .filter(

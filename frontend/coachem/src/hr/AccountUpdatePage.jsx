@@ -24,7 +24,7 @@ export default function AccountUpdatePage(props) {
             setAccounts(data);
         }
         getAccount();
-    }, [id]);
+    }, [id, props]);
 
     const updateInfo = async (e) => {
         e.preventDefault();

@@ -79,6 +79,12 @@ export default function App() {
                         }
                     />
                     <Route
+                        path="/skills/:id"
+                        element={
+                            <SkillsPage ownSkills={true} coachView logout={logout} />
+                        }
+                    />
+                    <Route
                         path="/skill/:id"
                         element={<SkillPage logout={logout} />}
                     />

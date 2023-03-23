@@ -26,28 +26,27 @@ export default function AccountUpdatePage(props) {
             setAccounts(data);
         }
         getAccount();
-    }, [id]);
+    }, [id, props]);
 
-    const updateInfo = async (e) => {
-        console.log('update');
-        e.preventDefault();
-    };
+    // const updateInfo = async (e) => {
+    //     console.log('update');
+    //     e.preventDefault();
+    // };
 
     return (
         <div className="accountpage">
             <h1>update Page for account {id}</h1>
             <div className="personal-info">
                 <h2>Personal Details</h2>
-                <form onSubmit={updateInfo}>
+                <form >
                     <label htmlFor="name">Name</label>
                     <input
                         type="text"
                         name="name"
                         id="name"
                         defaultValue={account.name}
-                        readonly="readonly"
-                    />
-                    <label htmlFor="address" readonly>
+                        readOnly                    />
+                    <label htmlFor="address" >
                         Address
                     </label>
                     <input
@@ -55,9 +54,8 @@ export default function AccountUpdatePage(props) {
                         name="address"
                         id="address"
                         defaultValue={account.address}
-                        readonly="readonly"
-                    />
-                    <label htmlFor="city" readonly>
+                        readOnly                    />
+                    <label htmlFor="city" >
                         City
                     </label>
                     <input
@@ -65,9 +63,8 @@ export default function AccountUpdatePage(props) {
                         name="city"
                         id="city"
                         defaultValue={account.city}
-                        readonly="readonly"
-                    />
-                    <label htmlFor="zipcode" readonly>
+                        readOnly                    />
+                    <label htmlFor="zipcode" >
                         Zipcode
                     </label>
                     <input
@@ -75,9 +72,9 @@ export default function AccountUpdatePage(props) {
                         name="zipcode"
                         id="zipcode"
                         defaultValue={account.zipcode}
-                        readonly="readonly"
+                        readOnly
                     />
-                    <label htmlFor="phonenumber" readonly>
+                    <label htmlFor="phonenumber" >
                         Phonenumber
                     </label>
                     <input
@@ -85,10 +82,10 @@ export default function AccountUpdatePage(props) {
                         name="phonenumber"
                         id="phonenumber"
                         defaultValue={account.phonenumber}
-                        readonly="readonly"
+                        readOnly
                     />
                     <input
-                        type="submit"
+                        type="button"
                         value="Enable editing"
                         onClick={() => {
                             navigate(`/account-update/${id}`);
