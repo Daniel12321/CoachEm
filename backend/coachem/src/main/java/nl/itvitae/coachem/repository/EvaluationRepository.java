@@ -14,4 +14,7 @@ public interface EvaluationRepository extends CrudRepository<Evaluation, Long> {
 
     @Query("SELECT e FROM Evaluation e WHERE e.trainee.id = ?1 AND e.notified = 0")
     List<Evaluation> getAllUnseen(Long traineeId);
+
+    @Query("UPDATE Evaluation e SET notified = 1 WHERE e.trainee.id = ?1")
+    void markAllSeen(Long traineeId);
 }

@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+
 import './Header.css';
 
-export default function Header({ logout, role, notifications }) {
+export default function Header({
+    logout,
+    role,
+    notifications,
+    setNotifications,
+}) {
     const nav =
         role === 'trainee' ? (
             <TraineeNav />
@@ -21,7 +27,11 @@ export default function Header({ logout, role, notifications }) {
                     <img src="" alt="Logo" />
                 </Link>
                 {nav}
-                <Account logout={logout} notifications={notifications} />
+                <Account
+                    logout={logout}
+                    notifications={notifications}
+                    setNotifications={setNotifications}
+                />
             </header>
         </div>
     );
@@ -45,7 +55,7 @@ function notificationCount(dto) {
     );
 }
 
-function Account({ logout, notifications }) {
+function Account({ logout, notifications, setNotifications }) {
     const count = notificationCount(notifications);
     const badge = count ? (
         <div className="notification-badge">{count}</div>
@@ -61,10 +71,11 @@ function Account({ logout, notifications }) {
                 <Link className="header-dropdown-item" to={'/account'}>
                     Profile
                 </Link>
-                {notifications ? (
-                    <NotificationList notifications={notifications} />
-                ) : (
-                    ''
+                {notifications && (
+                    <NotificationList
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                    />
                 )}
                 <div className="header-dropdown-item" onClick={logout}>
                     Log out
@@ -74,43 +85,74 @@ function Account({ logout, notifications }) {
     );
 }
 
-const NotificationList = ({ notifications }) => (
-    <>
-        <NotificationItem
-            to="/evals"
-            message="New Evaluation Invites"
-            count={arrayCount(notifications.attendees)}
-        />
-        <NotificationItem
-            to="/evals"
-            message="New Evaluations"
-            count={arrayCount(notifications.evaluations)}
-        />
-        <NotificationItem
-            to="/invite"
-            message="New 360 Invites"
-            count={arrayCount(notifications.invites)}
-        />
-        <NotificationItem
-            to="/skill/1"
-            message="New Feedback"
-            count={arrayCount(notifications.feedback)}
-        />
-        <NotificationItem
-            to="/evals"
-            message="New Info Changes"
-            count={arrayCount(notifications.infoChanges)}
-        />
-    </>
-);
+function NotificationList({ notifications, setNotifications }) {
+    const clearEvals = () => {
+        fetch('http://127.0.0.1:8080/api/evaluation/seen', { method: 'PUT' });
 
-function NotificationItem({ message, count, to }) {
+        notifications.attendees = [];
+        notifications.evaluations = [];
+        setNotifications(notifications);
+    };
+    const clearInvites = () => {
+        notifications.invites = [];
+        setNotifications(notifications);
+    };
+    const clearFeedback = () => {
+        notifications.feedback = [];
+        setNotifications(notifications);
+    };
+    const clearInfoChanges = () => {
+        notifications.infoChanges = [];
+        setNotifications(notifications);
+    };
+
+    return (
+        <>
+            <NotificationItem
+                to="/evals"
+                message="New Evaluation Invites"
+                count={arrayCount(notifications.attendees)}
+                clear={clearEvals}
+            />
+            <NotificationItem
+                to="/evals"
+                message="New Evaluations"
+                count={arrayCount(notifications.evaluations)}
+                clear={clearEvals}
+            />
+            <NotificationItem
+                to="/invite"
+                message="New 360 Invites"
+                count={arrayCount(notifications.invites)}
+                clear={clearInvites}
+            />
+            <NotificationItem
+                to="/skill/1"
+                message="New Feedback"
+                count={arrayCount(notifications.feedback)}
+                clear={clearFeedback}
+            />
+            <NotificationItem
+                to="/evals"
+                message="New Info Changes"
+                count={arrayCount(notifications.infoChanges)}
+                clear={clearInfoChanges}
+            />
+        </>
+    );
+}
+
+function NotificationItem({ message, count, to, clear }) {
     if (!count) {
         return '';
     }
 
     return (
-        <Link className="header-dropdown-item notification" to={to}>
+        <Link
+            onClick={clear}
+            className="header-dropdown-item notification"
+            to={to}
+        >
             {message}
         </Link>
     );

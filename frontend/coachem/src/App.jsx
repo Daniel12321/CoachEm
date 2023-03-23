@@ -59,6 +59,7 @@ export default function App() {
                 logout={logout}
                 role={role.toLowerCase()}
                 notifications={notifications}
+                setNotifications={setNotifications}
             />
             <div className="container">
                 <Routes>

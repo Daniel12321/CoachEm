@@ -10,11 +10,14 @@ import java.util.List;
 @Repository
 public interface EvaluationAttendeeRepository extends CrudRepository<EvaluationAttendee, Long> {
 
-    @Query("SELECT a FROM EvaluationAttendee a WHERE a.person.id = ?1 AND a.notified = 0")
-    List<EvaluationAttendee> getAllUnseen(Long personId);
-
     boolean existsByEvaluationIdAndPersonId(Long evaluationId, Long personId);
     void deleteByEvaluationIdAndPersonId(Long evaluationId, Long personId);
 
     List<EvaluationAttendee> findByPersonId(Long personId);
+
+    @Query("SELECT a FROM EvaluationAttendee a WHERE a.person.id = ?1 AND a.notified = 0")
+    List<EvaluationAttendee> getAllUnseen(Long personId);
+
+    @Query("UPDATE EvaluationAttendee a SET a.notified = 1 WHERE a.person.id = ?1")
+    void markAllSeen(Long personId);
 }
