@@ -3,12 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 import './Header.css';
 
-export default function Header({
-    logout,
-    role,
-    notifications,
-    setNotifications,
-}) {
+export default function Header({ logout, role, notifications }) {
     const nav =
         role === 'trainee' ? (
             <TraineeNav />
@@ -27,11 +22,7 @@ export default function Header({
                     <img src="" alt="Logo" />
                 </Link>
                 {nav}
-                <Account
-                    logout={logout}
-                    notifications={notifications}
-                    setNotifications={setNotifications}
-                />
+                <Account logout={logout} notifications={notifications} />
             </header>
         </div>
     );
@@ -55,7 +46,7 @@ function notificationCount(dto) {
     );
 }
 
-function Account({ logout, notifications, setNotifications }) {
+function Account({ logout, notifications }) {
     const count = notificationCount(notifications);
     const badge = count ? (
         <div className="notification-badge">{count}</div>
@@ -72,10 +63,7 @@ function Account({ logout, notifications, setNotifications }) {
                     Profile
                 </Link>
                 {notifications && (
-                    <NotificationList
-                        notifications={notifications}
-                        setNotifications={setNotifications}
-                    />
+                    <NotificationList notifications={notifications} />
                 )}
                 <div className="header-dropdown-item" onClick={logout}>
                     Log out
@@ -85,25 +73,30 @@ function Account({ logout, notifications, setNotifications }) {
     );
 }
 
-function NotificationList({ notifications, setNotifications }) {
+function NotificationList({ notifications }) {
     const clearEvals = () => {
-        fetch('http://127.0.0.1:8080/api/evaluation/seen', { method: 'PUT' });
+        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        });
 
         notifications.attendees = [];
         notifications.evaluations = [];
-        setNotifications(notifications);
+        // setNotifications(notifications);
     };
     const clearInvites = () => {
         notifications.invites = [];
-        setNotifications(notifications);
+        // setNotifications(notifications);
     };
     const clearFeedback = () => {
         notifications.feedback = [];
-        setNotifications(notifications);
+        // setNotifications(notifications);
     };
     const clearInfoChanges = () => {
         notifications.infoChanges = [];
-        setNotifications(notifications);
+        // setNotifications(notifications);
     };
 
     return (

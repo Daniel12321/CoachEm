@@ -1,6 +1,7 @@
 package nl.itvitae.coachem.repository;
 
 import nl.itvitae.coachem.model.EvaluationAttendee;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ public interface EvaluationAttendeeRepository extends CrudRepository<EvaluationA
     @Query("SELECT a FROM EvaluationAttendee a WHERE a.person.id = ?1 AND a.notified = 0")
     List<EvaluationAttendee> getAllUnseen(Long personId);
 
-    @Query("UPDATE EvaluationAttendee a SET a.notified = 1 WHERE a.person.id = ?1")
+    @Modifying
+    @Query("UPDATE EvaluationAttendee a SET a.notified = true WHERE a.person.id = ?1")
     void markAllSeen(Long personId);
 }

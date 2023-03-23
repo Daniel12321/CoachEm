@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './EvaluationsPage.css';
 
-export default function EvaluationsPage({ logout }) {
+export default function EvaluationsPage({ logout, reloadNotifications }) {
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
@@ -34,6 +34,15 @@ export default function EvaluationsPage({ logout }) {
                 return response.json();
             })
             .then(setAttendee);
+
+        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            reloadNotifications();
+        });
     }, []);
 
     const addAttendee = (id, e) => {

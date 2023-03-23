@@ -18,10 +18,10 @@ import AccountViewPage from './hr/AccountViewPage';
 import './App.css';
 
 export default function App() {
-    const [notifications, setNotifications] = useState();
     const [role, setRole] = useState(localStorage.getItem('user_role'));
+    const [notifications, setNotifications] = useState();
 
-    useEffect(() => {
+    const reloadNotifications = () => {
         if (role) {
             fetch('http://127.0.0.1:8080/api/notification/all', {
                 headers: {
@@ -33,6 +33,10 @@ export default function App() {
                 .then((resp) => resp.json())
                 .then(setNotifications);
         }
+    };
+
+    useEffect(() => {
+        reloadNotifications();
     }, [role]);
 
     if (!role) {
@@ -59,7 +63,6 @@ export default function App() {
                 logout={logout}
                 role={role.toLowerCase()}
                 notifications={notifications}
-                setNotifications={setNotifications}
             />
             <div className="container">
                 <Routes>
@@ -82,15 +85,30 @@ export default function App() {
                     />
                     <Route
                         path="/skill/:id"
-                        element={<SkillPage logout={logout} />}
+                        element={
+                            <SkillPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/evals"
-                        element={<EvaluationsPage logout={logout} />}
+                        element={
+                            <EvaluationsPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/invites"
-                        element={<InvitationsPage logout={logout} />}
+                        element={
+                            <InvitationsPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/trainees"
