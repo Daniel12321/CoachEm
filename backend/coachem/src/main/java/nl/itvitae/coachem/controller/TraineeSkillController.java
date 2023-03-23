@@ -16,10 +16,10 @@ public class TraineeSkillController {
     @Autowired
     private TraineeSkillService traineeSkillService;
 
-    @PostMapping("/new")
+    @PostMapping("/new/{traineeid}/{skillid}")
     public ResponseEntity<TraineeSkillDto> newTraineeSkill(@RequestBody TraineeSkillDto traineeSkill,
-                                           @PathVariable("traineeId") Long traineeId,
-                                           @PathVariable("skillId") Long skillId) {
+                                           @PathVariable("traineeid") Long traineeId,
+                                           @PathVariable("skillid") Long skillId) {
         return traineeSkillService.newTraineeSkill(traineeSkill, traineeId, skillId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
