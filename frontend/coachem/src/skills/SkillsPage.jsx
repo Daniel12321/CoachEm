@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './SkillsPage.css';
 
-export default function SkillsPage(props) {
+export default function SkillsPage({ logout, ownSkills }) {
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [ownSkills, setOwnSkills] = useState();
+    const [reload, setReload] = useState([]);
+    const role = localStorage.getItem('user_role');
 
     const [name, setName] = useState();
     const [type, setType] = useState();
@@ -16,8 +17,11 @@ export default function SkillsPage(props) {
 
     const person = JSON.parse(localStorage.getItem('person'));
 
-    if (props.ownSkills !== ownSkills) {
-        setOwnSkills(props.ownSkills);
+    let trainee;
+    if (role === 'TRAINEE') {
+        trainee = true;
+    } else {
+        trainee = false;
     }
 
     useEffect(() => {
@@ -30,7 +34,7 @@ export default function SkillsPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -41,48 +45,86 @@ export default function SkillsPage(props) {
     }, []);
 
     useEffect(() => {
-        if (ownSkills) {
-            fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+        fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        props.logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setTraineeSkills(data);
-                })
-                .catch((error) => console.log(error));
-        } else {
-            fetch(`http://localhost:8080/api/skill/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+            .then((data) => {
+                setTraineeSkills(data);
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        props.logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setSkills(data);
-                })
-                .catch((error) => console.log(error));
-        }
+            .catch((error) => console.log(error));
+
+        fetch(`http://localhost:8080/api/skill/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setSkills(data);
+            })
+            .catch((error) => console.log(error));
     }, [ownSkills]);
+
+    function signUp(skillId) {
+        fetch(
+            `http://localhost:8080/api/traineeskill/new/${person.id}/${skillId}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+                body: JSON.stringify({ time: new Date(), completed: false }),
+            }
+        )
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setTraineeSkills(traineeSkills.concat(data));
+            })
+            .catch((error) => console.log(error));
+    }
+
+    function completed(skill) {
+        let signedUp = false;
+        traineeSkills.map((traineeskill) => {
+            if (traineeskill.skill.id === skill.id) {
+                signedUp = true;
+            }
+        });
+        return signedUp ? (
+            <p className="green">
+                <b>signed up</b>
+            </p>
+        ) : (
+            <button className="signup" onClick={() => signUp(skill.id)}>
+                sign up
+            </button>
+        );
+    }
 
     function filterSkills(skill) {
         if (skill !== null) {
@@ -114,6 +156,19 @@ export default function SkillsPage(props) {
         );
     }
 
+    if (ownSkills) {
+        const filteredCompletedSkills = filteredSkills.filter(
+            (s) => s.completed === true
+        );
+        const filteredSkillsInProgress = filteredSkills.filter(
+            (s) => s.completed === false
+        );
+
+        filteredSkills = filteredSkillsInProgress.concat(
+            filteredCompletedSkills
+        );
+    }
+
     return (
         <div className="skills-page">
             <h1>Skills Dashboard</h1>
@@ -136,19 +191,26 @@ export default function SkillsPage(props) {
                 <div className="skill-list">
                     {filteredSkills.map((skill) =>
                         ownSkills ? (
-                            <Link
-                                key={skill.skill.id}
-                                to={`/skill/${skill.skill.id}`}
-                            >
+                            <Link key={skill.id} to={`/skill/${skill.id}`}>
                                 <div className="skill-item">
                                     <h3>{skill.skill.name}</h3>
                                     <p>{skill.skill.description}</p>
+                                    {skill.completed ? (
+                                        <p className="green">
+                                            <b>skill completed</b>
+                                        </p>
+                                    ) : (
+                                        <p className="orange">
+                                            <b>skill in progress</b>
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         ) : (
                             <div key={skill.id} className="skill-item">
                                 <h3>{skill.name}</h3>
                                 <p>{skill.description}</p>
+                                {trainee && completed(skill)}
                             </div>
                         )
                     )}
