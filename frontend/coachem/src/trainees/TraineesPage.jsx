@@ -10,23 +10,23 @@ export default function TraineesPage(props) {
 
     useEffect(() => {
         getAllTrainees();
-    }, []);
+    });
 
     async function getAllTrainees() {
-        const res = await fetch('http://localhost:8080/api/person/trainees', {
+        await fetch('http://localhost:8080/api/person/trainees', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
-        }).then((response) => {
-            if (response.status === 401) {
-                props.logout();
-            }
-            return response.json();
-        });
-        const data = await res.json();
-        setTrainees(data);
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    props.logout();
+                }
+                return response.json();
+            })
+            .then((data) => setTrainees(data));
     }
 
     const filteredTrainees = trainees

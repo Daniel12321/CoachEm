@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import './SkillsPage.css';
 
 export default function SkillsPage({ logout, ownSkills }) {
+    const { id } = useParams();
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [reload, setReload] = useState([]);
     const role = localStorage.getItem('user_role');
 
     const [name, setName] = useState();
@@ -42,10 +42,10 @@ export default function SkillsPage({ logout, ownSkills }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    }, []);
+    });
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/api/traineeskill/user/${person.id}`, {
+    function getSkillById(id) {
+        fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,17 @@ export default function SkillsPage({ logout, ownSkills }) {
                 setTraineeSkills(data);
             })
             .catch((error) => console.log(error));
+    }
 
+    useEffect(() => {
+        if (id) {
+            getSkillById(id);
+        } else {
+            getSkillById(person.id);
+        }
+    });
+
+    useEffect(() => {
         fetch(`http://localhost:8080/api/skill/all`, {
             method: 'GET',
             headers: {
@@ -80,7 +90,7 @@ export default function SkillsPage({ logout, ownSkills }) {
                 setSkills(data);
             })
             .catch((error) => console.log(error));
-    }, [ownSkills]);
+    }, [ownSkills, logout]);
 
     function signUp(skillId) {
         fetch(
@@ -114,6 +124,7 @@ export default function SkillsPage({ logout, ownSkills }) {
             if (traineeskill.skill.id === skill.id) {
                 signedUp = true;
             }
+            return traineeskill;
         });
         return signedUp ? (
             <p className="green">
