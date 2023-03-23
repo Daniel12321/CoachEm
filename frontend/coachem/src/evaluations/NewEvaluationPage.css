@@ -1,0 +1,15 @@
+
+.new-eval-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-eval-form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
+.new-eval-form input[type='submit'] {
+    margin-top: 24px;
+}

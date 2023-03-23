@@ -8,6 +8,7 @@ import AccountPage from './account/AccountPage';
 import SkillsPage from './skills/SkillsPage';
 import SkillPage from './skills/SkillPage';
 import EvaluationsPage from './evaluations/EvaluationsPage';
+import NewEvaluationPage from './evaluations/NewEvaluationPage';
 import InvitationsPage from './invitations/InvitationsPage';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
@@ -109,6 +110,10 @@ export default function App() {
                     <Route
                         path="/account-view/:id"
                         element={<AccountViewPage logout={logout} />}
+                    />
+                    <Route
+                        path="/new-eval"
+                        element={<NewEvaluationPage logout={logout} />}
                     />
                 </Routes>
             </div>
