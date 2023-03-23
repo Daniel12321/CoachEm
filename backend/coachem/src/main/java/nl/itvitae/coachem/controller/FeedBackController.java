@@ -44,6 +44,11 @@ public class FeedBackController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/seen/{id}")
+    public void markAllSeen(@PathVariable("id") Long traineeSkillId) {
+        feedbackService.markAllSeen(traineeSkillId);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFeedbackById(@PathVariable("id") Long id) {
         if (feedbackService.deleteFeedback(id)) {

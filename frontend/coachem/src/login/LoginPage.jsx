@@ -21,7 +21,6 @@ export default function LoginPage({ setRole, logout }) {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 localStorage.setItem('access_token', data.token);
                 localStorage.setItem('user_role', data.person.user.role);
                 localStorage.setItem('person', JSON.stringify(data.person));

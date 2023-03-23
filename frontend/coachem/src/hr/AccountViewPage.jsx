@@ -45,9 +45,9 @@ export default function AccountUpdatePage(props) {
                         name="name"
                         id="name"
                         defaultValue={account.name}
-                        readonly="readonly"
+                        readOnly
                     />
-                    <label htmlFor="address" readonly>
+                    <label htmlFor="address" readOnly>
                         Address
                     </label>
                     <input
@@ -55,9 +55,9 @@ export default function AccountUpdatePage(props) {
                         name="address"
                         id="address"
                         defaultValue={account.address}
-                        readonly="readonly"
+                        readOnly
                     />
-                    <label htmlFor="city" readonly>
+                    <label htmlFor="city" readOnly>
                         City
                     </label>
                     <input
@@ -65,9 +65,9 @@ export default function AccountUpdatePage(props) {
                         name="city"
                         id="city"
                         defaultValue={account.city}
-                        readonly="readonly"
+                        readOnly
                     />
-                    <label htmlFor="zipcode" readonly>
+                    <label htmlFor="zipcode" readOnly>
                         Zipcode
                     </label>
                     <input
@@ -75,9 +75,9 @@ export default function AccountUpdatePage(props) {
                         name="zipcode"
                         id="zipcode"
                         defaultValue={account.zipcode}
-                        readonly="readonly"
+                        readOnly
                     />
-                    <label htmlFor="phonenumber" readonly>
+                    <label htmlFor="phonenumber" readOnly>
                         Phonenumber
                     </label>
                     <input
@@ -85,7 +85,7 @@ export default function AccountUpdatePage(props) {
                         name="phonenumber"
                         id="phonenumber"
                         defaultValue={account.phonenumber}
-                        readonly="readonly"
+                        readOnly
                     />
                     <input
                         type="submit"

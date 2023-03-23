@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import './EvaluationsPage.css';
 
-export default function EvaluationsPage(props) {
+export default function EvaluationsPage({ logout, reloadNotifications }) {
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
@@ -15,7 +16,7 @@ export default function EvaluationsPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -28,34 +29,108 @@ export default function EvaluationsPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
             .then(setAttendee);
-    }, []);
+    }, [logout]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                reloadNotifications();
+            }
+        });
+    }, [logout, reloadNotifications]);
+
+    const addAttendee = (id, e) => {
+        e.preventDefault();
+
+        const body = { email: e.target[0].value };
+
+        fetch(`http://127.0.0.1:8080/api/evaluation/attendee/${id}`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((resp) => {
+                if (resp.status === 401) {
+                    logout();
+                } else if (!resp.ok) {
+                    throw new Error(resp.statusText);
+                }
+                return resp.json();
+            })
+            .then((data) => {
+                setAttendee(
+                    attendee.filter((a) => a.id !== data.id).concat(data)
+                );
+            });
+    };
+
+    const role = localStorage.getItem('user_role').toLowerCase();
+
+    const evaluationList = role === 'trainee' && (
+        <div className="trainee-evaluationss">
+            <h2>Your Evaluations</h2>
+            {trainee
+                .sort((t1, t2) => t1.time - t2.time)
+                .map((evalu) => (
+                    <Evaluation key={evalu.id} evaluation={evalu} />
+                ))}
+        </div>
+    );
+
+    const attendingList = (
+        <div className="attendee-evaluations">
+            <h2>Attending</h2>
+            {attendee
+                .sort((t1, t2) => t1.time - t2.time)
+                .map((evalu) => (
+                    <Attending
+                        key={evalu.id}
+                        evaluation={evalu}
+                        role={role}
+                        addAttendee={addAttendee}
+                    />
+                ))}
+        </div>
+    );
+
+    const person = JSON.parse(localStorage.getItem('person'));
 
     return (
         <div className="evalpage">
-            <h1>Evaluations</h1>
+            <div className="eval-heading-box">
+                <h1>Evaluations</h1>
+                <div className="current-user">
+                    <h4>
+                        Logged in as {person.name} ({role})
+                    </h4>
+                </div>
 
-            <div className="trainee-evaluationss">
-                <h2>Your Evaluations</h2>
-                {trainee
-                    .sort((t1, t2) => t1.time - t2.time)
-                    .map((evalu) => (
-                        <Evaluation key={evalu.id} evaluation={evalu} />
-                    ))}
+                {role !== 'trainee' && (
+                    <div>
+                        <Link className="new-eval-button" to="/new-eval">
+                            New Evaluation
+                        </Link>
+                    </div>
+                )}
             </div>
-            <div className="attendee-evaluations">
-                <h2>Attending</h2>
-                {attendee
-                    .sort((t1, t2) => t1.time - t2.time)
-                    .map((evalu) => (
-                        <Attending key={evalu.id} evaluation={evalu} />
-                    ))}
-            </div>
-            <div className="new-evaluations"></div>
+
+            {evaluationList}
+            {attendingList}
         </div>
     );
 }
@@ -79,17 +154,46 @@ const Evaluation = ({ evaluation }) => (
     </div>
 );
 
-const Attending = ({ evaluation }) => (
-    <div className="evaluation">
-        <div className="evaluation-trainee">
-            <h3>Trainee: </h3>
-            <p>
-                {evaluation.trainee.name} ({evaluation.trainee.user.email})
-            </p>
+function Attending({ role, evaluation, addAttendee }) {
+    return (
+        <div className="evaluation">
+            <div className="evaluation-info">
+                <div className="evaluation-trainee">
+                    <h3>Trainee: </h3>
+                    <p>
+                        {evaluation.trainee.name} (
+                        {evaluation.trainee.user.email})
+                    </p>
+                </div>
+                <div className="evaluation-time">
+                    <h3>Time: </h3>
+                    <p>{evaluation.time}</p>
+                </div>
+            </div>
+            <div className="evaluation-attendees">
+                <h3>Attendees:</h3>
+                {evaluation.attendees.map((attendee) => (
+                    <div key={attendee.id} className="evaluation-attendee">
+                        <p>
+                            {attendee.person.name} ({attendee.person.user.email}
+                            )
+                        </p>
+                    </div>
+                ))}
+            </div>
+            {(role === 'coach' || role === 'manager') && (
+                <div className="evaluation-add-attendee">
+                    <form onSubmit={(e) => addAttendee(evaluation.id, e)}>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" name="email" id="email" />
+                        <input
+                            className="new-attendee-button"
+                            type="submit"
+                            value="Add attendee"
+                        />
+                    </form>
+                </div>
+            )}
         </div>
-        <div className="evaluation-time">
-            <h3>Time: </h3>
-            <p>{evaluation.time}</p>
-        </div>
-    </div>
-);
+    );
+}

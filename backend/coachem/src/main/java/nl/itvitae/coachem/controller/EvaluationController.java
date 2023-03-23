@@ -1,9 +1,10 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.EvaluationDto;
+import nl.itvitae.coachem.dto.NewEvaluationAttendeeDto;
+import nl.itvitae.coachem.dto.NewEvaluationDto;
 import nl.itvitae.coachem.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,14 +17,14 @@ public class EvaluationController {
     @Autowired
     private EvaluationService evaluationService;
 
-    @PostMapping("/new/{traineeid}")
-    public EvaluationDto addEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("traineeid") Long traineeId) {
-        return evaluationService.addEvaluation(evaluation, traineeId);
+    @PostMapping("/new")
+    public EvaluationDto addEvaluation(@RequestBody NewEvaluationDto evaluation) {
+        return evaluationService.addEvaluation(evaluation);
     }
 
-    @PostMapping("/{id}/{attendeeid}")
-    public EvaluationDto addEvaluationAttendee(@PathVariable("id") Long evaluationId, @PathVariable("attendeeid") Long attendeeId) {
-        return evaluationService.addAttendee(evaluationId, attendeeId);
+    @PostMapping("/attendee/{id}")
+    public EvaluationDto addEvaluationAttendee(@PathVariable("id") Long evaluationId, @RequestBody NewEvaluationAttendeeDto attendee) {
+        return evaluationService.addAttendee(evaluationId, attendee);
     }
 
     @GetMapping("/trainee")
@@ -37,10 +38,13 @@ public class EvaluationController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<EvaluationDto> updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
-        return evaluationService.updateEvaluation(evaluation, id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public EvaluationDto updateEvaluation(@RequestBody EvaluationDto evaluation, @PathVariable("id") Long id) {
+        return evaluationService.updateEvaluation(evaluation, id);
+    }
+
+    @PutMapping("/seen")
+    public void markAllSeen() {
+        evaluationService.markAllSeen();
     }
 
     @DeleteMapping("/delete/{id}/{attendeeid}")

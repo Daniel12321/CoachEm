@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
@@ -8,6 +8,7 @@ import AccountPage from './account/AccountPage';
 import SkillsPage from './skills/SkillsPage';
 import SkillPage from './skills/SkillPage';
 import EvaluationsPage from './evaluations/EvaluationsPage';
+import NewEvaluationPage from './evaluations/NewEvaluationPage';
 import InvitationsPage from './invitations/InvitationsPage';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
@@ -17,10 +18,16 @@ import AccountViewPage from './hr/AccountViewPage';
 import './App.css';
 
 export default function App() {
-    const [notifications, setNotifications] = useState();
     const [role, setRole] = useState(localStorage.getItem('user_role'));
+    const [notifications, setNotifications] = useState();
 
-    useEffect(() => {
+    const logout = useCallback(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
+        setRole(undefined);
+    }, []);
+
+    const reloadNotifications = useCallback(() => {
         if (role) {
             fetch('http://127.0.0.1:8080/api/notification/all', {
                 headers: {
@@ -34,6 +41,10 @@ export default function App() {
         }
     }, [role]);
 
+    useEffect(() => {
+        reloadNotifications();
+    }, [role, reloadNotifications]);
+
     if (!role) {
         return (
             <div className="app">
@@ -45,12 +56,6 @@ export default function App() {
     }
 
     const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
-
-    const logout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user_role');
-        setRole(undefined);
-    };
 
     return (
         <div className="app">
@@ -90,15 +95,30 @@ export default function App() {
                     />
                     <Route
                         path="/skill/:id"
-                        element={<SkillPage logout={logout} />}
+                        element={
+                            <SkillPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/evals"
-                        element={<EvaluationsPage logout={logout} />}
+                        element={
+                            <EvaluationsPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/invites"
-                        element={<InvitationsPage logout={logout} />}
+                        element={
+                            <InvitationsPage
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path="/trainees"
@@ -119,6 +139,10 @@ export default function App() {
                     <Route
                         path="/account-view/:id"
                         element={<AccountViewPage logout={logout} />}
+                    />
+                    <Route
+                        path="/new-eval"
+                        element={<NewEvaluationPage logout={logout} />}
                     />
                 </Routes>
             </div>

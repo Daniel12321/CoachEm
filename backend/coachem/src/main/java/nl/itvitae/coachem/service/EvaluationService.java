@@ -1,6 +1,8 @@
 package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.EvaluationDto;
+import nl.itvitae.coachem.dto.NewEvaluationAttendeeDto;
+import nl.itvitae.coachem.dto.NewEvaluationDto;
 import nl.itvitae.coachem.model.Evaluation;
 import nl.itvitae.coachem.model.EvaluationAttendee;
 import nl.itvitae.coachem.model.Person;
@@ -16,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,22 +35,28 @@ public class EvaluationService {
     @Autowired
     private EvaluationDto.Mapper mapper;
 
-    public EvaluationDto addEvaluation(EvaluationDto dto, Long traineeId) {
-        Person trainee = personRepository.findById(traineeId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainee not found"));
-        Evaluation evaluation = mapper.post(dto);
+    public EvaluationDto addEvaluation(NewEvaluationDto dto) {
+        Person trainee = personRepository.findByUserEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainee not found"));
+        Evaluation evaluation = new Evaluation(dto.time(), trainee);
         evaluation.setTrainee(trainee);
         evaluation.setAttendees(new ArrayList<>());
         evaluation.setNotified(false);
         evaluation = evaluationRepository.save(evaluation);
 
+        EvaluationAttendee attendee = new EvaluationAttendee(evaluation, personRepository.findById(User.getFromAuth().getId()).get());
+        evaluationAttendeeRepository.save(attendee);
+
+        evaluation.getAttendees().add(attendee);
+        evaluation = evaluationRepository.save(evaluation);
+
         return mapper.get(evaluation);
     }
 
-    public EvaluationDto addAttendee(Long id, Long personId) {
+    public EvaluationDto addAttendee(Long id, NewEvaluationAttendeeDto dto) {
         Evaluation evaluation = evaluationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation not found"));
-        Person person = personRepository.findById(personId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
+        Person person = personRepository.findByUserEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found"));
 
-        if (evaluationAttendeeRepository.existsByEvaluationIdAndPersonId(id, personId))
+        if (evaluationAttendeeRepository.existsByEvaluationIdAndPersonId(id, person.getId()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "That person is already attending that evaluation");
 
         EvaluationAttendee attendee = new EvaluationAttendee(evaluation, person);
@@ -89,10 +96,17 @@ public class EvaluationService {
                 .toList();
     }
 
-    public Optional<EvaluationDto> updateEvaluation(EvaluationDto dto, Long id) {
+    public EvaluationDto updateEvaluation(EvaluationDto dto, Long id) {
         return evaluationRepository
                 .findById(id)
-                .map(feedback -> mapper.get(evaluationRepository.save(mapper.update(dto, feedback))));
+                .map(feedback -> mapper.get(evaluationRepository.save(mapper.update(dto, feedback))))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evaluation not found"));
+    }
+
+    public void markAllSeen() {
+        Long id = User.getFromAuth().getId();
+        evaluationRepository.markAllSeen(id);
+        evaluationAttendeeRepository.markAllSeen(id);
     }
 
     public void deleteAttendee(Long id, Long attendeeId) {
