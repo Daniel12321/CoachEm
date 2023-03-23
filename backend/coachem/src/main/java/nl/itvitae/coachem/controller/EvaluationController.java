@@ -23,7 +23,7 @@ public class EvaluationController {
         return evaluationService.addEvaluation(evaluation);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/attendee/{id}")
     public EvaluationDto addEvaluationAttendee(@PathVariable("id") Long evaluationId, @RequestBody NewEvaluationAttendeeDto attendee) {
         return evaluationService.addAttendee(evaluationId, attendee);
     }
