@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
@@ -21,7 +21,13 @@ export default function App() {
     const [role, setRole] = useState(localStorage.getItem('user_role'));
     const [notifications, setNotifications] = useState();
 
-    const reloadNotifications = () => {
+    const logout = useCallback(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
+        setRole(undefined);
+    }, []);
+
+    const reloadNotifications = useCallback(() => {
         if (role) {
             fetch('http://127.0.0.1:8080/api/notification/all', {
                 headers: {
@@ -33,11 +39,11 @@ export default function App() {
                 .then((resp) => resp.json())
                 .then(setNotifications);
         }
-    };
+    }, [role]);
 
     useEffect(() => {
         reloadNotifications();
-    }, [role]);
+    }, [role, reloadNotifications]);
 
     if (!role) {
         return (
@@ -50,12 +56,6 @@ export default function App() {
     }
 
     const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
-
-    const logout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user_role');
-        setRole(undefined);
-    };
 
     return (
         <div className="app">

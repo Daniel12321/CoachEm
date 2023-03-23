@@ -74,30 +74,10 @@ function Account({ logout, notifications }) {
 }
 
 function NotificationList({ notifications }) {
-    const clearEvals = () => {
-        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
-            method: 'PUT',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        });
-
-        notifications.attendees = [];
-        notifications.evaluations = [];
-        // setNotifications(notifications);
-    };
-    const clearInvites = () => {
-        notifications.invites = [];
-        // setNotifications(notifications);
-    };
-    const clearFeedback = () => {
-        notifications.feedback = [];
-        // setNotifications(notifications);
-    };
-    const clearInfoChanges = () => {
-        notifications.infoChanges = [];
-        // setNotifications(notifications);
-    };
+    const feedbackTo =
+        notifications.feedback && notifications.feedback.length > 0
+            ? '/skill/' + notifications.feedback[0].traineeSkill.id
+            : '/skills';
 
     return (
         <>
@@ -105,31 +85,26 @@ function NotificationList({ notifications }) {
                 to="/evals"
                 message="New Evaluation Invites"
                 count={arrayCount(notifications.attendees)}
-                clear={clearEvals}
             />
             <NotificationItem
                 to="/evals"
                 message="New Evaluations"
                 count={arrayCount(notifications.evaluations)}
-                clear={clearEvals}
             />
             <NotificationItem
                 to="/invite"
                 message="New 360 Invites"
                 count={arrayCount(notifications.invites)}
-                clear={clearInvites}
             />
             <NotificationItem
-                to="/skill/1"
+                to={feedbackTo}
                 message="New Feedback"
                 count={arrayCount(notifications.feedback)}
-                clear={clearFeedback}
             />
             <NotificationItem
                 to="/evals"
                 message="New Info Changes"
                 count={arrayCount(notifications.infoChanges)}
-                clear={clearInfoChanges}
             />
         </>
     );

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './SkillPage.css';
 
-export default function SkillPage(props) {
+export default function SkillPage({ logout, reloadNotifications }) {
     const { id } = useParams();
     const [skill, setSkill] = useState([]);
     const [traineeSkill, setTraineeSkill] = useState([]);
@@ -36,7 +36,7 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -45,9 +45,7 @@ export default function SkillPage(props) {
                 setTraineeSkill(data);
             })
             .catch((error) => console.log(error));
-    }, []);
 
-    useEffect(() => {
         fetch(`http://localhost:8080/api/feedback/traineeskill/${id}`, {
             method: 'GET',
             headers: {
@@ -57,17 +55,15 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
             .then((data) => {
-                setFeedback(sortByDate(feedback.concat(data)));
+                setFeedback(sortByDate(data));
             })
             .catch((error) => console.log(error));
-    }, []);
 
-    useEffect(() => {
         fetch(`http://localhost:8080/api/progress/traineeskill/${id}`, {
             method: 'GET',
             headers: {
@@ -77,15 +73,30 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
             .then((data) => {
-                setProgress(sortByDate(progress.concat(data)));
+                setProgress(sortByDate(data));
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [logout, id]);
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:8080/api/feedback/seen/${id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                reloadNotifications();
+            }
+        });
+    }, [id, logout, reloadNotifications]);
 
     function addProgress(e) {
         e.preventDefault();
@@ -109,7 +120,7 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -143,7 +154,7 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -169,7 +180,7 @@ export default function SkillPage(props) {
         )
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -192,7 +203,7 @@ export default function SkillPage(props) {
         )
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
@@ -211,7 +222,7 @@ export default function SkillPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })

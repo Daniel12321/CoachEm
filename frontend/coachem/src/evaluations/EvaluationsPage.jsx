@@ -34,16 +34,22 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                 return response.json();
             })
             .then(setAttendee);
+    }, [logout]);
 
+    useEffect(() => {
         fetch('http://127.0.0.1:8080/api/evaluation/seen', {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         }).then((resp) => {
-            reloadNotifications();
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                reloadNotifications();
+            }
         });
-    }, []);
+    }, [logout, reloadNotifications]);
 
     const addAttendee = (id, e) => {
         e.preventDefault();
@@ -68,7 +74,7 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
             })
             .then((data) => {
                 setAttendee(
-                    attendee.filter((a) => a.id != data.id).concat(data)
+                    attendee.filter((a) => a.id !== data.id).concat(data)
                 );
             });
     };
