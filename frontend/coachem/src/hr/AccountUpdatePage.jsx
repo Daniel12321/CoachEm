@@ -2,7 +2,7 @@ import './AccountUpdatePage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-export default function AccountUpdatePage(props) {
+export default function AccountUpdatePage({ logout }) {
     const [account, setAccounts] = useState([]);
     const { id } = useParams();
 
@@ -18,13 +18,13 @@ export default function AccountUpdatePage(props) {
                 },
             });
             if (res.status === 401) {
-                props.logout();
+                logout();
             }
             const data = await res.json();
             setAccounts(data);
         }
         getAccount();
-    }, [id]);
+    }, [id, logout]);
 
     const updateInfo = async (e) => {
         e.preventDefault();
@@ -45,7 +45,7 @@ export default function AccountUpdatePage(props) {
             },
         }).then((response) => {
             if (response.status === 401) {
-                props.logout();
+                logout();
             }
             return response.json();
         });

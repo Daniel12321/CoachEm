@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function AccountUpdatePage(props) {
+export default function AccountUpdatePage({ logout }) {
     const [account, setAccounts] = useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -20,13 +20,13 @@ export default function AccountUpdatePage(props) {
                 },
             });
             if (res.status === 401) {
-                props.logout();
+                logout();
             }
             const data = await res.json();
             setAccounts(data);
         }
         getAccount();
-    }, [id]);
+    }, [id, logout]);
 
     const updateInfo = async (e) => {
         console.log('update');
