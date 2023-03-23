@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useCallback } from 'react';
 import './SkillsPage.css';
 
 export default function SkillsPage({ logout, ownSkills }) {
@@ -42,7 +43,7 @@ export default function SkillsPage({ logout, ownSkills }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    });
+    }, [logout]);
 
     function getSkillById(id) {
         fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
@@ -70,7 +71,7 @@ export default function SkillsPage({ logout, ownSkills }) {
         } else {
             getSkillById(person.id);
         }
-    });
+    }, [person.id, id, getSkillById]);
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/skill/all`, {
