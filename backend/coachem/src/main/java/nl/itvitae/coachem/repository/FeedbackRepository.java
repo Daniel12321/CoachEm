@@ -17,7 +17,6 @@ public interface FeedbackRepository extends CrudRepository<Feedback,Long> {
     List<Feedback> getAllUnseen(Long personId);
 
     @Modifying
-//    @Query("UPDATE Feedback f SET f.notified = true WHERE f.traineeSkill.id = ?1 AND f.traineeSkill.user.id = ?2")
     @Query("UPDATE Feedback f SET f.notified = true WHERE f.traineeSkill.id = ?1")
     void markAllSeen(Long traineeSkillId, Long personId);
 }
