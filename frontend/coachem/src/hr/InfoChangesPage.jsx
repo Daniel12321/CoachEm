@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import './InfoChangesPage.css';
 import { useNavigate } from 'react-router-dom';
+import {Components, Components2} from '../common/Components.jsx';
 
-export default function infoChangesPage() {
+
+export default function InfoChangesPage({ logout }) {
     const [infoChanges, setInfoChanges] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -10,7 +12,7 @@ export default function infoChangesPage() {
 
     useEffect(() => {
         getAllInfoChanges();
-    });
+    }, []);
 
     async function getAllInfoChanges() {
         await fetch('http://localhost:8080/api/infochange/all', {
@@ -22,15 +24,14 @@ export default function infoChangesPage() {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
             .then((data) => setInfoChanges(data));
     }
 
-
-    const filteredInfoChanges = infoChanges
+     const filteredInfoChanges = infoChanges
         .filter(
             (s) => !(name && !s.name.toLowerCase().includes(name.toLowerCase()))
         )
@@ -38,6 +39,41 @@ export default function infoChangesPage() {
             (s) =>
                 !(email && !s.email.toLowerCase().includes(email.toLowerCase()))
         );
+
+    return (
+        <div className="infoChanges-page">
+            <h1>infoChanges Dashboard</h1>
+            <div className="infoChanges">
+                <div className="infoChange-filters">
+                    <h2>Filters</h2>
+                   
+                    <div className="infoChange-filter-box">
+                        <Components setName={setName}/>
+                        <Components2 setEmail={setEmail}/>
+                         {/* <NameFilter setName={setName} />
+                        <EmailFilter setEmail={setEmail} />  */}
+                    </div>
+                </div>
+                <div className="infoChange-list">
+                    {filteredInfoChanges.map((infoChange) => (
+                        <div
+                            key={infoChange.id}
+                            className="infoChange-item"
+                            onClick={() => {
+                                navigate(`/skills/${infoChange.id}`);
+                            }}
+                        >
+                            {console.log("ab")}
+                              <h3>{infoChange.name}</h3>
+                            <h4>{infoChange.email}</h4> 
+                            <h5>{infoChange.phonenumber}</h5>  
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
 
         // const NameFilter = ({ setName }) => (
         //     <div className="infoChange-filter infoChange-filter-name">
@@ -62,36 +98,3 @@ export default function infoChangesPage() {
         //         />
         //     </div>
         // );
-
-    return (
-        <div className="infoChanges-page">
-            <h1>infoChanges Dashboard</h1>
-            <div className="infoChanges">
-                <div className="infoChange-filters">
-                    <h2>Filters</h2>
-                    <div className="infoChange-filter-box">
-                        <NameFilter setName={setName} />
-                        <EmailFilter setEmail={setEmail} />
-                    </div>
-                </div>
-                <div className="infoChange-list">
-                    {filteredInfoChanges.map((infoChange) => (
-                        <div
-                            key={infoChange.id}
-                            className="infoChange-item"
-                            onClick={() => {
-                                navigate(`/skills/${infoChange.id}`);
-                            }}
-                        >
-                            <h3>{infoChange.name}</h3>
-                            <h4>{infoChange.user.email}</h4>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-
-

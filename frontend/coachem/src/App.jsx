@@ -16,6 +16,7 @@ import AccountAddPage from './hr/AccountAddPage';
 import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
 import InfoChangesPage from './hr/InfoChangesPage';
+import InfoChangeControllPage from './hr/InfoChangeControllPage'
 import './App.css';
 
 export default function App() {
@@ -144,6 +145,10 @@ export default function App() {
                     <Route
                         path="/infoChanges"
                         element={<InfoChangesPage logout={logout} />}
+                    />
+                    <Route
+                        path="/infoChange-controll/:id"
+                        element={<InfoChangeControllPage logout={logout} />}
                     />
                     <Route
                         path="/new-eval"
