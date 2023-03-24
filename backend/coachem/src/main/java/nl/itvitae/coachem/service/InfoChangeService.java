@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -66,5 +67,8 @@ public class InfoChangeService {
         personRepository.save(person);
         infoChangeRepository.deleteById(id);
         return true;
+    }
+
+    public Optional<InfoChangeDto> getInfoChangeById(Long id) {return infoChangeRepository.findById(id).map(mapper::get);
     }
 }
