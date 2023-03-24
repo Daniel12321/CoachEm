@@ -1,10 +1,16 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.TraineeSkillDto;
+import nl.itvitae.coachem.service.TraineeSkillReportService;
 import nl.itvitae.coachem.service.TraineeSkillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,6 +22,9 @@ public class TraineeSkillController {
     @Autowired
     private TraineeSkillService traineeSkillService;
 
+    @Autowired
+    private TraineeSkillReportService reportService;
+
     @PostMapping("/new/{traineeid}/{skillid}")
     public ResponseEntity<TraineeSkillDto> newTraineeSkill(@RequestBody TraineeSkillDto traineeSkill,
                                            @PathVariable("traineeid") Long traineeId,
@@ -23,6 +32,20 @@ public class TraineeSkillController {
         return traineeSkillService.newTraineeSkill(traineeSkill, traineeId, skillId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PostMapping("/upload/{id}")
+    public void upload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) {
+        this.reportService.saveReport(id, file);
+    }
+
+    @GetMapping("/download/{id}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable("id") Long id) {
+        Resource resource = this.reportService.loadReport(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Uploaded file found"));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     @GetMapping("/get/{id}")
