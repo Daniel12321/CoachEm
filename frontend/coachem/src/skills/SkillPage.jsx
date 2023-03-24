@@ -205,7 +205,6 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 if (response.status === 401) {
                     logout();
                 }
-                return response.json();
             })
             .catch((error) => console.log(error));
         setProgress(progress.filter((p) => progress[index] !== p));

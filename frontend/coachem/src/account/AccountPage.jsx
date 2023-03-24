@@ -1,13 +1,11 @@
 import './AccountPage.css';
 
 export default function AccountPage(props) {
-    const info = {
-        name: 'Daniel',
-        address: 'Grevengoedlaan 106',
-        city: 'Doetinchem',
-        zipcode: '7009DX',
-        phonenumber: '0612345678',
-    };
+    const person = JSON.parse(localStorage.getItem('person'));
+    let hr;
+    if (person.role === 'HR') {
+        hr = true;
+    }
 
     const updateInfo = (e) => {
         e.preventDefault();
@@ -36,8 +34,6 @@ export default function AccountPage(props) {
     };
 
     const updatePassword = (e) => {
-        e.preventDefault();
-
         const body = {
             oldPassword: e.target[0].value,
             newPassword1: e.target[1].value,
@@ -51,14 +47,18 @@ export default function AccountPage(props) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
-        })
-            .then((resp) => console.log(resp.status))
-            .then((response) => {
-                if (response.status === 401) {
-                    props.logout();
-                }
-                return response.json();
-            });
+        }).then((response) => {
+            if (response.ok) {
+                alert('password changed');
+            }
+            if (response.status === 401) {
+                props.logout();
+            }
+            if (!response.ok) {
+                alert("wrong password or new passwords don't match");
+            }
+            return response.json();
+        });
     };
 
     return (
@@ -72,37 +72,37 @@ export default function AccountPage(props) {
                         type="text"
                         name="name"
                         id="name"
-                        defaultValue={info.name}
+                        defaultValue={person.name}
                     />
                     <label htmlFor="address">Address</label>
                     <input
                         type="text"
                         name="address"
                         id="address"
-                        defaultValue={info.address}
+                        defaultValue={person.address}
                     />
                     <label htmlFor="city">City</label>
                     <input
                         type="text"
                         name="city"
                         id="city"
-                        defaultValue={info.city}
+                        defaultValue={person.city}
                     />
                     <label htmlFor="zipcode">Zipcode</label>
                     <input
                         type="text"
                         name="zipcode"
                         id="zipcode"
-                        defaultValue={info.zipcode}
+                        defaultValue={person.zipcode}
                     />
                     <label htmlFor="phonenumber">Phonenumber</label>
                     <input
                         type="text"
                         name="phonenumber"
                         id="phonenumber"
-                        defaultValue={info.phonenumber}
+                        defaultValue={person.phonenumber}
                     />
-                    <input type="submit" value="Update Information" />
+                    <input type="submit" value="request information change" />
                 </form>
             </div>
             <div className="change-password">

@@ -45,25 +45,30 @@ export default function SkillsPage({ logout, ownSkills }) {
             .catch((error) => console.log(error));
     }, [logout]);
 
-    function getSkillById(id) {
-        fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        })
-            .then((response) => {
-                if (response.status === 401) {
-                    logout();
-                }
-                return response.json();
+    const getSkillById = useCallback(
+        (id) => {
+            fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
             })
-            .then((data) => {
-                setTraineeSkills(data);
-            })
-            .catch((error) => console.log(error));
-    }
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    setTraineeSkills(data);
+                })
+                .catch((error) => console.log(error));
+        },
+        [logout]
+    );
 
     useEffect(() => {
         if (id) {
