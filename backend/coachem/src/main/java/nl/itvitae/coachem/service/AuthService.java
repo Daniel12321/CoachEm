@@ -26,6 +26,9 @@ import java.util.Optional;
 public class AuthService {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private UserRepository userRepo;
 
     @Autowired
@@ -60,6 +63,8 @@ public class AuthService {
 
         this.userRepo.save(user);
         person = this.personRepo.save(person);
+
+        this.emailService.sendNewAccountEmail(person, dto.password());
 
         return Optional.of(this.mapper.get(person));
     }
