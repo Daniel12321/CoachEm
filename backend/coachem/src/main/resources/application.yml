@@ -8,7 +8,22 @@ spring:
     database_platform: org.hibernate.dialect.MySQL5Dialect
     hibernate.ddl-auto: create-drop # update create-only
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 'noreply.coachem@gmail.com'
+    password: password
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 server:
   port: 8080
   error:
     include-stacktrace: never
+
