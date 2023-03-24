@@ -233,6 +233,50 @@ export default function SkillPage({ logout, reloadNotifications }) {
         return arr.sort((a, b) => new Date(b.time) - new Date(a.time));
     }
 
+    function uploadFile(e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('file', e.target[0].files[0]);
+
+        fetch(`http://127.0.0.1:8080/api/traineeskill/upload/${id}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                const newTraineeSkill = { ...traineeSkill };
+                newTraineeSkill.report = e.target[0].files[0].name;
+
+                setTraineeSkill(newTraineeSkill);
+            }
+        });
+    }
+
+    function downloadFile() {
+        fetch(`http://127.0.0.1:8080/api/traineeskill/download/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((res) => res.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = traineeSkill.report;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            });
+    }
+
+    const typeReportText = skill.type ? 'Certificate' : 'Report';
+
     if (!skill || !skill.category) {
         return '';
     }
@@ -275,6 +319,28 @@ export default function SkillPage({ logout, reloadNotifications }) {
                     <b>Completed skill</b>
                 </label>
             </div>
+
+            <div className="upload">
+                <h3>Upload {typeReportText}</h3>
+                <div className="upload-box">
+                    <form className="upload-form" onSubmit={uploadFile}>
+                        <input type="file" name="file" id="file" />
+                        <input type="submit" value="Upload" />
+                    </form>
+                    {traineeSkill.report && (
+                        <div className="uploaded-file">
+                            <div>
+                                <h4>Uploaded {typeReportText}</h4>
+                                <p>{traineeSkill.report}</p>
+                            </div>
+                            <div>
+                                <button onClick={downloadFile}>Download</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
             <div className="flex-container">
                 <div>
                     <h2>Progress</h2>

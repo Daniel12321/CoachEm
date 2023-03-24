@@ -41,6 +41,36 @@ button:hover {
     width: 20px;
 }
 
+/* Uploads */
+
+.upload-box {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 100px;
+}
+
+.upload-form {
+    width: 100%;
+}
+
+.upload-form input[type='submit'], .uploaded-file button {
+    font-size: 1.6rem;
+    background-color: #65baff;
+    padding: 8px 24px;
+    border-radius: 8px;
+}
+
+.uploaded-file {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
 /* flex */
 
 .flex-container {
@@ -127,3 +157,4 @@ button:hover {
     padding: 4px 16px;
     border-radius: 10px;
 }
+

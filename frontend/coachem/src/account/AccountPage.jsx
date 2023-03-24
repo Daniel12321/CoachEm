@@ -2,11 +2,6 @@ import './AccountPage.css';
 
 export default function AccountPage(props) {
     const person = JSON.parse(localStorage.getItem('person'));
-    let hr;
-    if (person.role === 'HR') {
-        hr = true;
-    }
-
     const updateInfo = (e) => {
         e.preventDefault();
 
