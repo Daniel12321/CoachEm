@@ -92,6 +92,7 @@ public class PersonService {
         return Optional.of(mapper.get(person));
     }
 
-
-
+    public PersonDto getPersonByEmail(String email) {
+        return mapper.get(personRepository.findByUserEmail(email).orElse(null));
+    }
 }

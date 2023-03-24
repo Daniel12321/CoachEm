@@ -155,6 +155,13 @@ const Evaluation = ({ evaluation }) => (
 );
 
 function Attending({ role, evaluation, addAttendee }) {
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+    };
     return (
         <div className="evaluation">
             <div className="evaluation-info">
@@ -167,7 +174,12 @@ function Attending({ role, evaluation, addAttendee }) {
                 </div>
                 <div className="evaluation-time">
                     <h3>Time: </h3>
-                    <p>{evaluation.time}</p>
+                    <p>
+                        {new Date(evaluation.time).toLocaleString(
+                            'en-EN',
+                            options
+                        )}
+                    </p>
                 </div>
             </div>
             <div className="evaluation-attendees">

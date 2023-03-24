@@ -15,6 +15,7 @@ import AccountsPage from './hr/AccountsPage';
 import AccountAddPage from './hr/AccountAddPage';
 import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
+import NewInvitePage from './invitations/NewInvitePage';
 import './App.css';
 
 export default function App() {
@@ -143,6 +144,10 @@ export default function App() {
                     <Route
                         path="/new-eval"
                         element={<NewEvaluationPage logout={logout} />}
+                    />
+                    <Route
+                        path="/new-invite"
+                        element={<NewInvitePage logout={logout} />}
                     />
                 </Routes>
             </div>
