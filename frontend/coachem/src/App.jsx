@@ -16,6 +16,7 @@ import AccountAddPage from './hr/AccountAddPage';
 import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
 import NewInvitePage from './invitations/NewInvitePage';
+import NewSkill from './skills/NewSkill';
 import './App.css';
 
 export default function App() {
@@ -148,6 +149,10 @@ export default function App() {
                     <Route
                         path="/new-invite"
                         element={<NewInvitePage logout={logout} />}
+                    />
+                    <Route
+                        path="/new-skill"
+                        element={<NewSkill logout={logout} />}
                     />
                 </Routes>
             </div>

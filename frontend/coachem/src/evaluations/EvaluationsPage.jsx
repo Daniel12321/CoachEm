@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 
 import './EvaluationsPage.css';
 
+const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+};
+
 export default function EvaluationsPage({ logout, reloadNotifications }) {
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
@@ -139,7 +147,7 @@ const Evaluation = ({ evaluation }) => (
     <div className="evaluation">
         <div className="evaluation-time">
             <h3>Time: </h3>
-            <p>{evaluation.time}</p>
+            <p>{new Date(evaluation.time).toLocaleString('en-EN', options)}</p>
         </div>
         <div className="evaluation-attendees">
             <h3>Attendees:</h3>
@@ -155,13 +163,6 @@ const Evaluation = ({ evaluation }) => (
 );
 
 function Attending({ role, evaluation, addAttendee }) {
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-    };
     return (
         <div className="evaluation">
             <div className="evaluation-info">

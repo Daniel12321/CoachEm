@@ -49,7 +49,8 @@ public class InviteService {
         invite.setAccepted(false);
         invite.setTrainee(inviter);
         invite.setInvited(invited);
-        return Optional.of(mapper.get(inviteRepository.save(invite)));
+        Invite invite2 = inviteRepository.save(invite);
+        return Optional.of(mapper.get(invite2));
     }
 
     public boolean acceptInviteRequest(Long id) {

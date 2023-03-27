@@ -17,7 +17,7 @@ export default function InvitationsPage({ logout }) {
             return;
         }
         const body = {
-            time: e.target[0].value + ' ' + e.target[1].value,
+            time: new Date(e.target[0].value + ' ' + e.target[1].value),
             accepted: false,
         };
 
@@ -64,6 +64,11 @@ export default function InvitationsPage({ logout }) {
                 let newperson = true;
                 if (data.id === loggedInPerson.id) {
                     alert('cannot add yourself');
+                    e.target[0].value = '';
+                    return;
+                }
+                if (data.user.role === 'HR') {
+                    alert('cannot add hr employees');
                     e.target[0].value = '';
                     return;
                 }
