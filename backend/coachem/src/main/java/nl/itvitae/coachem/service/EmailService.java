@@ -1,8 +1,10 @@
 package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.model.Evaluation;
+import nl.itvitae.coachem.model.Feedback;
 import nl.itvitae.coachem.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -12,18 +14,26 @@ import org.springframework.stereotype.Service;
 @Async("threadPoolTaskExecutor")
 public class EmailService {
 
+    @Value("${spring.mail.enabled}")
+    private boolean enabled;
+
     @Autowired
     private JavaMailSender emailSender;
 
     @Autowired
     private SimpleMailMessage template;
 
+    private void send(SimpleMailMessage mail) {
+        if (enabled)
+            emailSender.send(mail);
+    }
+
     public void sendNewAccountEmail(Person person, String password) {
         SimpleMailMessage mail = new SimpleMailMessage(this.template);
         mail.setTo(person.getUser().getEmail());
         mail.setSubject("New Coachem Account");
         mail.setText(this.getNewAccountText(person.getName(), person.getUser().getEmail(), password));
-        emailSender.send(mail);
+        send(mail);
     }
 
     public void sendEvaluationEmail(Person person, Evaluation evaluation) {
@@ -31,6 +41,7 @@ public class EmailService {
         mail.setTo(person.getUser().getEmail());
         mail.setSubject("Coachem Evaluation");
         mail.setText(this.getEvaluationText(person.getName(), person.getUser().getEmail(), evaluation.getTime()));
+        send(mail);
     }
 
     public void sendEvaluationAttendingEmail(Person person, Evaluation evaluation) {
@@ -40,13 +51,20 @@ public class EmailService {
         mail.setTo(person.getUser().getEmail());
         mail.setSubject("Coachem Evaluation Invite");
         mail.setText(this.getEvaluationAttendeeText(person.getName(), trainee.getName(), trainee.getUser().getEmail(), evaluation.getTime()));
+        send(mail);
     }
 
-    public void sendFeedbackEmail() {
-
+    public void sendFeedbackEmail(Person trainee, Person person, Feedback feedback) {
+        SimpleMailMessage mail = new SimpleMailMessage(this.template);
+        mail.setTo(trainee.getUser().getEmail());
+        mail.setSubject("Coachem Feedback");
+        mail.setText(this.getFeedbackText(trainee.getName(), person.getName(), feedback.getTraineeSkill().getSkill().getName(), feedback.getText(), feedback.getTraineeSkill().getId()));
+        send(mail);
     }
 
     public void send360InviteEmail() {}
+
+    public void send360InviteReminderEmail() {}
 
     public void sendNewInfoChangeEmail() {}
 
@@ -101,5 +119,18 @@ public class EmailService {
 
                 - Team Coachem
                 """, name, trainee, traineeEmail, time);
+    }
+
+    private String getFeedbackText(String name, String coachName, String skillName, String comment, Long id) {
+        return String.format("""
+                Hello %s,
+                
+                You have new feedback from %s on the skill '%s':
+                `%s`
+                
+                Click here to see the feedback. (http://127.0.0.1:3000/skill/%s)
+                
+                - Team Coachem
+                """, name, coachName, skillName, comment, id);
     }
 }

@@ -93,10 +93,10 @@ public class DefaultUsers {
         progressRepo.save(new Progress("and againnnnn", "2023-03-23T10:35:12.967Z", traineeskill));
         progressRepo.save(new Progress("i made progress dude", "2023-03-23T10:35:12.967Z", traineeskill2));
 
-        feedbackRepo.save(new Feedback("do this differently", "2023-03-23T10:35:12.967Z", traineeskill, coach));
-        feedbackRepo.save(new Feedback("do this differently too", "2023-03-23T10:35:12.967Z", traineeskill, coach));
-        feedbackRepo.save(new Feedback("fix it", "2023-03-23T10:35:12.967Z", traineeskill, coach));
-        feedbackRepo.save(new Feedback("good work", "2023-03-23T10:35:12.967Z", traineeskill2, coach));
+        feedbackRepo.save(new Feedback("do this differently", "2023-03-23T10:35:12.967Z", traineeskill, coachP));
+        feedbackRepo.save(new Feedback("do this differently too", "2023-03-23T10:35:12.967Z", traineeskill, coachP));
+        feedbackRepo.save(new Feedback("fix it", "2023-03-23T10:35:12.967Z", traineeskill, coachP));
+        feedbackRepo.save(new Feedback("good work", "2023-03-23T10:35:12.967Z", traineeskill2, coachP));
 
         Evaluation evaluation = evaluationRepo.save(new Evaluation("2023-03-23T10:35:12.967Z", traineeP));
         EvaluationAttendee evaluationAttendee = evaluationAttendeeRepo.save(new EvaluationAttendee(evaluation, coachP));
