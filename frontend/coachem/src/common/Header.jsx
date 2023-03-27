@@ -92,7 +92,7 @@ function NotificationList({ notifications }) {
                 count={arrayCount(notifications.evaluations)}
             />
             <NotificationItem
-                to="/invite"
+                to="/invites"
                 message="New 360 Invites"
                 count={arrayCount(notifications.invites)}
             />
@@ -141,6 +141,7 @@ const CoachNav = () => (
         <NavLink to="/skills-all">All Skills</NavLink>
         <NavLink to="/evals">Evaluations</NavLink>
         <NavLink to="/invites">Invitations</NavLink>
+        <NavLink to="/new-skill">New Skill</NavLink>
     </nav>
 );
 

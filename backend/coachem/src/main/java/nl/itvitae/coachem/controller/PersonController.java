@@ -25,6 +25,11 @@ public class PersonController {
         return personService.getAllPersons();
     }
 
+    @GetMapping("/email/{email}")
+    public PersonDto getPersonByEmail(@PathVariable(value = "email") String email){
+        return personService.getPersonByEmail(email);
+    }
+
     @GetMapping("/trainees")
     public List<PersonDto> getAllTrainees() {
         return personService.getAllTrainees();

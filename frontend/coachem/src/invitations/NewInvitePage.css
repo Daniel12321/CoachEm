@@ -1,0 +1,37 @@
+.new-invite-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-invite-form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
+.input[type='submit'] {
+    margin-top: 24px;
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+input[type='submit']:hover {
+    cursor: pointer;
+}
+
+.invite-people{
+    margin-top: 20px;
+}
+
+.invite-addpeople{
+    width: 100%;
+}
+
+.invite-addpeople input{
+    width: 100%;
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 0;
+}
