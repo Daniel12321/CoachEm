@@ -1,0 +1,65 @@
+package nl.itvitae.coachem.controller;
+
+import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.service.InfoChangeService;
+import nl.itvitae.coachem.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/api/person")
+public class PersonController {
+
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private InfoChangeService infoChangeService;
+
+    @GetMapping("/all")
+    public List<PersonDto> getAllPersons() {
+        return personService.getAllPersons();
+    }
+
+    @GetMapping("/email/{email}")
+    public PersonDto getPersonByEmail(@PathVariable(value = "email") String email){
+        return personService.getPersonByEmail(email);
+    }
+
+    @GetMapping("/trainees")
+    public List<PersonDto> getAllTrainees() {
+        return personService.getAllTrainees();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDto getPersonById(@PathVariable(value = "id") Long id) {
+        return personService.getPersonById(id);
+    }
+
+    @PutMapping("/infochange/{infochangeid}")
+    public ResponseEntity<PersonDto> acceptInfoChange(@PathVariable("infochangeid") Long infoChangeId) {
+        return personService.acceptInfoChange(infoChangeId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deletePersonById(@PathVariable("id") Long id) {
+        if (personService.deletePerson(id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PersonDto> updatePersonById(@PathVariable("id") Long id, @RequestBody PersonDto person){
+        return personService.updatePersonById(person, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+}
