@@ -24,6 +24,9 @@ import java.util.List;
 public class EvaluationService {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private EvaluationRepository evaluationRepository;
 
     @Autowired
@@ -49,6 +52,8 @@ public class EvaluationService {
         evaluation.getAttendees().add(attendee);
         evaluation = evaluationRepository.save(evaluation);
 
+        emailService.sendEvaluationEmail(trainee, evaluation);
+
         return mapper.get(evaluation);
     }
 
@@ -65,8 +70,12 @@ public class EvaluationService {
         person.getEvaluations().add(attendee);
         evaluation.getAttendees().add(attendee);
 
-        personRepository.save(person);
-        return mapper.get(evaluationRepository.save(evaluation));
+        person = personRepository.save(person);
+        evaluation = evaluationRepository.save(evaluation);
+
+        emailService.sendEvaluationAttendingEmail(person, evaluation);
+
+        return mapper.get(evaluation);
     }
 
     public List<EvaluationDto> getEvaluationsAsTrainee() {
