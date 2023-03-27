@@ -82,7 +82,11 @@ export default function App() {
                     <Route
                         path="/skills"
                         element={
-                            <SkillsPage ownSkills={true} logout={logout} />
+                            <SkillsPage
+                                ownSkills={true}
+                                logout={logout}
+                                notifications={notifications}
+                            />
                         }
                     />
                     <Route
