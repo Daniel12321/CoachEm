@@ -32,10 +32,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<TraineeSkill> traineeSkills = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Feedback> feedbacks = new ArrayList<>();
-
     public User(String email, String password, String role) {
         this.email = email;
         this.password = password;

@@ -2,11 +2,12 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.FeedbackDto;
 import nl.itvitae.coachem.model.Feedback;
+import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.model.TraineeSkill;
 import nl.itvitae.coachem.model.User;
 import nl.itvitae.coachem.repository.FeedbackRepository;
+import nl.itvitae.coachem.repository.PersonRepository;
 import nl.itvitae.coachem.repository.TraineeSkillRepository;
-import nl.itvitae.coachem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +20,16 @@ import java.util.Optional;
 public class FeedbackService {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private FeedbackRepository feedbackRepository;
 
     @Autowired
     private TraineeSkillRepository traineeSkillRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private PersonRepository personRepository;
 
     @Autowired
     private FeedbackDto.Mapper mapper;
@@ -34,16 +38,20 @@ public class FeedbackService {
         if (!dto.isValid())
             return Optional.empty();
 
-        User user = userRepository.findById(userId).orElse(null);
+        Person person = personRepository.findById(userId).orElse(null);
         TraineeSkill skill = traineeSkillRepository.findById(traineeSkillId).orElse(null);
-        if (user == null || skill == null)
+        if (person == null || skill == null)
             return Optional.empty();
 
         Feedback feedback = mapper.post(dto);
-        feedback.setUser(user);
+        feedback.setPerson(person);
         feedback.setTraineeSkill(skill);
         feedback.setNotified(false);
-        return Optional.of(mapper.get(feedbackRepository.save(feedback)));
+        feedback = feedbackRepository.save(feedback);
+
+        emailService.sendFeedbackEmail(personRepository.findById(skill.getUser().getId()).get(), person, feedback);
+
+        return Optional.of(mapper.get(feedback));
     }
 
     public Optional<FeedbackDto> getFeedback(Long id) {
