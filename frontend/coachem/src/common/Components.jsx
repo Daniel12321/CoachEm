@@ -1,4 +1,4 @@
-export function Components({setName}) {
+export function NameFilter({setName}) {
     return(
         <div className="infoChange-filter infoChange-filter-name">
         <p>Name</p>
@@ -12,7 +12,7 @@ export function Components({setName}) {
     ) 
 }
 
-export function Components2({setEmail}) {
+export function EmailFilter({setEmail}) {
     return(
         <div className="infoChange-filter trainee-filter-email">
         <p>Email</p>
@@ -26,7 +26,7 @@ export function Components2({setEmail}) {
     ) 
 }
 
-export function OldDataViewComponent({account, updateInfo}){
+export function OldDataViewComponent({data, updateInfo}){
     return(
     <div className="personal-info">
         <h2>Current Personal Details</h2>
@@ -36,7 +36,7 @@ export function OldDataViewComponent({account, updateInfo}){
                 type="text"
                 name="name"
                 id="name"
-                defaultValue={account.name}
+                defaultValue={data.name}
                 readOnly
             />
             <label htmlFor="address">Address</label>
@@ -44,7 +44,7 @@ export function OldDataViewComponent({account, updateInfo}){
                 type="text"
                 name="address"
                 id="address"
-                defaultValue={account.address}
+                defaultValue={data.address}
                 readOnly
             />
             <label htmlFor="city">City</label>
@@ -52,7 +52,7 @@ export function OldDataViewComponent({account, updateInfo}){
                 type="text"
                 name="city"
                 id="city"
-                defaultValue={account.city}
+                defaultValue={data.city}
                 readOnly
             />
             <label htmlFor="zipcode">Zipcode</label>
@@ -60,7 +60,7 @@ export function OldDataViewComponent({account, updateInfo}){
                 type="text"
                 name="zipcode"
                 id="zipcode"
-                defaultValue={account.zipcode}
+                defaultValue={data.zipcode}
                 readOnly
             />
             <label htmlFor="phonenumber">Phonenumber</label>
@@ -68,7 +68,7 @@ export function OldDataViewComponent({account, updateInfo}){
                 type="text"
                 name="phonenumber"
                 id="phonenumber"
-                defaultValue={account.phonenumber}
+                defaultValue={data.phonenumber}
                 readOnly
             />
         </form>
@@ -76,7 +76,7 @@ export function OldDataViewComponent({account, updateInfo}){
 )
 }
 
-export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
+export function NewDataViewComponent({data, updateInfo, rejectInfoChange}){
     return(
     <div className="personal-info">
         <h2>New Personal Details</h2>
@@ -86,7 +86,7 @@ export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
                 type="text"
                 name="name"
                 id="name"
-                defaultValue={account.name}
+                defaultValue={data.name}
                 readOnly
             />
             <label htmlFor="address">Address</label>
@@ -94,7 +94,7 @@ export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
                 type="text"
                 name="address"
                 id="address"
-                defaultValue={account.address}
+                defaultValue={data.address}
                 readOnly
             />
             <label htmlFor="city">City</label>
@@ -102,7 +102,7 @@ export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
                 type="text"
                 name="city"
                 id="city"
-                defaultValue={account.city}
+                defaultValue={data.city}
                 readOnly
             />
             <label htmlFor="zipcode">Zipcode</label>
@@ -110,7 +110,7 @@ export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
                 type="text"
                 name="zipcode"
                 id="zipcode"
-                defaultValue={account.zipcode}
+                defaultValue={data.zipcode}
                 readOnly
             />
             <label htmlFor="phonenumber">Phonenumber</label>
@@ -118,7 +118,7 @@ export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
                 type="text"
                 name="phonenumber"
                 id="phonenumber"
-                defaultValue={account.phonenumber}
+                defaultValue={data.phonenumber}
                 readOnly
             />
             <input

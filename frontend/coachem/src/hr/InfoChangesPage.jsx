@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import './InfoChangesPage.css';
-import { useNavigate } from 'react-router-dom';
-import {Components, Components2} from '../common/Components.jsx';
-
+import { useNavigate} from 'react-router-dom';
+import { NameFilter, EmailFilter} from '../common/Components.jsx';
 
 export default function InfoChangesPage({ logout }) {
     const [infoChanges, setInfoChanges] = useState([]);
@@ -16,7 +15,9 @@ export default function InfoChangesPage({ logout }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             })
                 .then((response) => {
@@ -27,13 +28,10 @@ export default function InfoChangesPage({ logout }) {
                 })
                 .then((data) => setInfoChanges(data));
         }
-
         getAllInfoChanges();
     }, [logout]);
 
-
-
-     const filteredInfoChanges = infoChanges
+    const filteredInfoChanges = infoChanges
         .filter(
             (s) => !(name && !s.name.toLowerCase().includes(name.toLowerCase()))
         )
@@ -48,12 +46,10 @@ export default function InfoChangesPage({ logout }) {
             <div className="infoChanges">
                 <div className="infoChange-filters">
                     <h2>Filters</h2>
-                   
+
                     <div className="infoChange-filter-box">
-                        <Components setName={setName}/>
-                        <Components2 setEmail={setEmail}/>
-                         {/* <NameFilter setName={setName} />
-                        <EmailFilter setEmail={setEmail} />  */}
+                        <NameFilter setName={setName} />
+                        <EmailFilter setEmail={setEmail} />
                     </div>
                 </div>
                 <div className="infoChange-list">
@@ -62,12 +58,14 @@ export default function InfoChangesPage({ logout }) {
                             key={infoChange.id}
                             className="infoChange-item"
                             onClick={() => {
-                                navigate(`/infoChange-controll/${infoChange.id}/${infoChange.person.id}`);
+                                navigate(
+                                    `/infoChange-controll/${infoChange.id}/${infoChange.person.id}`
+                                );
                             }}
-                        >    
+                        >
                             <h3>Infochange ID: {infoChange.id}</h3>
                             <h4>{infoChange.person.name}</h4>
-                            <h5>{infoChange.personemail}</h5>  
+                            <h5>{infoChange.personemail}</h5>
                         </div>
                     ))}
                 </div>
@@ -75,27 +73,3 @@ export default function InfoChangesPage({ logout }) {
         </div>
     );
 }
-
-        // const NameFilter = ({ setName }) => (
-        //     <div className="infoChange-filter infoChange-filter-name">
-        //         <p>Name</p>
-        //         <input
-        //             type="text"
-        //             name="name"
-        //             id="name"
-        //             onChange={(e) => setName(e.target.value)}
-        //         />
-        //     </div>
-        // );
-
-        // const EmailFilter = ({ setEmail }) => (
-        //     <div className="infoChange-filter trainee-filter-email">
-        //         <p>Email</p>
-        //         <input
-        //             type="text"
-        //             name="email"
-        //             id="email"
-        //             onChange={(e) => setEmail(e.target.value)}
-        //         />
-        //     </div>
-        // );
