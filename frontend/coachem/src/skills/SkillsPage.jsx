@@ -4,13 +4,12 @@ import { useCallback } from 'react';
 import './SkillsPage.css';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function SkillsPage({ logout, ownSkills }) {
+export default function SkillsPage({ logout, ownSkills, notifications }) {
     const [api] = useLocalStorage('api');
     const { id } = useParams();
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
     const [categories, setCategories] = useState([]);
-    const role = localStorage.getItem('user_role');
 
     const [name, setName] = useState();
     const [type, setType] = useState();
@@ -19,13 +18,8 @@ export default function SkillsPage({ logout, ownSkills }) {
     const [maxDuration, setMaxDuration] = useState();
 
     const person = JSON.parse(localStorage.getItem('person'));
-
-    let trainee;
-    if (role === 'TRAINEE') {
-        trainee = true;
-    } else {
-        trainee = false;
-    }
+    const role = localStorage.getItem('user_role');
+    const trainee = role === 'TRAINEE';
 
     useEffect(() => {
         fetch(`${api}/api/category/all`, {
@@ -183,6 +177,57 @@ export default function SkillsPage({ logout, ownSkills }) {
         );
     }
 
+    function getNotificationCount(skill) {
+        if (
+            !(trainee && ownSkills && notifications && notifications.feedback)
+        ) {
+            return 0;
+        }
+
+        return notifications.feedback.filter(
+            (f) => f.traineeSkill.skill.id === skill.id
+        ).length;
+    }
+
+    function OwnTaskItem({ skill }) {
+        const count = getNotificationCount(skill);
+        const badge = count ? (
+            <div className="notification-badge">{count}</div>
+        ) : (
+            ''
+        );
+
+        return (
+            <Link to={`/skill/${skill.id}`}>
+                <div className="skill-item">
+                    {badge}
+
+                    <h3>{skill.skill.name}</h3>
+                    <p>{skill.skill.description}</p>
+                    {skill.completed ? (
+                        <p className="green">
+                            <b>skill completed</b>
+                        </p>
+                    ) : (
+                        <p className="orange">
+                            <b>skill in progress</b>
+                        </p>
+                    )}
+                </div>
+            </Link>
+        );
+    }
+
+    function TaskItem({ skill }) {
+        return (
+            <div className="skill-item">
+                <h3>{skill.name}</h3>
+                <p>{skill.description}</p>
+                {trainee && completed(skill)}
+            </div>
+        );
+    }
+
     return (
         <div className="skills-page">
             <div className="eval-heading-box">
@@ -214,27 +259,9 @@ export default function SkillsPage({ logout, ownSkills }) {
                 <div className="skill-list">
                     {filteredSkills.map((skill) =>
                         ownSkills ? (
-                            <Link key={skill.id} to={`/skill/${skill.id}`}>
-                                <div className="skill-item">
-                                    <h3>{skill.skill.name}</h3>
-                                    <p>{skill.skill.description}</p>
-                                    {skill.completed ? (
-                                        <p className="green">
-                                            <b>skill completed</b>
-                                        </p>
-                                    ) : (
-                                        <p className="orange">
-                                            <b>skill in progress</b>
-                                        </p>
-                                    )}
-                                </div>
-                            </Link>
+                            <OwnTaskItem key={skill.id} skill={skill} />
                         ) : (
-                            <div key={skill.id} className="skill-item">
-                                <h3>{skill.name}</h3>
-                                <p>{skill.description}</p>
-                                {trainee && completed(skill)}
-                            </div>
+                            <TaskItem key={skill.id} skill={skill} />
                         )
                     )}
                 </div>
