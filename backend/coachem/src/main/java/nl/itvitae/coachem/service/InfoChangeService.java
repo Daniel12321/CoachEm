@@ -69,6 +69,5 @@ public class InfoChangeService {
         return true;
     }
 
-    public Optional<InfoChangeDto> getInfoChangeById(Long id) {return infoChangeRepository.findById(id).map(mapper::get);
-    }
+    public Optional<InfoChangeDto> getInfoChangeById(Long id) {return infoChangeRepository.findById(id).map(mapper::get);}
 }

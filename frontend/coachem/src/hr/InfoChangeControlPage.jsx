@@ -1,4 +1,4 @@
-import './InfoChangeControllPage.css';
+import './InfoChangeControlPage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -6,7 +6,7 @@ import {
     NewDataViewComponent,
 } from '../common/Components';
 
-export default function InfoChangeControllPage({ logout }) {
+export default function InfoChangeControlPage({ logout }) {
     const [newDetails, setNewDetails] = useState([]);
     const [oldDetails, setOldDetails] = useState([]);
     const [ infoChangeId, personId ] = useParams();

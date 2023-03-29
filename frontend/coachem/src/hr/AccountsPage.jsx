@@ -3,7 +3,7 @@ import './AccountsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountsPage() {
+export default function AccountsPage({ logout }) {
     const [api] = useLocalStorage('api');
     const [accounts, setAccounts] = useState([]);
     const [name, setName] = useState();
@@ -11,20 +11,24 @@ export default function AccountsPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        async function getAllAccounts() {
+            const res = await fetch(`${api}/api/person/all`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
+            });
+            if (res.status === 401) {
+                logout();
+            }
+            const data = await res.json();
+            setAccounts(data);
+        }
         getAllAccounts();
-    }, []);
+    }, [logout, api]);
 
-    async function getAllAccounts() {
-        const res = await fetch(`${api}/api/person/all`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        });
-        const data = await res.json();
-        setAccounts(data);
-    }
+
 
     const filteredAccounts = accounts
         .filter(
