@@ -146,8 +146,8 @@ const CoachNav = () => (
 
 const HRNav = () => (
     <nav>
-        <NavLink to="/trainees">Trainees</NavLink>
         <NavLink to="/accounts">Accounts</NavLink>
         <NavLink to="/account-add">Add Account</NavLink>
+        <NavLink to="/infochanges">Info change</NavLink>
     </nav>
 );

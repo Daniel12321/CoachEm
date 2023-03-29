@@ -1,15 +1,16 @@
 import './InfoChangeControllPage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import {Components3} from '../common/Components';
+import {OldDataViewComponent, NewDataViewComponent} from '../common/Components';
 
 export default function AccountUpdatePage({ logout }) {
     const [account, setAccounts] = useState([]);
-    const { id } = useParams();
+    const [oldDetails, setOldDetails] = useState([]);
+    const { infoChangeId, personId } = useParams();
 
     useEffect(() => {
-        async function getAccount() {
-            const res = await fetch(`http://localhost:8080/api/person/${id}`, {
+        async function getInfoChange() {
+            const res = await fetch(`http://localhost:8080/api/infochange/get/${infoChangeId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,22 +25,34 @@ export default function AccountUpdatePage({ logout }) {
             const data = await res.json();
             setAccounts(data);
         }
-        getAccount();
-    }, [id, logout]);
+
+        async function getOldDetails(){
+            const res = await fetch(`http://localhost:8080/api/person/${personId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            });
+            if (res.status === 401) {
+                logout();
+            }
+            const data = await res.json();
+            setOldDetails(data);
+        }
+
+        getInfoChange();
+        getOldDetails();
+
+    }, [infoChangeId, personId,logout]);
 
     const updateInfo = async (e) => {
         e.preventDefault();
-        const body = {
-            name: e.target[0].value,
-            address: e.target[1].value,
-            city: e.target[2].value,
-            zipcode: e.target[3].value,
-            phonenumber: e.target[4].value,
-        };
-
-        fetch(`http://127.0.0.1:8080/api/person/update/${id}`, {
+        fetch(`http://127.0.0.1:8080/api/person/infochange/${infoChangeId}`, {
             method: 'PUT',
-            body: JSON.stringify(body),
+            
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -48,16 +61,51 @@ export default function AccountUpdatePage({ logout }) {
             if (response.status === 401) {
                 logout();
             }
+            if (response.status === 404) {
+                e.target.form[6].value = 'the info change you are trying to procces has been removed';
+            }
+            if (response.status === 200) {
+                 e.target.form[6].value = 'saved';
+             }
             return response.json();
         });
-        e.target[5].value = 'saved';
+        
     };
 
+    const rejectInfo = async (e) => {
+        e.preventDefault();
+        fetch(`http://127.0.0.1:8080/api/infochange/delete/${infoChangeId}`, {
+        method: 'DELETE',
+        
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    }).then((response) => {
+        if (response.status === 401) {
+            logout();
+        }
+        if (response.status === 404) {
+            e.target.form[5].value = 'already removed';
+        }
+        if (response.status === 200) {
+             e.target.form[5].value = 'changes rejected';
+         }
+        return response.json();
+    });}
+
     return (
-        <div className="accountpage">
-            <h1>update Page for account {id}</h1>
-            <Components3 account={account} updateInfo={updateInfo} />
-             {/* <div className="personal-info">
+        <div className="infoChangePage">
+            <h1>Info change request: {infoChangeId}</h1>
+            <div className="formsbox">
+                <div className="formsbox-left">
+                    <OldDataViewComponent account={oldDetails} updateInfo={updateInfo} />
+                </div>
+                <div className="formsbox-right">
+                    <NewDataViewComponent account={account} updateInfo={updateInfo} rejectInfoChange={rejectInfo}/>
+                </div>
+            </div>
+            {/* <div className="personal-info">
                 <h2>Personal Details</h2>
                 <form onSubmit={updateInfo}>
                     <label htmlFor="name">Name</label>

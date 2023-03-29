@@ -147,7 +147,7 @@ export default function App() {
                         element={<InfoChangesPage logout={logout} />}
                     />
                     <Route
-                        path="/infoChange-controll/:id"
+                        path="/infoChange-controll/:infoChangeId/:personId" 
                         element={<InfoChangeControllPage logout={logout} />}
                     />
                     <Route

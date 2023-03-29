@@ -26,17 +26,18 @@ export function Components2({setEmail}) {
     ) 
 }
 
-export function Components3({account, updateInfo}){
+export function OldDataViewComponent({account, updateInfo}){
     return(
     <div className="personal-info">
-        <h2>Personal Details</h2>
-        <form onSubmit={updateInfo}>
+        <h2>Current Personal Details</h2>
+        <form className="form" onSubmit={updateInfo}>
             <label htmlFor="name">Name</label>
             <input
                 type="text"
                 name="name"
                 id="name"
                 defaultValue={account.name}
+                readOnly
             />
             <label htmlFor="address">Address</label>
             <input
@@ -44,6 +45,7 @@ export function Components3({account, updateInfo}){
                 name="address"
                 id="address"
                 defaultValue={account.address}
+                readOnly
             />
             <label htmlFor="city">City</label>
             <input
@@ -51,6 +53,7 @@ export function Components3({account, updateInfo}){
                 name="city"
                 id="city"
                 defaultValue={account.city}
+                readOnly
             />
             <label htmlFor="zipcode">Zipcode</label>
             <input
@@ -58,6 +61,7 @@ export function Components3({account, updateInfo}){
                 name="zipcode"
                 id="zipcode"
                 defaultValue={account.zipcode}
+                readOnly
             />
             <label htmlFor="phonenumber">Phonenumber</label>
             <input
@@ -65,11 +69,69 @@ export function Components3({account, updateInfo}){
                 name="phonenumber"
                 id="phonenumber"
                 defaultValue={account.phonenumber}
+                readOnly
+            />
+        </form>
+    </div>
+)
+}
+
+export function NewDataViewComponent({account, updateInfo, rejectInfoChange}){
+    return(
+    <div className="personal-info">
+        <h2>New Personal Details</h2>
+        <form className="form" onSubmit={updateInfo}>
+            <label htmlFor="name">Name</label>
+            <input
+                type="text"
+                name="name"
+                id="name"
+                defaultValue={account.name}
+                readOnly
+            />
+            <label htmlFor="address">Address</label>
+            <input
+                type="text"
+                name="address"
+                id="address"
+                defaultValue={account.address}
+                readOnly
+            />
+            <label htmlFor="city">City</label>
+            <input
+                type="text"
+                name="city"
+                id="city"
+                defaultValue={account.city}
+                readOnly
+            />
+            <label htmlFor="zipcode">Zipcode</label>
+            <input
+                type="text"
+                name="zipcode"
+                id="zipcode"
+                defaultValue={account.zipcode}
+                readOnly
+            />
+            <label htmlFor="phonenumber">Phonenumber</label>
+            <input
+                type="text"
+                name="phonenumber"
+                id="phonenumber"
+                defaultValue={account.phonenumber}
+                readOnly
             />
             <input
-                className="dark-on-hover"
+                className="reject dark-on-hover"
                 type="submit"
-                value="Save Changes"
+                value="reject Changes"
+                onClick={rejectInfoChange}
+            />
+            <input
+                className="accept dark-on-hover"
+                type="button"
+                value="accept Changes"
+                onClick={updateInfo}
             />
         </form>
     </div>

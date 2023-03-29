@@ -11,25 +11,27 @@ export default function InfoChangesPage({ logout }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getAllInfoChanges();
-    }, []);
-
-    async function getAllInfoChanges() {
-        await fetch('http://localhost:8080/api/infochange/all', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        })
-            .then((response) => {
-                if (response.status === 401) {
-                    logout();
-                }
-                return response.json();
+        async function getAllInfoChanges() {
+            await fetch('http://localhost:8080/api/infochange/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                },
             })
-            .then((data) => setInfoChanges(data));
-    }
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    return response.json();
+                })
+                .then((data) => setInfoChanges(data));
+        }
+
+        getAllInfoChanges();
+    }, [logout]);
+
+
 
      const filteredInfoChanges = infoChanges
         .filter(
@@ -60,13 +62,12 @@ export default function InfoChangesPage({ logout }) {
                             key={infoChange.id}
                             className="infoChange-item"
                             onClick={() => {
-                                navigate(`/skills/${infoChange.id}`);
+                                navigate(`/infoChange-controll/${infoChange.id}/${infoChange.person.id}`);
                             }}
-                        >
-                            {console.log("ab")}
-                              <h3>{infoChange.name}</h3>
-                            <h4>{infoChange.email}</h4> 
-                            <h5>{infoChange.phonenumber}</h5>  
+                        >    
+                            <h3>Infochange ID: {infoChange.id}</h3>
+                            <h4>{infoChange.person.name}</h4>
+                            <h5>{infoChange.personemail}</h5>  
                         </div>
                     ))}
                 </div>
