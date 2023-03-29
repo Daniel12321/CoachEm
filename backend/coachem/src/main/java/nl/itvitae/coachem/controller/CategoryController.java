@@ -1,34 +1,37 @@
 package nl.itvitae.coachem.controller;
 
+import nl.itvitae.coachem.api.ICategoryAPI;
 import nl.itvitae.coachem.dto.CategoryDto;
 import nl.itvitae.coachem.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/category")
-public class CategoryController {
+public class CategoryController implements ICategoryAPI {
 
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/all")
+    @Override
     public List<CategoryDto> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto category){
+    @Override
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto category) {
         return categoryService.addCategory(category)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @DeleteMapping("/delete/{id}")
+    @Override
     public ResponseEntity<Void> deleteCategoryById(@PathVariable("id") Long id) {
         if (categoryService.deleteCategory(id)) {
             return ResponseEntity.ok().build();

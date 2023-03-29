@@ -1,5 +1,6 @@
 package nl.itvitae.coachem.controller;
 
+import nl.itvitae.coachem.api.ITraineeSkillAPI;
 import nl.itvitae.coachem.dto.TraineeSkillDto;
 import nl.itvitae.coachem.service.TraineeSkillReportService;
 import nl.itvitae.coachem.service.TraineeSkillService;
@@ -16,8 +17,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/traineeskill")
-public class TraineeSkillController {
+public class TraineeSkillController implements ITraineeSkillAPI {
 
     @Autowired
     private TraineeSkillService traineeSkillService;
@@ -25,7 +25,7 @@ public class TraineeSkillController {
     @Autowired
     private TraineeSkillReportService reportService;
 
-    @PostMapping("/new/{traineeid}/{skillid}")
+    @Override
     public ResponseEntity<TraineeSkillDto> newTraineeSkill(@RequestBody TraineeSkillDto traineeSkill,
                                            @PathVariable("traineeid") Long traineeId,
                                            @PathVariable("skillid") Long skillId) {
@@ -34,13 +34,12 @@ public class TraineeSkillController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @PostMapping("/upload/{id}")
+    @Override
     public void upload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) {
         this.reportService.saveReport(id, file);
     }
 
-    @GetMapping("/download/{id}")
-    @ResponseBody
+    @Override
     public ResponseEntity<Resource> serveFile(@PathVariable("id") Long id) {
         Resource resource = this.reportService.loadReport(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Uploaded file found"));
         return ResponseEntity.ok()
@@ -48,26 +47,26 @@ public class TraineeSkillController {
                 .body(resource);
     }
 
-    @GetMapping("/get/{id}")
+    @Override
     public ResponseEntity<TraineeSkillDto> getTraineeSkillById(@PathVariable("id") Long id) {
         return traineeSkillService.getTraineeSkillById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{id}")
-    public List<TraineeSkillDto> getTraineeSkillByUser(@PathVariable("id") Long id) {
-        return traineeSkillService.getTraineeSkillByUser(id);
+    @Override
+    public List<TraineeSkillDto> getTraineeSkillByUser(@PathVariable("userid") Long userId) {
+        return traineeSkillService.getTraineeSkillByUser(userId);
     }
 
-    @PutMapping("/update/{id}")
+    @Override
     public ResponseEntity<TraineeSkillDto> updateTraineeSkillById(@PathVariable("id") Long id, @RequestBody TraineeSkillDto traineeSkill) {
         return traineeSkillService.updateTraineeSkillById(traineeSkill, id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{id}")
+    @Override
     public ResponseEntity<Void> deleteTraineeSkillById(@PathVariable("id") Long id) {
         if (traineeSkillService.deleteTraineeSkillById(id)) {
             return ResponseEntity.ok().build();

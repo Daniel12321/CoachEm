@@ -1,22 +1,25 @@
 package nl.itvitae.coachem.controller;
 
+import nl.itvitae.coachem.api.IFeedBackAPI;
 import nl.itvitae.coachem.dto.FeedbackDto;
 import nl.itvitae.coachem.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/feedback")
-public class FeedBackController {
+public class FeedBackController implements IFeedBackAPI {
 
     @Autowired
     private FeedbackService feedbackService;
 
-    @PostMapping("/new/{userId}/{traineeSkillId}")
+    @Override
     public ResponseEntity<FeedbackDto> newFeedback(@PathVariable("userId") Long userId,
                                                    @PathVariable("traineeSkillId") Long traineeSkillId,
                                                    @RequestBody FeedbackDto feedback) {
@@ -25,31 +28,31 @@ public class FeedBackController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/get/{id}")
+    @Override
     public ResponseEntity<FeedbackDto> getFeedbackById(@PathVariable("id") Long id) {
         return feedbackService.getFeedback(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/traineeskill/{id}")
+    @Override
     public List<FeedbackDto> getFeedbackByTraineeSkill(@PathVariable("id") Long id) {
         return feedbackService.getFeedbackByTraineeSkill(id);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<FeedbackDto> updateSkill(@PathVariable("id") Long id, @RequestBody FeedbackDto feedback) {
+    @Override
+    public ResponseEntity<FeedbackDto> updateFeedback(@PathVariable("id") Long id, @RequestBody FeedbackDto feedback) {
         return feedbackService.updateFeedback(feedback, id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/seen/{id}")
+    @Override
     public void markAllSeen(@PathVariable("id") Long traineeSkillId) {
         feedbackService.markAllSeen(traineeSkillId);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @Override
     public ResponseEntity<Void> deleteFeedbackById(@PathVariable("id") Long id) {
         if (feedbackService.deleteFeedback(id)) {
             return ResponseEntity.ok().build();
