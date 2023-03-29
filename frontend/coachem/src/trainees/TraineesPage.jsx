@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import './TraineesPage.css';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function TraineesPage(props) {
+    const [api] = useLocalStorage('api');
     const [trainees, setTrainees] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -13,7 +15,7 @@ export default function TraineesPage(props) {
     });
 
     async function getAllTrainees() {
-        await fetch('http://localhost:8080/api/person/trainees', {
+        await fetch(`${api}/api/person/trainees`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

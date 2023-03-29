@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 import './NewInvitePage.css';
 
 export default function InvitationsPage({ logout }) {
+    const [api] = useLocalStorage('api');
     const navigate = useNavigate();
     const [people, setPeople] = useState([]);
     const loggedInPerson = JSON.parse(localStorage.getItem('person'));
@@ -23,7 +25,7 @@ export default function InvitationsPage({ logout }) {
 
         people.map((person) => {
             return fetch(
-                `http://127.0.0.1:8080/api/invite/new/${loggedInPerson.id}/${person.id}`,
+                `${api}/api/invite/new/${loggedInPerson.id}/${person.id}`,
                 {
                     method: 'POST',
                     body: JSON.stringify(body),
@@ -47,7 +49,7 @@ export default function InvitationsPage({ logout }) {
 
     const addPerson = (e) => {
         e.preventDefault();
-        fetch(`http://127.0.0.1:8080/api/person/email/${e.target[0].value}`, {
+        fetch(`${api}/api/person/email/${e.target[0].value}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

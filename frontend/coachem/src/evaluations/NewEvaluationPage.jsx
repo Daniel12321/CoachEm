@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 import './NewEvaluationPage.css';
 
 export default function NewEvaluationPage({ logout }) {
+    const [api] = useLocalStorage('api');
     const navigate = useNavigate();
 
     const submit = (e) => {
@@ -19,7 +21,7 @@ export default function NewEvaluationPage({ logout }) {
             email: e.target[2].value,
         };
 
-        fetch('http://127.0.0.1:8080/api/evaluation/new', {
+        fetch(`${api}/api/evaluation/new`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {

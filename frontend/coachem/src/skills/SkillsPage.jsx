@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useCallback } from 'react';
 import './SkillsPage.css';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function SkillsPage({ logout, ownSkills, notifications }) {
+    const [api] = useLocalStorage('api');
     const { id } = useParams();
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
@@ -20,7 +22,7 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
     const trainee = role === 'TRAINEE';
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/category/all`, {
+        fetch(`${api}/api/category/all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,11 +39,11 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    }, [logout]);
+    }, [logout, api]);
 
     const getSkillById = useCallback(
         (id) => {
-            fetch(`http://localhost:8080/api/traineeskill/user/${id}`, {
+            fetch(`${api}/api/traineeskill/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +63,7 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 })
                 .catch((error) => console.log(error));
         },
-        [logout]
+        [logout, api]
     );
 
     useEffect(() => {
@@ -70,10 +72,10 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
         } else {
             getSkillById(person.id);
         }
-    }, [person.id, id, getSkillById]);
+    }, [person.id, id, getSkillById, api]);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/skill/all`, {
+        fetch(`${api}/api/skill/all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,22 +92,17 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setSkills(data);
             })
             .catch((error) => console.log(error));
-    }, [ownSkills, logout]);
+    }, [ownSkills, logout, api]);
 
     function signUp(skillId) {
-        fetch(
-            `http://localhost:8080/api/traineeskill/new/${person.id}/${skillId}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-                body: JSON.stringify({ time: new Date(), completed: false }),
-            }
-        )
+        fetch(`${api}/api/traineeskill/new/${person.id}/${skillId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+            body: JSON.stringify({ time: new Date(), completed: false }),
+        })
             .then((response) => {
                 if (response.status === 401) {
                     logout();
@@ -233,7 +230,16 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
 
     return (
         <div className="skills-page">
-            <h1>Skills Dashboard</h1>
+            <div className="eval-heading-box">
+                <h1>Skills Dashboard</h1>
+                {role !== 'TRAINEE' && (
+                    <div>
+                        <Link className="new-eval-button" to="/new-skill">
+                            New Skill
+                        </Link>
+                    </div>
+                )}
+            </div>
             <div className="skills">
                 <div className="skill-filters">
                     <h2>Filters</h2>
