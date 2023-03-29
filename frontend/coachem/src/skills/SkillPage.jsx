@@ -19,12 +19,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
         minute: 'numeric',
     };
 
-    let trainee;
-    if (role === 'TRAINEE') {
-        trainee = true;
-    } else {
-        trainee = false;
-    }
+    const trainee = role === 'TRAINEE';
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/traineeskill/get/${id}`, {
@@ -321,12 +316,14 @@ export default function SkillPage({ logout, reloadNotifications }) {
             </div>
 
             <div className="upload">
-                <h3>Upload {typeReportText}</h3>
+                {trainee && <h3>Upload {typeReportText}</h3>}
                 <div className="upload-box">
-                    <form className="upload-form" onSubmit={uploadFile}>
-                        <input type="file" name="file" id="file" />
-                        <input type="submit" value="Upload" />
-                    </form>
+                    {trainee && (
+                        <form className="upload-form" onSubmit={uploadFile}>
+                            <input type="file" name="file" id="file" />
+                            <input type="submit" value="Upload" />
+                        </form>
+                    )}
                     {traineeSkill.report && (
                         <div className="uploaded-file">
                             <div>
