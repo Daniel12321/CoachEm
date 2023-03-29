@@ -26,6 +26,8 @@ jobs:
 
             - name: Install Dependencies
               uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: frontend/coachem
 
 
             - name: Build project
@@ -36,7 +38,7 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                   name: production-files
-                  path: ./build
+                  path: ./frontend/coachem/build
 
     deploy:
         name: Deploy
@@ -49,11 +51,11 @@ jobs:
               uses: actions/download-artifact@v3
               with:
                   name: production-files
-                  path: ./build
+                  path: ./frontend/coachem/build
 
             - name: Deploy to github pages
               uses: peaceiris/actions-gh-pages@v3
               
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./build
+                  publish_dir: ./frontend/coachem/build
