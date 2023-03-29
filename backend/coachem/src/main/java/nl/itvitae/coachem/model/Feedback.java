@@ -24,13 +24,13 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private Person person;
 
-    public Feedback(String text, String time, TraineeSkill traineeSkill, User user) {
+    public Feedback(String text, String time, TraineeSkill traineeSkill, Person person) {
         this.text = text;
         this.time = time;
         this.traineeSkill = traineeSkill;
-        this.user = user;
+        this.person = person;
         this.notified= false;
     }
 }

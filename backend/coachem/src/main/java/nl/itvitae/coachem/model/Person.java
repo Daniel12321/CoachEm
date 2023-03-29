@@ -28,6 +28,10 @@ public class Person {
     private User user;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks = new ArrayList<>();
+
+    @JsonIgnore
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private InfoChange infoChange;
 

@@ -1,14 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 import './EvaluationsPage.css';
 
+const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+};
+
 export default function EvaluationsPage({ logout, reloadNotifications }) {
+    const [api] = useLocalStorage('api');
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8080/api/evaluation/trainee`, {
+        fetch(`${api}/api/evaluation/trainee`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -21,7 +31,7 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                 return response.json();
             })
             .then(setTrainee);
-        fetch(`http://127.0.0.1:8080/api/evaluation/attendee`, {
+        fetch(`${api}/api/evaluation/attendee`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -34,10 +44,10 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                 return response.json();
             })
             .then(setAttendee);
-    }, [logout]);
+    }, [logout, api]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8080/api/evaluation/seen', {
+        fetch(`${api}/api/evaluation/seen`, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -49,14 +59,14 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                 reloadNotifications();
             }
         });
-    }, [logout, reloadNotifications]);
+    }, [logout, reloadNotifications, api]);
 
     const addAttendee = (id, e) => {
         e.preventDefault();
 
         const body = { email: e.target[0].value };
 
-        fetch(`http://127.0.0.1:8080/api/evaluation/attendee/${id}`, {
+        fetch(`${api}/api/evaluation/attendee/${id}`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -139,7 +149,7 @@ const Evaluation = ({ evaluation }) => (
     <div className="evaluation">
         <div className="evaluation-time">
             <h3>Time: </h3>
-            <p>{evaluation.time}</p>
+            <p>{new Date(evaluation.time).toLocaleString('en-EN', options)}</p>
         </div>
         <div className="evaluation-attendees">
             <h3>Attendees:</h3>
@@ -167,7 +177,12 @@ function Attending({ role, evaluation, addAttendee }) {
                 </div>
                 <div className="evaluation-time">
                     <h3>Time: </h3>
-                    <p>{evaluation.time}</p>
+                    <p>
+                        {new Date(evaluation.time).toLocaleString(
+                            'en-EN',
+                            options
+                        )}
+                    </p>
                 </div>
             </div>
             <div className="evaluation-attendees">

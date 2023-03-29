@@ -1,0 +1,43 @@
+.invite {
+    background-color: rgb(230, 255, 255);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 8px;
+    position: relative;
+}
+
+.invite>div {
+    padding: 8px 16px;
+    width: 40%;
+}
+
+.accept{
+    position: relative;
+    top: 6px;
+}
+
+.accept img{
+    width: 50px;
+    height: 40px;
+    margin-right: 36px;
+}
+
+.accept img:hover{
+    cursor: pointer;
+}
+
+.new-invite-button {
+    background-color: #65baff;
+    padding: 12px 32px;
+    border-radius: 8px;
+    right: 0px;
+}
+
+.invite-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

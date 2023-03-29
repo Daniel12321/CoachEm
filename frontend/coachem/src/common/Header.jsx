@@ -92,7 +92,7 @@ function NotificationList({ notifications }) {
                 count={arrayCount(notifications.evaluations)}
             />
             <NotificationItem
-                to="/invite"
+                to="/invites"
                 message="New 360 Invites"
                 count={arrayCount(notifications.invites)}
             />

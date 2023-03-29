@@ -1,6 +1,8 @@
+import { useLocalStorage } from '../common/LocalStorage';
 import './LoginPage.css';
 
 export default function LoginPage({ setRole, logout }) {
+    const [api] = useLocalStorage('api');
     const login = (e) => {
         e.preventDefault();
 
@@ -9,7 +11,7 @@ export default function LoginPage({ setRole, logout }) {
             password: e.target[1].value,
         };
 
-        fetch('http://127.0.0.1:8080/api/auth/login', {
+        fetch(`${api}/api/auth/login`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' },

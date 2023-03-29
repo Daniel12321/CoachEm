@@ -1,21 +1,27 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 import './NewEvaluationPage.css';
 
 export default function NewEvaluationPage({ logout }) {
+    const [api] = useLocalStorage('api');
     const navigate = useNavigate();
 
     const submit = (e) => {
         e.preventDefault();
 
+        if (new Date(e.target[0].value) < new Date()) {
+            alert('must use a future date');
+            return;
+        }
+
         const body = {
             time: e.target[0].value + ' ' + e.target[1].value,
             email: e.target[2].value,
         };
-        console.log(body);
 
-        fetch('http://127.0.0.1:8080/api/evaluation/new', {
+        fetch(`${api}/api/evaluation/new`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {

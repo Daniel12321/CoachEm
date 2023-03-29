@@ -1,8 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './SkillPage.css';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function SkillPage({ logout, reloadNotifications }) {
+    const [api] = useLocalStorage('api');
     const { id } = useParams();
     const [skill, setSkill] = useState([]);
     const [traineeSkill, setTraineeSkill] = useState([]);
@@ -19,15 +21,10 @@ export default function SkillPage({ logout, reloadNotifications }) {
         minute: 'numeric',
     };
 
-    let trainee;
-    if (role === 'TRAINEE') {
-        trainee = true;
-    } else {
-        trainee = false;
-    }
+    const trainee = role === 'TRAINEE';
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/traineeskill/get/${id}`, {
+        fetch(`${api}/api/traineeskill/get/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +43,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             })
             .catch((error) => console.log(error));
 
-        fetch(`http://localhost:8080/api/feedback/traineeskill/${id}`, {
+        fetch(`${api}/api/feedback/traineeskill/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +61,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             })
             .catch((error) => console.log(error));
 
-        fetch(`http://localhost:8080/api/progress/traineeskill/${id}`, {
+        fetch(`${api}/api/progress/traineeskill/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,10 +78,10 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 setProgress(sortByDate(data));
             })
             .catch((error) => console.log(error));
-    }, [logout, id]);
+    }, [logout, id, api]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8080/api/feedback/seen/${id}`, {
+        fetch(`${api}/api/feedback/seen/${id}`, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -96,7 +93,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 reloadNotifications();
             }
         });
-    }, [id, logout, reloadNotifications]);
+    }, [id, logout, reloadNotifications, api]);
 
     function addProgress(e) {
         e.preventDefault();
@@ -110,7 +107,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             },
         ];
         let dataJSON = JSON.stringify(newProgress[0]);
-        fetch(`http://localhost:8080/api/progress/new/${id}`, {
+        fetch(`${api}/api/progress/new/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -144,7 +141,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
         ];
 
         let dataJSON = JSON.stringify(newFeedback[0]);
-        fetch(`http://localhost:8080/api/feedback/new/${person.id}/${id}`, {
+        fetch(`${api}/api/feedback/new/${person.id}/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -166,18 +163,13 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function deleteFeedback(index) {
-        fetch(
-            `http://localhost:8080/api/feedback/delete/${feedback[index].id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            }
-        )
+        fetch(`${api}/api/feedback/delete/${feedback[index].id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
             .then((response) => {
                 if (response.status === 401) {
                     logout();
@@ -189,18 +181,13 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function deleteProgress(index) {
-        fetch(
-            `http://localhost:8080/api/progress/delete/${progress[index].id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            }
-        )
+        fetch(`${api}/api/progress/delete/${progress[index].id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
             .then((response) => {
                 if (response.status === 401) {
                     logout();
@@ -211,7 +198,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function completeSkill() {
-        fetch(`http://localhost:8080/api/traineeskill/update/${id}`, {
+        fetch(`${api}/api/traineeskill/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -232,6 +219,50 @@ export default function SkillPage({ logout, reloadNotifications }) {
     function sortByDate(arr) {
         return arr.sort((a, b) => new Date(b.time) - new Date(a.time));
     }
+
+    function uploadFile(e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('file', e.target[0].files[0]);
+
+        fetch(`${api}/api/traineeskill/upload/${id}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        }).then((resp) => {
+            if (resp.status === 401) {
+                logout();
+            } else if (resp.ok) {
+                const newTraineeSkill = { ...traineeSkill };
+                newTraineeSkill.report = e.target[0].files[0].name;
+
+                setTraineeSkill(newTraineeSkill);
+            }
+        });
+    }
+
+    function downloadFile() {
+        fetch(`${api}/api/traineeskill/download/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((res) => res.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = traineeSkill.report;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            });
+    }
+
+    const typeReportText = skill.type ? 'Certificate' : 'Report';
 
     if (!skill || !skill.category) {
         return '';
@@ -275,6 +306,30 @@ export default function SkillPage({ logout, reloadNotifications }) {
                     <b>Completed skill</b>
                 </label>
             </div>
+
+            <div className="upload">
+                {trainee && <h3>Upload {typeReportText}</h3>}
+                <div className="upload-box">
+                    {trainee && (
+                        <form className="upload-form" onSubmit={uploadFile}>
+                            <input type="file" name="file" id="file" />
+                            <input type="submit" value="Upload" />
+                        </form>
+                    )}
+                    {traineeSkill.report && (
+                        <div className="uploaded-file">
+                            <div>
+                                <h4>Uploaded {typeReportText}</h4>
+                                <p>{traineeSkill.report}</p>
+                            </div>
+                            <div>
+                                <button onClick={downloadFile}>Download</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
             <div className="flex-container">
                 <div>
                     <h2>Progress</h2>

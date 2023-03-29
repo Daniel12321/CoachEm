@@ -1,12 +1,9 @@
+import { useLocalStorage } from '../common/LocalStorage';
 import './AccountPage.css';
 
 export default function AccountPage(props) {
+    const [api] = useLocalStorage('api');
     const person = JSON.parse(localStorage.getItem('person'));
-    let hr;
-    if (person.role === 'HR') {
-        hr = true;
-    }
-
     const updateInfo = (e) => {
         e.preventDefault();
 
@@ -18,7 +15,7 @@ export default function AccountPage(props) {
             phonenumber: e.target[4].value,
         };
 
-        fetch('http://127.0.0.1:8080/api/infochange/new', {
+        fetch(`${api}/api/infochange/new`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -40,7 +37,7 @@ export default function AccountPage(props) {
             newPassword2: e.target[2].value,
         };
 
-        fetch('http://127.0.0.1:8080/api/auth/change_password', {
+        fetch(`${api}/api/auth/change_password`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {

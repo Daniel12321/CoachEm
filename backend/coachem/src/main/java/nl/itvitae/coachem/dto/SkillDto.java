@@ -12,8 +12,7 @@ public record SkillDto(Long id, String name, Boolean type, String description, S
                 type != null &&
                 duration != null &&
                 time != null &&
-                description != null &&
-                category != null;
+                description != null;
     }
 
     @org.mapstruct.Mapper(componentModel = "spring")

@@ -21,10 +21,8 @@
 }
 
 .signup:hover{
-    
+    cursor: pointer;
 }
-
-
 
 /* Filters */
 
@@ -73,6 +71,7 @@
 }
 
 .skill-item {
+    position: relative;
     padding: 8px 16px;
     border-radius: 4px;
     background-color: #eefdff;
