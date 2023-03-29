@@ -59,7 +59,7 @@ export default function InfoChangesPage({ logout }) {
                             className="infoChange-item"
                             onClick={() => {
                                 navigate(
-                                    `/infoChange-controll/${infoChange.id}/${infoChange.person.id}`
+                                    `/infoChange-control/${infoChange.id}/${infoChange.person.id}`
                                 );
                             }}
                         >
