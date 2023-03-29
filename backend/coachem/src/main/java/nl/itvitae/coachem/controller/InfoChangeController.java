@@ -1,6 +1,7 @@
 package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.dto.InfoChangeDto;
+import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.service.InfoChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,13 @@ public class InfoChangeController {
     @GetMapping("/all")
     public List<InfoChangeDto> getAllInfoChanges() {
         return infoChangeService.getAllInfoChanges();
+    }
+
+    @GetMapping("/get/{id}")
+    public  ResponseEntity<InfoChangeDto> getInfoChangeById(@PathVariable("id") Long id) {
+        return infoChangeService.getInfoChangeById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/new")

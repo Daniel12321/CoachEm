@@ -18,6 +18,8 @@ import AccountViewPage from './hr/AccountViewPage';
 import NewInvitePage from './invitations/NewInvitePage';
 import NewSkill from './skills/NewSkill';
 import { useLocalStorage } from './common/LocalStorage';
+import InfoChangesPage from './hr/InfoChangesPage';
+import InfoChangeControlPage from './hr/InfoChangeControlPage'
 import './App.css';
 
 export default function App() {
@@ -148,6 +150,14 @@ export default function App() {
                     <Route
                         path="/account-view/:id"
                         element={<AccountViewPage logout={logout} />}
+                    />
+                    <Route
+                        path="/infoChanges"
+                        element={<InfoChangesPage logout={logout} />}
+                    />
+                    <Route
+                        path="/infoChange-control/:infoChangeId/:personId" 
+                        element={<InfoChangeControlPage logout={logout} />}
                     />
                     <Route
                         path="/new-eval"

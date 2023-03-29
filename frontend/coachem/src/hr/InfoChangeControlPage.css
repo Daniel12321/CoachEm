@@ -1,0 +1,28 @@
+.infoChangePage {
+    display: flex;
+    flex-direction: column;
+}
+.infoChangePage form {
+    display: flex;
+    flex-direction: column;
+}
+
+.formsbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.formsbox-left{
+    min-width: 550px;
+}
+.formsbox-right{
+    min-width: 550px;
+}
+
+.infoChangePage form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
