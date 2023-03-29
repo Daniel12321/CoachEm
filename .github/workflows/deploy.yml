@@ -1,4 +1,9 @@
 name: Deploy
+
+defaults:
+  run:
+    working-directory: frontend/coachem
+
 on:
     push:
         branches: ['main']
