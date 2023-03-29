@@ -2,15 +2,17 @@ import './AccountUpdatePage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function AccountUpdatePage({ logout }) {
+    const [api] = useLocalStorage('api');
     const [account, setAccounts] = useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
         async function getAccount() {
-            const res = await fetch(`http://localhost:8080/api/person/${id}`, {
+            const res = await fetch(`${api}/api/person/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export default function AccountUpdatePage({ logout }) {
             setAccounts(data);
         }
         getAccount();
-    }, [id, logout]);
+    }, [id, logout, api]);
 
     const updateInfo = async (e) => {
         console.log('update');

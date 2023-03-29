@@ -16,9 +16,9 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
-    @PostMapping("/new")
-    public ResponseEntity<SkillDto> newSkill(@RequestBody SkillDto skill) {
-        return skillService.newSkill(skill)
+    @PostMapping("/new/{categoryId}")
+    public ResponseEntity<SkillDto> newSkill(@RequestBody SkillDto skill, @PathVariable("categoryId") Long id) {
+        return skillService.newSkill(skill, id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
