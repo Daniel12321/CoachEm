@@ -1,3 +1,149 @@
+import { useEffect, useState } from 'react';
+
 export default function SkillPage({ logout }) {
-    return <></>;
+    const [categories, setCategories] = useState([]);
+
+    function addSkill(e) {
+        e.preventDefault();
+        const data = {
+            name: e.target[0].value,
+            type: e.target[1].value,
+            duration: e.target[2].value,
+            category: e.target[3].value,
+            description: e.target[4].value,
+            time: new Date(),
+        };
+        let dataJSON = JSON.stringify(data);
+        fetch(`http://localhost:8080/api/skill/new`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+            body: dataJSON,
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .catch((error) => console.log(error));
+    }
+    function addCategory(e) {
+        const data = {
+            name: e.target[0].value,
+        };
+        let dataJSON = JSON.stringify(data);
+        fetch(`http://localhost:8080/api/category/new`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+            body: dataJSON,
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .catch((error) => console.log(error));
+    }
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/category/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setCategories(data);
+            })
+            .catch((error) => console.log(error));
+    }, [logout]);
+
+    function categoryOptions() {
+        if (categories.length === 0) {
+            return;
+        }
+        return categories.map((category) => (
+            <option key={category.id} value={category}>
+                {category.name}
+            </option>
+        ));
+    }
+
+    return (
+        <div>
+            <h1>New skill</h1>
+            <div className="newSkill">
+                <form onSubmit={(e) => addSkill(e)}>
+                    <label htmlFor="name">Name: </label>
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder="name"
+                        maxLength={30}
+                        required
+                    />
+                    <br />
+                    <label htmlFor="type">Type: </label>
+                    <select name="type" id="type">
+                        <option value="hard">hard skill</option>
+                        <option value="soft">soft skill</option>
+                    </select>
+                    <br />
+                    <label htmlFor="duration">Duration: </label>
+                    <input
+                        id="duration"
+                        type="number"
+                        placeholder="duration"
+                        maxLength={30}
+                        required
+                    />
+                    hours
+                    <br />
+                    <label htmlFor="category">Category: </label>
+                    <select name="category" id="category">
+                        {categoryOptions()}
+                    </select>
+                    <br />
+                    <label htmlFor="description">Description: </label>
+                    <input
+                        id="description"
+                        type="text"
+                        placeholder="name"
+                        maxLength={30}
+                        required
+                    />
+                    <br />
+                    <button type="submit">add skill</button>
+                </form>
+            </div>
+            <h1>New category</h1>
+            <div className="newCategory">
+                <form onSubmit={(e) => addCategory(e)}>
+                    <label htmlFor="name">Name: </label>
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder="name"
+                        maxLength={30}
+                        required
+                    />
+                    <button type="submit">add category</button>
+                </form>
+            </div>
+        </div>
+    );
 }
