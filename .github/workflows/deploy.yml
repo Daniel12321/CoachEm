@@ -1,12 +1,18 @@
 name: Deploy
+
 on:
     push:
         branches: ['main']
     workflow_dispatch:
+    
+defaults:
+    run:
+        working-directory: frontend/coachem
 
 jobs:
     build:
         name: Build
+        
         runs-on: ubuntu-latest
 
         steps:
@@ -21,8 +27,10 @@ jobs:
             - name: Install Dependencies
               uses: bahmutov/npm-install@v1
 
+
             - name: Build project
               run: npm run build
+              working-directory: frontend/coachem
 
             - name: Upload files for pages
               uses: actions/upload-artifact@v3
@@ -45,6 +53,7 @@ jobs:
 
             - name: Deploy to github pages
               uses: peaceiris/actions-gh-pages@v3
+              
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./build
