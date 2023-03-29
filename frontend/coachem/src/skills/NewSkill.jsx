@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function SkillPage({ logout }) {
+    const [api] = useLocalStorage('api');
     const [categories, setCategories] = useState([]);
 
     function addSkill(e) {
@@ -14,7 +16,7 @@ export default function SkillPage({ logout }) {
             time: new Date(),
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`http://localhost:8080/api/skill/new`, {
+        fetch(`${api}/api/skill/new`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ export default function SkillPage({ logout }) {
             name: e.target[0].value,
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`http://localhost:8080/api/category/new`, {
+        fetch(`${api}/api/category/new`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ export default function SkillPage({ logout }) {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/category/all`, {
+        fetch(`${api}/api/category/all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -70,7 +72,7 @@ export default function SkillPage({ logout }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    }, [logout]);
+    }, [logout, api]);
 
     function categoryOptions() {
         if (categories.length === 0) {

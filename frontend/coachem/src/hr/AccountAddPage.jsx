@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function AccountAddPage(props) {
+    const [api] = useLocalStorage('api');
     const [password, setPassword] = useState(generatePassword());
 
     function addAccount(e) {
@@ -16,7 +18,7 @@ export default function AccountAddPage(props) {
             role: e.target[7].value,
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`http://localhost:8080/api/auth/register`, {
+        fetch(`${api}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

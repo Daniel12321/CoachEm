@@ -1,8 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './SkillPage.css';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function SkillPage({ logout, reloadNotifications }) {
+    const [api] = useLocalStorage('api');
     const { id } = useParams();
     const [skill, setSkill] = useState([]);
     const [traineeSkill, setTraineeSkill] = useState([]);
@@ -27,7 +29,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/traineeskill/get/${id}`, {
+        fetch(`${api}/api/traineeskill/get/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +48,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             })
             .catch((error) => console.log(error));
 
-        fetch(`http://localhost:8080/api/feedback/traineeskill/${id}`, {
+        fetch(`${api}/api/feedback/traineeskill/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             })
             .catch((error) => console.log(error));
 
-        fetch(`http://localhost:8080/api/progress/traineeskill/${id}`, {
+        fetch(`${api}/api/progress/traineeskill/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,10 +83,10 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 setProgress(sortByDate(data));
             })
             .catch((error) => console.log(error));
-    }, [logout, id]);
+    }, [logout, id, api]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8080/api/feedback/seen/${id}`, {
+        fetch(`${api}/api/feedback/seen/${id}`, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -96,7 +98,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 reloadNotifications();
             }
         });
-    }, [id, logout, reloadNotifications]);
+    }, [id, logout, reloadNotifications, api]);
 
     function addProgress(e) {
         e.preventDefault();
@@ -110,7 +112,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
             },
         ];
         let dataJSON = JSON.stringify(newProgress[0]);
-        fetch(`http://localhost:8080/api/progress/new/${id}`, {
+        fetch(`${api}/api/progress/new/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -144,7 +146,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
         ];
 
         let dataJSON = JSON.stringify(newFeedback[0]);
-        fetch(`http://localhost:8080/api/feedback/new/${person.id}/${id}`, {
+        fetch(`${api}/api/feedback/new/${person.id}/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -166,18 +168,13 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function deleteFeedback(index) {
-        fetch(
-            `http://localhost:8080/api/feedback/delete/${feedback[index].id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            }
-        )
+        fetch(`${api}/api/feedback/delete/${feedback[index].id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
             .then((response) => {
                 if (response.status === 401) {
                     logout();
@@ -189,18 +186,13 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function deleteProgress(index) {
-        fetch(
-            `http://localhost:8080/api/progress/delete/${progress[index].id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            }
-        )
+        fetch(`${api}/api/progress/delete/${progress[index].id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
             .then((response) => {
                 if (response.status === 401) {
                     logout();
@@ -211,7 +203,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function completeSkill() {
-        fetch(`http://localhost:8080/api/traineeskill/update/${id}`, {
+        fetch(`${api}/api/traineeskill/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -239,7 +231,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
         const formData = new FormData();
         formData.append('file', e.target[0].files[0]);
 
-        fetch(`http://127.0.0.1:8080/api/traineeskill/upload/${id}`, {
+        fetch(`${api}/api/traineeskill/upload/${id}`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -258,7 +250,7 @@ export default function SkillPage({ logout, reloadNotifications }) {
     }
 
     function downloadFile() {
-        fetch(`http://127.0.0.1:8080/api/traineeskill/download/${id}`, {
+        fetch(`${api}/api/traineeskill/download/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import './AccountsPage.css';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function AccountsPage() {
+    const [api] = useLocalStorage('api');
     const [accounts, setAccounts] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -13,7 +15,7 @@ export default function AccountsPage() {
     }, []);
 
     async function getAllAccounts() {
-        const res = await fetch('http://localhost:8080/api/person/all', {
+        const res = await fetch(`${api}/api/person/all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
