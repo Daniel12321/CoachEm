@@ -141,7 +141,6 @@ const CoachNav = () => (
         <NavLink to="/skills-all">All Skills</NavLink>
         <NavLink to="/evals">Evaluations</NavLink>
         <NavLink to="/invites">Invitations</NavLink>
-        <NavLink to="/new-skill">New Skill</NavLink>
     </nav>
 );
 

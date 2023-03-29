@@ -185,7 +185,16 @@ export default function SkillsPage({ logout, ownSkills }) {
 
     return (
         <div className="skills-page">
-            <h1>Skills Dashboard</h1>
+            <div className="eval-heading-box">
+                <h1>Skills Dashboard</h1>
+                {role !== 'TRAINEE' && (
+                    <div>
+                        <Link className="new-eval-button" to="/new-skill">
+                            New Skill
+                        </Link>
+                    </div>
+                )}
+            </div>
             <div className="skills">
                 <div className="skill-filters">
                     <h2>Filters</h2>

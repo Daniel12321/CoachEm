@@ -7,16 +7,21 @@ export default function SkillPage({ logout }) {
 
     function addSkill(e) {
         e.preventDefault();
+        let type;
+        if (e.target[1].value === 'hard') {
+            type = true;
+        } else {
+            type = false;
+        }
         const data = {
             name: e.target[0].value,
-            type: e.target[1].value,
+            type: type,
             duration: e.target[2].value,
-            category: e.target[3].value,
             description: e.target[4].value,
             time: new Date(),
         };
         let dataJSON = JSON.stringify(data);
-        fetch(`${api}/api/skill/new`, {
+        fetch(`${api}/api/skill/new/${e.target[3].value}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,6 +38,7 @@ export default function SkillPage({ logout }) {
             .catch((error) => console.log(error));
     }
     function addCategory(e) {
+        e.preventDefault();
         const data = {
             name: e.target[0].value,
         };
@@ -50,6 +56,10 @@ export default function SkillPage({ logout }) {
                     logout();
                 }
                 return response.json();
+            })
+            .then((data) => {
+                setCategories(categories.concat(data));
+                e.target[0].value = '';
             })
             .catch((error) => console.log(error));
     }
@@ -79,7 +89,7 @@ export default function SkillPage({ logout }) {
             return;
         }
         return categories.map((category) => (
-            <option key={category.id} value={category}>
+            <option key={category.id} value={category.id}>
                 {category.name}
             </option>
         ));
