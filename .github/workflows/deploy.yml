@@ -1,9 +1,5 @@
 name: Deploy
 
-defaults:
-  run:
-    working-directory: frontend/coachem
-
 on:
     push:
         branches: ['main']
@@ -12,6 +8,10 @@ on:
 jobs:
     build:
         name: Build
+        
+        defaults:
+            run:
+                working-directory: frontend/coachem
         runs-on: ubuntu-latest
 
         steps:
