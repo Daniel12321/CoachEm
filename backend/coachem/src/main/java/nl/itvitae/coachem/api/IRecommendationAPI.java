@@ -26,9 +26,9 @@ public interface IRecommendationAPI {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = RecommendationDto.class))),
             @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Recommendation not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Person not found", content = @Content)
     })
-    @GetMapping("/trainee/{id}")
+    @GetMapping(value = "/trainee/{id}", produces = "application.json")
     List<RecommendationDto> getRecommendationsByTraineeId(@PathVariable("id") Long id);
 
     @Operation(
@@ -38,9 +38,10 @@ public interface IRecommendationAPI {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = RecommendationDto.class))),
-            @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content)
+            @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Person or Skill not found", content = @Content)
     })
-    @PostMapping("/new/{personid}/{skillid}")
+    @PostMapping(value = "/new/{personid}/{skillid}", produces = "application.json")
     RecommendationDto newRecommendation(@PathVariable("personid") Long personId,
                                                @PathVariable("skillid") Long skillId);
 
