@@ -24,6 +24,10 @@ spring:
           starttls:
             enable: true
 
+logging:
+  file:
+    path: './groep1.log'
+
 server:
   port: 8081
   error:
