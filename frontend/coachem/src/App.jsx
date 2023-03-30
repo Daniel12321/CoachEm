@@ -1,6 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-
 import { useCallback, useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
@@ -23,8 +22,8 @@ import InfoChangeControlPage from './hr/InfoChangeControlPage';
 import './App.css';
 
 export default function App() {
-    const [api] = useLocalStorage('api', 'https://groep1.jorisspeeltgames.nl');
-    // const [api] = useLocalStorage('api', 'http://127.0.0.1:8081');
+    const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [role, setRole] = useState(localStorage.getItem('user_role'));
     const [notifications, setNotifications] = useState();
 
@@ -62,7 +61,14 @@ export default function App() {
         );
     }
 
-    const redir = role.toLowerCase() === 'trainee' ? '/skills' : '/trainees';
+    const skillsPage = (
+        <SkillsPage
+            ownSkills={true}
+            logout={logout}
+            notifications={notifications}
+        />
+    );
+    const traineesPage = <TraineesPage logout={logout} />;
 
     return (
         <div className="app">
@@ -73,29 +79,27 @@ export default function App() {
             />
             <div className="container">
                 <Routes>
-                    <Route path="/" element={<Navigate to={redir} />} />
                     <Route
-                        path="/account"
+                        path={route}
+                        element={
+                            role.toLowerCase() === 'trainee'
+                                ? skillsPage
+                                : traineesPage
+                        }
+                    />
+                    <Route
+                        path={`${route}/account`}
                         element={<AccountPage logout={logout} />}
                     />
                     <Route
-                        path="/skills-all"
+                        path={`${route}/skills-all`}
                         element={
                             <SkillsPage ownSkills={false} logout={logout} />
                         }
                     />
+                    <Route path={`${route}/skills`} element={skillsPage} />
                     <Route
-                        path="/skills"
-                        element={
-                            <SkillsPage
-                                ownSkills={true}
-                                logout={logout}
-                                notifications={notifications}
-                            />
-                        }
-                    />
-                    <Route
-                        path="/skills/:id"
+                        path={`${route}/skills/:id`}
                         element={
                             <SkillsPage
                                 ownSkills={true}
@@ -105,7 +109,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path="/skill/:id"
+                        path={`${route}/skill/:id`}
                         element={
                             <SkillPage
                                 logout={logout}
@@ -114,7 +118,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path="/evals"
+                        path={`${route}/evals`}
                         element={
                             <EvaluationsPage
                                 logout={logout}
@@ -123,7 +127,7 @@ export default function App() {
                         }
                     />
                     <Route
-                        path="/invites"
+                        path={`${route}/invites`}
                         element={
                             <InvitationsPage
                                 logout={logout}
@@ -131,44 +135,41 @@ export default function App() {
                             />
                         }
                     />
+                    <Route path={`${route}/trainees`} element={traineesPage} />
                     <Route
-                        path="/trainees"
-                        element={<TraineesPage logout={logout} />}
-                    />
-                    <Route
-                        path="/accounts"
+                        path={`${route}/accounts`}
                         element={<AccountsPage logout={logout} />}
                     />
                     <Route
-                        path="/account-add"
+                        path={`${route}/account-add`}
                         element={<AccountAddPage logout={logout} />}
                     />
                     <Route
-                        path="/account-update/:id"
+                        path={`${route}/account-update/:id`}
                         element={<AccountUpdatePage logout={logout} />}
                     />
                     <Route
-                        path="/account-view/:id"
+                        path={`${route}/account-view/:id`}
                         element={<AccountViewPage logout={logout} />}
                     />
                     <Route
-                        path="/infoChanges"
+                        path={`${route}/infoChanges`}
                         element={<InfoChangesPage logout={logout} />}
                     />
                     <Route
-                        path="/infoChange-control/:infoChangeId/:personId"
+                        path={`${route}/infoChange-control/:infoChangeId/:personId`}
                         element={<InfoChangeControlPage logout={logout} />}
                     />
                     <Route
-                        path="/new-eval"
+                        path={`${route}/new-eval`}
                         element={<NewEvaluationPage logout={logout} />}
                     />
                     <Route
-                        path="/new-invite"
+                        path={`${route}/new-invite`}
                         element={<NewInvitePage logout={logout} />}
                     />
                     <Route
-                        path="/new-skill"
+                        path={`${route}/new-skill`}
                         element={<NewSkill logout={logout} />}
                     />
                 </Routes>
