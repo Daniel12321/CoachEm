@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import './TraineesPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function TraineesPage(props) {
+import './TraineesPage.css';
+
+export default function TraineesPage({ logout }) {
     const [api] = useLocalStorage('api');
     const [trainees, setTrainees] = useState([]);
     const [name, setName] = useState();
@@ -11,11 +12,7 @@ export default function TraineesPage(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getAllTrainees();
-    });
-
-    async function getAllTrainees() {
-        await fetch(`${api}/api/person/trainees`, {
+        fetch(`${api}/api/person/trainees`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,12 +21,12 @@ export default function TraineesPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
                 }
                 return response.json();
             })
             .then((data) => setTrainees(data));
-    }
+    }, [api, logout]);
 
     const filteredTrainees = trainees
         .filter(
