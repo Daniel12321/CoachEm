@@ -6,6 +6,7 @@ import './TraineesPage.css';
 
 export default function TraineesPage({ logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [trainees, setTrainees] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -54,7 +55,7 @@ export default function TraineesPage({ logout }) {
                             key={trainee.id}
                             className="trainee-item"
                             onClick={() => {
-                                navigate(`/skills/${trainee.id}`);
+                                navigate(`${route}/skills/${trainee.id}`);
                             }}
                         >
                             <h3>{trainee.name}</h3>
