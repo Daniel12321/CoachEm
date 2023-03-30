@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useLocalStorage } from './LocalStorage';
 
 import './Header.css';
 
 export default function Header({ logout, role, notifications }) {
+    const [route] = useLocalStorage('route', '');
+
     const nav =
         role === 'trainee' ? (
-            <TraineeNav />
+            <TraineeNav route={route} />
         ) : role === 'coach' || role === 'manager' ? (
-            <CoachNav />
+            <CoachNav route={route} />
         ) : role === 'hr' ? (
-            <HRNav />
+            <HRNav route={route} />
         ) : (
             <nav />
         );
@@ -18,11 +21,15 @@ export default function Header({ logout, role, notifications }) {
     return (
         <div className="header-wrapper">
             <header>
-                <Link className="header-logo" to="/">
+                <Link className="header-logo" to={route}>
                     <img src="" alt="Logo" />
                 </Link>
                 {nav}
-                <Account logout={logout} notifications={notifications} />
+                <Account
+                    route={route}
+                    logout={logout}
+                    notifications={notifications}
+                />
             </header>
         </div>
     );
@@ -46,7 +53,7 @@ function notificationCount(dto) {
     );
 }
 
-function Account({ logout, notifications }) {
+function Account({ route, logout, notifications }) {
     const count = notificationCount(notifications);
     const badge = count ? (
         <div className="notification-badge">{count}</div>
@@ -59,11 +66,14 @@ function Account({ logout, notifications }) {
             {'Account'}
             {badge}
             <div className="header-dropdown-content">
-                <Link className="header-dropdown-item" to={'/account'}>
+                <Link className="header-dropdown-item" to={`${route}/account`}>
                     Profile
                 </Link>
                 {notifications && (
-                    <NotificationList notifications={notifications} />
+                    <NotificationList
+                        route={route}
+                        notifications={notifications}
+                    />
                 )}
                 <div className="header-dropdown-item" onClick={logout}>
                     Log out
@@ -73,11 +83,12 @@ function Account({ logout, notifications }) {
     );
 }
 
-function NotificationList({ notifications }) {
+function NotificationList({ route, notifications }) {
     const feedbackTo =
-        notifications.feedback && notifications.feedback.length > 0
+        route +
+        (notifications.feedback && notifications.feedback.length > 0
             ? '/skill/' + notifications.feedback[0].traineeSkill.id
-            : '/skills';
+            : '/skills');
 
             console.log(notifications)
             console.log(notifications.infoChanges[0]) 
@@ -90,17 +101,17 @@ function NotificationList({ notifications }) {
     return (
         <>
             <NotificationItem
-                to="/evals"
+                to={`${route}/evals`}
                 message="New Evaluation Invites"
                 count={arrayCount(notifications.attendees)}
             />
             <NotificationItem
-                to="/evals"
+                to={`${route}/evals`}
                 message="New Evaluations"
                 count={arrayCount(notifications.evaluations)}
             />
             <NotificationItem
-                to="/invites"
+                to={`${route}/invites`}
                 message="New 360 Invites"
                 count={arrayCount(notifications.invites)}
             />
@@ -110,7 +121,7 @@ function NotificationList({ notifications }) {
                 count={arrayCount(notifications.feedback)}
             />
             <NotificationItem
-                to="/evals"
+                to={`${route}/evals`}
                 message="New Info Changes"
                 count={arrayCount(notifications.infoChanges)}
             />
@@ -134,28 +145,28 @@ function NotificationItem({ message, count, to, clear }) {
     );
 }
 
-const TraineeNav = () => (
+const TraineeNav = ({ route }) => (
     <nav>
-        <NavLink to="/skills">Skills</NavLink>
-        <NavLink to="/skills-all">New Skills</NavLink>
-        <NavLink to="/evals">Evaluations</NavLink>
-        <NavLink to="/invites">Invitations</NavLink>
+        <NavLink to={`${route}/skills`}>Skills</NavLink>
+        <NavLink to={`${route}/skills-all`}>New Skills</NavLink>
+        <NavLink to={`${route}/evals`}>Evaluations</NavLink>
+        <NavLink to={`${route}/invites`}>Invitations</NavLink>
     </nav>
 );
 
-const CoachNav = () => (
+const CoachNav = ({ route }) => (
     <nav>
-        <NavLink to="/trainees">Trainees</NavLink>
-        <NavLink to="/skills-all">All Skills</NavLink>
-        <NavLink to="/evals">Evaluations</NavLink>
-        <NavLink to="/invites">Invitations</NavLink>
+        <NavLink to={`${route}/trainees`}>Trainees</NavLink>
+        <NavLink to={`${route}/skills-all`}>New Skills</NavLink>
+        <NavLink to={`${route}/evals`}>Evaluations</NavLink>
+        <NavLink to={`${route}/invites`}>Invitations</NavLink>
     </nav>
 );
 
-const HRNav = () => (
+const HRNav = ({ route }) => (
     <nav>
-        <NavLink to="/accounts">Accounts</NavLink>
-        <NavLink to="/account-add">Add Account</NavLink>
-        <NavLink to="/infochanges">Info change</NavLink>
+        <NavLink to={`${route}/accounts`}>Accounts</NavLink>
+        <NavLink to={`${route}/account-add`}>Add Account</NavLink>
+        <NavLink to={`${route}/infochanges`}>Info change</NavLink>
     </nav>
 );
