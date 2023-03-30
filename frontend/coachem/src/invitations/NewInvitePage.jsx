@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './NewInvitePage.css';
 
-export default function InvitationsPage({ logout }) {
+export default function InvitationsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
     const navigate = useNavigate();
     const [people, setPeople] = useState([]);
@@ -41,6 +41,8 @@ export default function InvitationsPage({ logout }) {
                     navigate('/invites');
                 } else if (resp.status === 401) {
                     logout();
+                } else if (resp.status === 403) {
+                    home();
                 }
                 return resp;
             });
@@ -59,6 +61,8 @@ export default function InvitationsPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })

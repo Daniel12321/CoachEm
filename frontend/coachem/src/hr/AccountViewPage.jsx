@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountUpdatePage({ logout }) {
+export default function AccountUpdatePage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [account, setAccounts] = useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -23,12 +24,14 @@ export default function AccountUpdatePage({ logout }) {
             });
             if (res.status === 401) {
                 logout();
+            } else if (res.status === 403) {
+                home();
             }
             const data = await res.json();
             setAccounts(data);
         }
         getAccount();
-    }, [id, logout, api]);
+    }, [id, home, logout, api]);
 
     const updateInfo = async (e) => {
         console.log('update');
@@ -93,7 +96,7 @@ export default function AccountUpdatePage({ logout }) {
                         type="submit"
                         value="Enable editing"
                         onClick={() => {
-                            navigate(`/account-update/${id}`);
+                            navigate(`${route}/account-update/${id}`);
                         }}
                     />
                 </form>

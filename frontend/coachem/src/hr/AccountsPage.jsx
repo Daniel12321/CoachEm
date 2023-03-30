@@ -3,8 +3,9 @@ import './AccountsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountsPage({ logout }) {
+export default function AccountsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [accounts, setAccounts] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -16,19 +17,21 @@ export default function AccountsPage({ logout }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             });
             if (res.status === 401) {
                 logout();
+            } else if (res.status === 403) {
+                home();
             }
             const data = await res.json();
             setAccounts(data);
         }
         getAllAccounts();
-    }, [logout, api]);
-
-
+    }, [home, logout, api]);
 
     const filteredAccounts = accounts
         .filter(
@@ -56,7 +59,7 @@ export default function AccountsPage({ logout }) {
                             key={account.id}
                             className="account-item"
                             onClick={() => {
-                                navigate(`/account-view/${account.id}`);
+                                navigate(`${route}/account-view/${account.id}`);
                             }}
                         >
                             <h3>{account.name}</h3>
