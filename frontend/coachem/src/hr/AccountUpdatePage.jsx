@@ -9,15 +9,14 @@ export default function AccountUpdatePage({ logout }) {
     const { id } = useParams();
 
     useEffect(() => {
-           fetch(`${api}/api/person/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            }).then((response) => {
+        fetch(`${api}/api/person/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
                 if (response.status === 401) {
                     logout();
                 }
