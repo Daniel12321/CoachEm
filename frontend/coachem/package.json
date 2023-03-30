@@ -1,5 +1,6 @@
 {
   "name": "coachem",
+  "homepage": "https://daniel12321.github.io/CoachEm/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
