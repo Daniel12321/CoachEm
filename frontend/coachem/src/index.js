@@ -5,11 +5,11 @@ import App from './App';
 
 import './index.css';
 
-const api = 'https://groep1.jorisspeeltgames.nl';
-const route = '/CoachEm';
+// const api = 'https://groep1.jorisspeeltgames.nl';
+// const route = '/CoachEm';
 
-// const api = 'http://localhost:8081';
-// const route = '';
+const api = 'http://localhost:8081';
+const route = '';
 
 localStorage.setItem('api', JSON.stringify(api));
 localStorage.setItem('route', JSON.stringify(route));

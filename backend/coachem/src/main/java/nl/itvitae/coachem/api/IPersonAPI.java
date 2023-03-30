@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.TraineeListDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +68,17 @@ public interface IPersonAPI {
     @GetMapping(value = "/trainees", produces = "application/json")
     List<PersonDto> getAllTrainees();
 
+    @Operation(
+            summary = "Get All Trainees for coach recommendations",
+            description = "Gets a list of lists with all trainees per skill if they can be recommended.",
+            tags = {"Person"}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TraineeListDto.class)))),
+            @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content)
+    })
+    @GetMapping(value = "/trainees/forcoach", produces = "application/json")
+    List<TraineeListDto> getTraineesForCoachRecommendations();
     @Operation(
             summary = "Accept InfoChange",
             description = "Accepts an infochange, and merges its data with the appropriate person. Also deletes this infochange if successful.",

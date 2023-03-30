@@ -2,6 +2,7 @@ package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.api.IPersonAPI;
 import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.TraineeListDto;
 import nl.itvitae.coachem.service.InfoChangeService;
 import nl.itvitae.coachem.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class PersonController implements IPersonAPI {
     @Override
     public List<PersonDto> getAllTrainees() {
         return personService.getAllTrainees();
+    }
+
+    @Override
+    public List<TraineeListDto> getTraineesForCoachRecommendations() {
+        return personService.getTraineesForCoachRecommendations();
     }
 
     @Override

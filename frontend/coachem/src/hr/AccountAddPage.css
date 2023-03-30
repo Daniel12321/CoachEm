@@ -1,0 +1,32 @@
+.new-account-form img{
+    height: 18px;
+    position: relative;
+    top: 4px;
+}
+
+.new-account-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-account-form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
+.new-account-form input[type='submit'] {
+    margin-top: 8px;
+}
+
+.new-account-form select {
+    font-size: 2rem;
+}
+
+.new-account-form label {
+    font-weight: 600;
+}
+
+.account-add-form-flex{
+    display: flex;
+}

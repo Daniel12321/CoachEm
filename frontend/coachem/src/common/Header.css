@@ -104,3 +104,7 @@ header nav a {
 .notification:hover {
     background-color: #ff8c84;
 }
+
+.header-logo img{
+    height: 80px;
+}
