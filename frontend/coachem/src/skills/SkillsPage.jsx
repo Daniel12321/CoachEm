@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useCallback } from 'react';
-import './SkillsPage.css';
 import { useLocalStorage } from '../common/LocalStorage';
+import './SkillsPage.css';
 
 export default function SkillsPage({ logout, ownSkills, notifications }) {
     const [api] = useLocalStorage('api');
