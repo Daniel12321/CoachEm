@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Person {
+    public class Person {
 
     @Id
     private Long id;
@@ -46,6 +46,10 @@ public class Person {
     @JsonIgnore
     @OneToMany(mappedBy = "invited", cascade = CascadeType.ALL)
     private List<Invite> receivedInvites = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Recommendation> recommendations = new ArrayList<>();
 
     public Person(String name) {
         this.name = name;

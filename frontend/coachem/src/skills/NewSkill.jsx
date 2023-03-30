@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '../common/LocalStorage';
+import './NewSkill.css';
 
 export default function SkillPage({ logout }) {
     const [api] = useLocalStorage('api');
@@ -99,7 +100,7 @@ export default function SkillPage({ logout }) {
         <div>
             <h1>New skill</h1>
             <div className="newSkill">
-                <form onSubmit={(e) => addSkill(e)}>
+                <form className="new-skill-form" onSubmit={(e) => addSkill(e)}>
                     <label htmlFor="name">Name: </label>
                     <input
                         id="name"
@@ -108,7 +109,6 @@ export default function SkillPage({ logout }) {
                         maxLength={30}
                         required
                     />
-                    <br />
                     <label htmlFor="type">Type: </label>
                     <select name="type" id="type">
                         <option value="hard">hard skill</option>
@@ -119,12 +119,10 @@ export default function SkillPage({ logout }) {
                     <input
                         id="duration"
                         type="number"
-                        placeholder="duration"
+                        placeholder="duration in hours"
                         maxLength={30}
                         required
                     />
-                    hours
-                    <br />
                     <label htmlFor="category">Category: </label>
                     <select name="category" id="category">
                         {categoryOptions()}
@@ -134,17 +132,19 @@ export default function SkillPage({ logout }) {
                     <input
                         id="description"
                         type="text"
-                        placeholder="name"
+                        placeholder="description"
                         maxLength={30}
                         required
                     />
-                    <br />
-                    <button type="submit">add skill</button>
+                    <input type="submit" value="add new skill"></input>
                 </form>
             </div>
             <h1>New category</h1>
             <div className="newCategory">
-                <form onSubmit={(e) => addCategory(e)}>
+                <form
+                    className="new-skill-form"
+                    onSubmit={(e) => addCategory(e)}
+                >
                     <label htmlFor="name">Name: </label>
                     <input
                         id="name"
@@ -153,7 +153,7 @@ export default function SkillPage({ logout }) {
                         maxLength={30}
                         required
                     />
-                    <button type="submit">add category</button>
+                    <input value="add category" type="submit"></input>
                 </form>
             </div>
         </div>

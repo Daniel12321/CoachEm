@@ -10,6 +10,9 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [recommendations, setRecommendations] = useState();
+    const [trainees, setTrainees] = useState([]);
+    const role = localStorage.getItem('user_role');
 
     const [name, setName] = useState();
     const [type, setType] = useState();
@@ -18,7 +21,6 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
     const [maxDuration, setMaxDuration] = useState();
 
     const person = JSON.parse(localStorage.getItem('person'));
-    const role = localStorage.getItem('user_role');
     const trainee = role === 'TRAINEE';
 
     useEffect(() => {
@@ -37,6 +39,23 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
             })
             .then((data) => {
                 setCategories(data);
+            })
+            .catch((error) => console.log(error));
+        fetch(`${api}/api/person/trainees/forcoach`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setTrainees(data);
             })
             .catch((error) => console.log(error));
     }, [logout, api]);
@@ -92,7 +111,25 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setSkills(data);
             })
             .catch((error) => console.log(error));
-    }, [ownSkills, logout, api]);
+
+        fetch(`${api}/api/recommendation/trainee/${person.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setRecommendations(data);
+            })
+            .catch((error) => console.log(error));
+    }, [ownSkills, logout, api, person.id]);
 
     function signUp(skillId) {
         fetch(`${api}/api/traineeskill/new/${person.id}/${skillId}`, {
@@ -113,6 +150,35 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setTraineeSkills(traineeSkills.concat(data));
             })
             .catch((error) => console.log(error));
+
+        let removable;
+        let bool = false;
+        recommendations.forEach((r) => {
+            if (r.skill.id === skillId) {
+                bool = true;
+                removable = r;
+            }
+        });
+        if (bool) {
+            fetch(`${api}/api/recommendation/delete/${removable.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            })
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                })
+                .catch((error) => console.log(error));
+            setRecommendations(
+                recommendations.filter((r) => skillId !== r.skill.id)
+            );
+        }
     }
 
     function completed(skill) {
@@ -132,6 +198,60 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 sign up
             </button>
         );
+    }
+
+    function recommended(skill) {
+        let res;
+        recommendations.forEach((r) => {
+            if (r.skill.id === skill.id) {
+                res = <p className="recommended">recommended</p>;
+            }
+        });
+        return res;
+    }
+
+    function recommend(skill, train) {
+        return (
+            <form onSubmit={(e) => recommendSkill(skill, e)}>
+                <select name="trainees" id="">
+                    <option value=""></option>
+                    {trainees.length === skills.length &&
+                        train.map((t) => {
+                            return (
+                                <option key={t.id} value={t.id}>
+                                    {t.name}
+                                </option>
+                            );
+                        })}
+                </select>
+                <button type="submit">recommend</button>
+            </form>
+        );
+    }
+
+    function recommendSkill(skill, e) {
+        fetch(
+            `${api}/api/recommendation/new/${e.target[0].value}/${skill.id}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            }
+        )
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setRecommendations(recommendations.concat(data));
+            })
+            .catch((error) => console.log(error));
     }
 
     function filterSkills(skill) {
@@ -218,12 +338,16 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
         );
     }
 
-    function TaskItem({ skill }) {
+    function TaskItem({ skill, index }) {
         return (
-            <div className="skill-item">
+            <div key={skill.id} className="skill-item">
                 <h3>{skill.name}</h3>
                 <p>{skill.description}</p>
                 {trainee && completed(skill)}
+                {trainee && recommendations && recommended(skill)}
+                {role === 'COACH' &&
+                    trainees.length === skills.length &&
+                    recommend(skill, trainees[index].trainees)}
             </div>
         );
     }
@@ -260,11 +384,15 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                     </div>
                 </div>
                 <div className="skill-list">
-                    {filteredSkills.map((skill) =>
+                    {filteredSkills.map((skill, index) =>
                         ownSkills ? (
                             <OwnTaskItem key={skill.id} skill={skill} />
                         ) : (
-                            <TaskItem key={skill.id} skill={skill} />
+                            <TaskItem
+                                key={skill.id}
+                                skill={skill}
+                                index={index}
+                            />
                         )
                     )}
                 </div>
@@ -360,10 +488,4 @@ const DurationFilter = ({ setMinDuration, setMaxDuration }) => (
     </div>
 );
 
-// Naam
-// Type
-// Category
-// Tijdsduur
-// Datum van upload (order)
-//
-// Recommended ?????
+// maak knopje voor coach met "recommend" erop, wat iets uitklapt met een select met alle trainees om die skill aan te recommenden
