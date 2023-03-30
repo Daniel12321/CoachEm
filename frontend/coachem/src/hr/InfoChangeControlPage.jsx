@@ -7,11 +7,11 @@ import {
 } from '../common/Components';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function InfoChangeControlPage({ logout }) {
+export default function InfoChangeControlPage({ logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
     const [newDetails, setNewDetails] = useState([]);
     const [oldDetails, setOldDetails] = useState([]);
-    const [ infoChangeId, personId ] = useParams();
+    const {infoChangeId, personId} = useParams();
 
     useEffect(() => {
         async function getInfoChange() {
@@ -75,6 +75,7 @@ export default function InfoChangeControlPage({ logout }) {
                     'the info change you are trying to procces has been removed';
             }
             if (response.status === 200) {
+                reloadNotifications();
                 e.target.form[6].value = 'saved';
             }
             return response.json();
@@ -99,6 +100,7 @@ export default function InfoChangeControlPage({ logout }) {
             }
             if (response.status === 200) {
                 e.target.form[5].value = 'changes rejected';
+                reloadNotifications();
             }
             return response.json();
         });

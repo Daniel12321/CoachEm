@@ -113,7 +113,7 @@ function NotificationList({ route, notifications }) {
                 count={arrayCount(notifications.feedback)}
             />
             <NotificationItem
-                to={`${route}/evals`}
+                to={`${route}/infoChanges`}
                 message="New Info Changes"
                 count={arrayCount(notifications.infoChanges)}
             />
