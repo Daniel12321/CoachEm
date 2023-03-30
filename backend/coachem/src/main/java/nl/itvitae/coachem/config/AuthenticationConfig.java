@@ -39,6 +39,8 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
+                    .requestMatchers("/v3/**").permitAll()
+                    .requestMatchers("/swagger-ui.html").permitAll()
                     .requestMatchers("/error").anonymous() // Allow anonymous access to /error to enable throwing status exceptions
                     .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/auth/register").hasAuthority("HR")

@@ -10,8 +10,9 @@ public record InviteDto(Long id, Boolean accepted, String time, PersonDto traine
 
     @JsonIgnore
     public boolean isValid() {
-        return time != null && accepted!=null;
+        return time != null && accepted != null;
     }
+
     @org.mapstruct.Mapper(componentModel = "spring")
     public interface Mapper extends IEntityMapper<Invite, InviteDto> {
     }

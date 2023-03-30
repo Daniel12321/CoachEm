@@ -1,23 +1,25 @@
 package nl.itvitae.coachem.controller;
 
-import nl.itvitae.coachem.dto.FeedbackDto;
+import nl.itvitae.coachem.api.IProgressAPI;
 import nl.itvitae.coachem.dto.ProgressDto;
 import nl.itvitae.coachem.service.ProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/progress")
-public class ProgressController {
+public class ProgressController implements IProgressAPI {
 
     @Autowired
-    ProgressService progressService;
+    private ProgressService progressService;
 
-    @PostMapping("/new/{traineeSkillId}")
+    @Override
     public ResponseEntity<ProgressDto> newProgress(@PathVariable("traineeSkillId") Long traineeSkillId,
                                                    @RequestBody ProgressDto progress) {
         return progressService.newProgress(progress, traineeSkillId)
@@ -25,12 +27,12 @@ public class ProgressController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/traineeskill/{id}")
+    @Override
     public List<ProgressDto> getProgressByTraineeSkill(@PathVariable("id") Long id) {
         return progressService.getProgressByTraineeSkill(id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @Override
     public ResponseEntity<Void> deleteProgressById(@PathVariable("id") Long id) {
         if (progressService.deleteProgress(id)) {
             return ResponseEntity.ok().build();
