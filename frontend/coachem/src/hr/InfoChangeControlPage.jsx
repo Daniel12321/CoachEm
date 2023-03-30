@@ -11,7 +11,7 @@ export default function InfoChangeControlPage({ logout }) {
     const [api] = useLocalStorage('api');
     const [newDetails, setNewDetails] = useState([]);
     const [oldDetails, setOldDetails] = useState([]);
-    const [ infoChangeId, personId ] = useParams();
+    const {infoChangeId, personId} = useParams();
 
     useEffect(() => {
         async function getInfoChange() {
