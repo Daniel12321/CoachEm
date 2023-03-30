@@ -90,14 +90,6 @@ function NotificationList({ route, notifications }) {
             ? '/skill/' + notifications.feedback[0].traineeSkill.id
             : '/skills');
 
-            console.log(notifications)
-            console.log(notifications.infoChanges[0]) 
-            console.log(notifications.infoChanges[0].id) 
-    // const infoChangeTo =
-    //    notifications.infoChanges && notifications.infoChanges.length > 0
-    //         ? '/infoChange-control/' + notifications.infoChanges[0].id +'/'+notifications.infoChanges[0].person.id
-    //         : '/infoChange-control';
-
     return (
         <>
             <NotificationItem
@@ -121,7 +113,7 @@ function NotificationList({ route, notifications }) {
                 count={arrayCount(notifications.feedback)}
             />
             <NotificationItem
-                to={`${route}/evals`}
+                to={`${route}/infoChanges`}
                 message="New Info Changes"
                 count={arrayCount(notifications.infoChanges)}
             />

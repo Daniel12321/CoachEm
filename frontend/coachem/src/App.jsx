@@ -158,7 +158,9 @@ export default function App() {
                     />
                     <Route
                         path={`${route}/infoChange-control/:infoChangeId/:personId`}
-                        element={<InfoChangeControlPage logout={logout} />}
+                        element={<InfoChangeControlPage 
+                        logout={logout} 
+                        reloadNotifications={reloadNotifications}/>}
                     />
                     <Route
                         path={`${route}/new-eval`}
