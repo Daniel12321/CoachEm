@@ -19,12 +19,12 @@ import NewInvitePage from './invitations/NewInvitePage';
 import NewSkill from './skills/NewSkill';
 import { useLocalStorage } from './common/LocalStorage';
 import InfoChangesPage from './hr/InfoChangesPage';
-import InfoChangeControlPage from './hr/InfoChangeControlPage'
+import InfoChangeControlPage from './hr/InfoChangeControlPage';
 import './App.css';
 
 export default function App() {
-    // const [api] = useLocalStorage('api', 'http://groep1.jorisspeeltgames.nl:8081');
-    const [api] = useLocalStorage('api', 'http://127.0.0.1:8081');
+    const [api] = useLocalStorage('api', 'https://groep1.jorisspeeltgames.nl');
+    // const [api] = useLocalStorage('api', 'http://127.0.0.1:8081');
     const [role, setRole] = useState(localStorage.getItem('user_role'));
     const [notifications, setNotifications] = useState();
 
@@ -156,7 +156,7 @@ export default function App() {
                         element={<InfoChangesPage logout={logout} />}
                     />
                     <Route
-                        path="/infoChange-control/:infoChangeId/:personId" 
+                        path="/infoChange-control/:infoChangeId/:personId"
                         element={<InfoChangeControlPage logout={logout} />}
                     />
                     <Route
