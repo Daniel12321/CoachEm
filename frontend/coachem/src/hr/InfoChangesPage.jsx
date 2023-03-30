@@ -56,7 +56,8 @@ export default function InfoChangesPage({ logout }) {
                     </div>
                 </div>
                 <div className="infoChange-list">
-                    {filteredInfoChanges.map((infoChange) => (
+                {filteredInfoChanges.length >= 1 ? 
+                    filteredInfoChanges.map((infoChange) => (
                         <div
                             key={infoChange.id}
                             className="infoChange-item"
@@ -70,7 +71,8 @@ export default function InfoChangesPage({ logout }) {
                             <h4>{infoChange.person.name}</h4>
                             <h5>{infoChange.personemail}</h5>
                         </div>
-                    ))}
+                    ))
+                    :   <div><h8>there are no pending information changes (or you filterd them all)</h8> </div>}
                 </div>
             </div>
         </div>
