@@ -9,8 +9,7 @@ export default function AccountUpdatePage({ logout }) {
     const { id } = useParams();
 
     useEffect(() => {
-        async function getAccount() {
-            const res = await fetch(`${api}/api/person/${id}`, {
+           fetch(`${api}/api/person/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -18,14 +17,13 @@ export default function AccountUpdatePage({ logout }) {
                         'access_token'
                     )}`,
                 },
-            });
-            if (res.status === 401) {
-                logout();
-            }
-            const data = await res.json();
-            setAccounts(data);
-        }
-        getAccount();
+            }).then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
+            })
+            .then((data) => setAccounts(data));
     }, [id, logout, api]);
 
     const updateInfo = async (e) => {
