@@ -26,7 +26,8 @@ spring:
 
 logging:
   file:
-    path: './groep1.log'
+    path: '/var/log'
+    name: 'groep1.log'
 
 server:
   port: 8081
