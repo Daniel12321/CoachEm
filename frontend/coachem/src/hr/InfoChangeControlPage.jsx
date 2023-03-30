@@ -14,47 +14,39 @@ export default function InfoChangeControlPage({ logout, reloadNotifications }) {
     const {infoChangeId, personId} = useParams();
 
     useEffect(() => {
-        async function getInfoChange() {
-            const res = await fetch(
-                `${api}/api/infochange/get/${infoChangeId}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem(
-                            'access_token'
-                        )}`,
-                    },
-                }
-            );
-            if (res.status === 401) {
-                logout();
-            }
-            const data = await res.json();
-            setNewDetails(data);
-        }
+            fetch(`${api}/api/infochange/get/${infoChangeId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            })
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    return response.json();
+                })
+                .then((data) => setNewDetails(data));
 
-        async function getOldDetails() {
-            const res = await fetch(
-                `${api}/api/person/${personId}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem(
-                            'access_token'
-                        )}`,
-                    },
-                }
-            );
-            if (res.status === 401) {
-                logout();
-            }
-            const data = await res.json();
-            setOldDetails(data);
-        }
-        getInfoChange();
-        getOldDetails();
+            fetch(`${api}/api/person/${personId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            })
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    }
+                    return response.json();
+                })
+                .then((data) => setOldDetails(data));
     }, [infoChangeId, personId, logout, api]);
 
     const updateInfoChange = async (e) => {
