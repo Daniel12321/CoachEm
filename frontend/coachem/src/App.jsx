@@ -17,9 +17,14 @@ import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
 import NewInvitePage from './invitations/NewInvitePage';
 import NewSkill from './skills/NewSkill';
+import { useLocalStorage } from './common/LocalStorage';
+import InfoChangesPage from './hr/InfoChangesPage';
+import InfoChangeControlPage from './hr/InfoChangeControlPage'
 import './App.css';
 
 export default function App() {
+    // const [api] = useLocalStorage('api', 'http://groep1.jorisspeeltgames.nl:8081');
+    const [api] = useLocalStorage('api', 'http://127.0.0.1:8081');
     const [role, setRole] = useState(localStorage.getItem('user_role'));
     const [notifications, setNotifications] = useState();
 
@@ -31,7 +36,7 @@ export default function App() {
 
     const reloadNotifications = useCallback(() => {
         if (role) {
-            fetch('http://127.0.0.1:8080/api/notification/all', {
+            fetch(`${api}/api/notification/all`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem(
                         'access_token'
@@ -41,7 +46,7 @@ export default function App() {
                 .then((resp) => resp.json())
                 .then(setNotifications);
         }
-    }, [role]);
+    }, [role, api]);
 
     useEffect(() => {
         reloadNotifications();
@@ -82,7 +87,11 @@ export default function App() {
                     <Route
                         path="/skills"
                         element={
-                            <SkillsPage ownSkills={true} logout={logout} />
+                            <SkillsPage
+                                ownSkills={true}
+                                logout={logout}
+                                notifications={notifications}
+                            />
                         }
                     />
                     <Route
@@ -141,6 +150,14 @@ export default function App() {
                     <Route
                         path="/account-view/:id"
                         element={<AccountViewPage logout={logout} />}
+                    />
+                    <Route
+                        path="/infoChanges"
+                        element={<InfoChangesPage logout={logout} />}
+                    />
+                    <Route
+                        path="/infoChange-control/:infoChangeId/:personId" 
+                        element={<InfoChangeControlPage logout={logout} />}
                     />
                     <Route
                         path="/new-eval"

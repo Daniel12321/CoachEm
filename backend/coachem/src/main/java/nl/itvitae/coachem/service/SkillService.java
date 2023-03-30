@@ -2,6 +2,7 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.model.Skill;
+import nl.itvitae.coachem.repository.CategoryRepository;
 import nl.itvitae.coachem.repository.SkillRepository;
 import nl.itvitae.coachem.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,18 @@ public class SkillService {
     private SkillRepository skillRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private SkillDto.Mapper mapper;
 
-    public Optional<SkillDto> newSkill(SkillDto dto) {
-        if (!dto.isValid())
+    public Optional<SkillDto> newSkill(SkillDto dto, Long id) {
+        if (!dto.isValid() || categoryRepository.findById(id).isEmpty())
             return Optional.empty();
 
-        Skill skill = skillRepository.save(mapper.post(dto));
+        Skill skill = mapper.post(dto);
+        skill.setCategory(categoryRepository.findById(id).get());
+        skillRepository.save(skill);
         return Optional.of(mapper.get(skill));
     }
 

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLocalStorage } from '../common/LocalStorage';
 import './InvitationsPage.css';
 
 export default function InvitationsPage({ logout, reloadNotifications }) {
+    const [api] = useLocalStorage('api');
     const [yourInvites, setYourInvites] = useState([]);
     const [invites, setInvites] = useState([]);
     const [reload, setReload] = useState(false);
@@ -17,7 +19,7 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
     };
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8080/api/invite/sent/${person.id}`, {
+        fetch(`${api}/api/invite/sent/${person.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
                 });
                 setYourInvites(filteredData);
             });
-        fetch(`http://127.0.0.1:8080/api/invite/received/${person.id}`, {
+        fetch(`${api}/api/invite/received/${person.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,10 +59,10 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((data) => {
                 setInvites(data);
             });
-    }, [logout, person.id, reload]);
+    }, [logout, person.id, reload, api]);
 
     function acceptInvite(id) {
-        fetch(`http://127.0.0.1:8080/api/invite/accept/${id}`, {
+        fetch(`${api}/api/invite/accept/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +79,7 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
     }
 
     function denyInvite(id) {
-        fetch(`http://127.0.0.1:8080/api/invite/delete/${id}`, {
+        fetch(`${api}/api/invite/delete/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
