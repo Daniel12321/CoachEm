@@ -6,6 +6,7 @@ import { useLocalStorage } from '../common/LocalStorage';
 
 export default function SkillsPage({ logout, ownSkills, notifications }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const { id } = useParams();
     const [skills, setSkills] = useState([]);
     const [traineeSkills, setTraineeSkills] = useState([]);
@@ -198,7 +199,7 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
         );
 
         return (
-            <Link to={`/skill/${skill.id}`}>
+            <Link to={`${route}/skill/${skill.id}`}>
                 <div className="skill-item">
                     {badge}
 
@@ -234,7 +235,10 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 <h1>Skills Dashboard</h1>
                 {role !== 'TRAINEE' && (
                     <div>
-                        <Link className="new-eval-button" to="/new-skill">
+                        <Link
+                            className="new-eval-button"
+                            to={`${route}/new-skill`}
+                        >
                             New Skill
                         </Link>
                     </div>

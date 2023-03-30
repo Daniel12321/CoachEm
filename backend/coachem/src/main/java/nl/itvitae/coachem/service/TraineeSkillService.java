@@ -49,8 +49,8 @@ public class TraineeSkillService {
         return traineeSkillRepository.findById(id).map(mapper::get);
     }
 
-    public List<TraineeSkillDto> getTraineeSkillByUser(Long id) {
-        return traineeSkillRepository.findByUserId(id)
+    public List<TraineeSkillDto> getTraineeSkillByUser(Long userId) {
+        return traineeSkillRepository.findByUserId(userId)
                 .stream().map(mapper::get).toList();
     }
 

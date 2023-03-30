@@ -5,8 +5,10 @@ import {
     OldDataViewComponent,
     NewDataViewComponent,
 } from '../common/Components';
+import { useLocalStorage } from '../common/LocalStorage';
 
 export default function InfoChangeControlPage({ logout }) {
+    const [api] = useLocalStorage('api');
     const [newDetails, setNewDetails] = useState([]);
     const [oldDetails, setOldDetails] = useState([]);
     const [ infoChangeId, personId ] = useParams();
@@ -14,7 +16,7 @@ export default function InfoChangeControlPage({ logout }) {
     useEffect(() => {
         async function getInfoChange() {
             const res = await fetch(
-                `http://localhost:8080/api/infochange/get/${infoChangeId}`,
+                `${api}/api/infochange/get/${infoChangeId}`,
                 {
                     method: 'GET',
                     headers: {
@@ -34,7 +36,7 @@ export default function InfoChangeControlPage({ logout }) {
 
         async function getOldDetails() {
             const res = await fetch(
-                `http://localhost:8080/api/person/${personId}`,
+                `${api}/api/person/${personId}`,
                 {
                     method: 'GET',
                     headers: {
@@ -53,11 +55,11 @@ export default function InfoChangeControlPage({ logout }) {
         }
         getInfoChange();
         getOldDetails();
-    }, [infoChangeId, personId, logout]);
+    }, [infoChangeId, personId, logout, api]);
 
     const updateInfoChange = async (e) => {
         e.preventDefault();
-        fetch(`http://127.0.0.1:8080/api/person/infochange/${infoChangeId}`, {
+        fetch(`${api}/api/person/infochange/${infoChangeId}`, {
             method: 'PUT',
 
             headers: {
@@ -81,7 +83,7 @@ export default function InfoChangeControlPage({ logout }) {
 
     const rejectInfoChange = async (e) => {
         e.preventDefault();
-        fetch(`http://127.0.0.1:8080/api/infochange/delete/${infoChangeId}`, {
+        fetch(`${api}/api/infochange/delete/${infoChangeId}`, {
             method: 'DELETE',
 
             headers: {
