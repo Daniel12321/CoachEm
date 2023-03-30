@@ -14,6 +14,7 @@ const options = {
 
 export default function EvaluationsPage({ logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [trainee, setTrainee] = useState([]);
     const [attendee, setAttendee] = useState([]);
 
@@ -132,7 +133,10 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
 
                 {role !== 'trainee' && (
                     <div>
-                        <Link className="new-eval-button" to="/new-eval">
+                        <Link
+                            className="new-eval-button"
+                            to={`${route}/new-eval`}
+                        >
                             New Evaluation
                         </Link>
                     </div>

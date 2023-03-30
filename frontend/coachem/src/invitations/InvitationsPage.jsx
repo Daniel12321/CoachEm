@@ -5,6 +5,7 @@ import './InvitationsPage.css';
 
 export default function InvitationsPage({ logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [yourInvites, setYourInvites] = useState([]);
     const [invites, setInvites] = useState([]);
     const [reload, setReload] = useState(false);
@@ -105,7 +106,10 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
                 <h1>360 degrees</h1>
                 {role === 'trainee' && (
                     <div>
-                        <Link className="new-invite-button" to="/new-invite">
+                        <Link
+                            className="new-invite-button"
+                            to={`${route}/new-invite`}
+                        >
                             New Invite
                         </Link>
                     </div>
