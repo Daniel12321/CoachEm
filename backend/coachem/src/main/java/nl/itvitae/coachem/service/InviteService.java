@@ -75,4 +75,8 @@ public class InviteService {
     public List<InviteDto> getAllUnseen(Long personId) {
         return inviteRepository.getAllUnseen(personId).stream().map(mapper::get).toList();
     }
+
+    public List<Invite> getAllUnaccepted(){
+        return inviteRepository.getAllUnaccepted().stream().toList();
+    }
 }

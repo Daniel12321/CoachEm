@@ -2,16 +2,24 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.model.Evaluation;
 import nl.itvitae.coachem.model.Feedback;
+import nl.itvitae.coachem.model.Invite;
 import nl.itvitae.coachem.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Async("threadPoolTaskExecutor")
+@EnableScheduling
+
 public class EmailService {
 
     @Value("${spring.mail.enabled}")
@@ -22,6 +30,9 @@ public class EmailService {
 
     @Autowired
     private SimpleMailMessage template;
+
+    @Autowired
+    private InviteService inviteService;
 
     private void send(SimpleMailMessage mail) {
         if (enabled)
@@ -60,6 +71,16 @@ public class EmailService {
         mail.setSubject("Coachem Feedback");
         mail.setText(this.getFeedbackText(trainee.getName(), person.getName(), feedback.getTraineeSkill().getSkill().getName(), feedback.getText(), feedback.getTraineeSkill().getId()));
         send(mail);
+    }
+
+    @Scheduled(cron = "0 0 8 * * *", zone= "Europe/Paris") //at 8 in the morning
+    public void sentReminder(){
+        List<Invite> invites = inviteService.getAllUnaccepted();
+        for (Invite invite: invites) {
+            if (!invite.getAccepted()){
+                //send360InviteReminderEmail(invite.getInvited())
+            }
+        }
     }
 
     public void send360InviteEmail() {}
