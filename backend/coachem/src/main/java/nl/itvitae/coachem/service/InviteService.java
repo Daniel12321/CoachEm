@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -92,5 +93,9 @@ public class InviteService {
 
     public List<InviteDto> getAllUnseen(Long personId) {
         return inviteRepository.getAllUnseen(personId).stream().map(mapper::get).toList();
+    }
+
+    public Optional<InviteDto> getInviteById(Long id) {
+        return inviteRepository.findById(id).map(mapper::get);
     }
 }
