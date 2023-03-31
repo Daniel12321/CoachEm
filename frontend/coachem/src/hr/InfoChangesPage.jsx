@@ -1,9 +1,8 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import './InfoChangesPage.css';
-import { useNavigate} from 'react-router-dom';
-import { NameFilter, EmailFilter} from '../common/Components.jsx';
+import { useNavigate } from 'react-router-dom';
+import { NameFilter, EmailFilter } from '../common/Components.jsx';
 import { useLocalStorage } from '../common/LocalStorage';
-
 
 export default function InfoChangesPage({ logout }) {
     const [api] = useLocalStorage('api');
@@ -71,6 +70,7 @@ export default function InfoChangesPage({ logout }) {
                             <h5>{infoChange.personemail}</h5>
                         </div>
                     ))}
+                    {filteredInfoChanges.length < 1 && <p className='emptylist'>no infochanges</p>}
                 </div>
             </div>
         </div>

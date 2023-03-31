@@ -16,7 +16,9 @@ export default function AccountsPage({ logout }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
                 },
             });
             if (res.status === 401) {
@@ -27,8 +29,6 @@ export default function AccountsPage({ logout }) {
         }
         getAllAccounts();
     }, [logout, api]);
-
-
 
     const filteredAccounts = accounts
         .filter(
@@ -63,6 +63,9 @@ export default function AccountsPage({ logout }) {
                             <h4>{account.user.email}</h4>
                         </div>
                     ))}
+                    {filteredAccounts.length < 1 && (
+                        <p className="emptylist">no accounts</p>
+                    )}
                 </div>
             </div>
         </div>

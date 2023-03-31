@@ -140,6 +140,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
                         </div>
                     </div>
                 ))}
+                {yourInvites.concat(invites.filter((invite) => invite.accepted))
+                    .length < 1 && <p className="emptylist">no invites</p>}
             </div>
             <h2>invites</h2>
             {invites
@@ -173,6 +175,9 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
                         </div>
                     </div>
                 ))}
+            {invites.filter((invite) => !invite.accepted).length < 1 && (
+                <p className="emptylist">no invites</p>
+            )}
         </>
     );
 }

@@ -62,6 +62,9 @@ export default function TraineesPage({ logout }) {
                             <h4>{trainee.user.email}</h4>
                         </div>
                     ))}
+                    {filteredTrainees.length < 1 && (
+                        <p className="emptylist">no trainees</p>
+                    )}
                 </div>
             </div>
         </div>
