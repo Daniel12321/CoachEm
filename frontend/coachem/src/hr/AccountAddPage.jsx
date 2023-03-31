@@ -1,7 +1,7 @@
 import { useLocalStorage } from '../common/LocalStorage';
 import './AccountAddPage.css';
 
-export default function AccountAddPage(props) {
+export default function AccountAddPage({ home, logout }) {
     const [api] = useLocalStorage('api');
 
     function addAccount(e) {
@@ -26,7 +26,9 @@ export default function AccountAddPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })

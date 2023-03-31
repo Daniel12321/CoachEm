@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import './SkillPage.css';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function SkillPage({ logout, reloadNotifications }) {
+export default function SkillPage({ home, logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
     const { id } = useParams();
     const [skill, setSkill] = useState([]);
@@ -34,6 +34,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -53,6 +55,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -71,6 +75,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -78,22 +84,28 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 setProgress(sortByDate(data));
             })
             .catch((error) => console.log(error));
-    }, [logout, id, api]);
+    }, [home, logout, id, api]);
 
     useEffect(() => {
-        fetch(`${api}/api/feedback/seen/${id}`, {
-            method: 'PUT',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        }).then((resp) => {
-            if (resp.status === 401) {
-                logout();
-            } else if (resp.ok) {
-                reloadNotifications();
-            }
-        });
-    }, [id, logout, reloadNotifications, api]);
+        if (trainee) {
+            fetch(`${api}/api/feedback/seen/${id}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            }).then((resp) => {
+                if (resp.status === 401) {
+                    logout();
+                } else if (resp.status === 403) {
+                    home();
+                } else if (resp.ok) {
+                    reloadNotifications();
+                }
+            });
+        }
+    }, [id, home, logout, reloadNotifications, api, trainee]);
 
     function addProgress(e) {
         e.preventDefault();
@@ -118,6 +130,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -152,6 +166,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -173,6 +189,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -191,6 +209,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
             })
             .catch((error) => console.log(error));
@@ -209,6 +229,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -235,6 +257,8 @@ export default function SkillPage({ logout, reloadNotifications }) {
         }).then((resp) => {
             if (resp.status === 401) {
                 logout();
+            } else if (resp.status === 403) {
+                home();
             } else if (resp.ok) {
                 const newTraineeSkill = { ...traineeSkill };
                 newTraineeSkill.report = e.target[0].files[0].name;
@@ -250,7 +274,14 @@ export default function SkillPage({ logout, reloadNotifications }) {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         })
-            .then((res) => res.blob())
+            .then((resp) => {
+                if (resp.status === 401) {
+                    logout();
+                } else if (resp.status === 403) {
+                    home();
+                }
+                return resp.blob();
+            })
             .then((blob) => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
