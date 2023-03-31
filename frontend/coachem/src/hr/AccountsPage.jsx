@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import './AccountsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
+import './AccountsPage.css';
 
 export default function AccountsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
@@ -24,8 +24,8 @@ export default function AccountsPage({ home, logout }) {
                     logout();
                 } else if (response.status === 403) {
                     home();
-                    return response.json();
                 }
+                return response.json();
             })
             .then((data) => setAccounts(data));
     }, [home, logout, api]);

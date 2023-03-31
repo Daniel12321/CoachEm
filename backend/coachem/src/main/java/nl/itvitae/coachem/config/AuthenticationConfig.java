@@ -71,7 +71,7 @@ public class AuthenticationConfig {
                     .requestMatchers("/api/person/update/**", "/api/person/delete/**").hasAuthority("HR")
                     .requestMatchers("/api/person/infochange/**").hasAuthority("HR")
                     .requestMatchers("/api/person/trainees").hasAnyAuthority("COACH", "MANAGER")
-                    .requestMatchers("/api/person/**", "/api/person/email/**").hasAnyAuthority("COACH", "MANAGER", "HR")
+                    .requestMatchers("/api/person/**", "/api/person/email/**").hasAuthority("USER")
 
                     .requestMatchers("/api/progress/new/**", "/api/progress/delete/**").hasAuthority("TRAINEE")
                     .requestMatchers("/api/progress/traineeskill/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER")

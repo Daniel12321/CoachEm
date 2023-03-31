@@ -69,8 +69,8 @@ public interface IInviteAPI {
             @ApiResponse(responseCode = "404", description = "Sender not found", content = @Content),
             @ApiResponse(responseCode = "404", description = "Receiver not found", content = @Content)
     })
-    @PostMapping(value = "/new/{senderid}/{receiverid}", produces = "application/json")
-    ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("senderid") Long senderId, @PathVariable("receiverid") Long receiverId);
+    @PostMapping(value = "/new/{traineeid}/{receiverid}", produces = "application/json")
+    ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("traineeid") Long traineeId, @PathVariable("receiverid") Long receiverId);
 
     @Operation(
             summary = "Delete Invite",
