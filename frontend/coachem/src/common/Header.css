@@ -18,16 +18,23 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     z-index: 99;
 }
 
-header nav {
+.nav-dropdown {
+    height: 100%;
+}
+
+nav {
+    background-color: #ABD9FF;
     height: 100%;
     display: flex;
     flex-direction: row;
+    background-color: #ABD9FF;
 }
 
-header nav a {
+nav a {
     height: 100%;
     padding: 8px 24px;
 
@@ -38,9 +45,17 @@ header nav a {
     transition: all ease-in-out 0.1s;
 }
 
-.active, header nav a:hover {
+.nav-placeholder {
+    display: none;
+}
+
+.active, nav a:hover {
     background-color: #97d0ff;
 }
+
+
+
+
 
 .header-dropdown {
     position: relative;
@@ -107,4 +122,48 @@ header nav a {
 
 .header-logo img{
     height: 80px;
+}
+
+/* Header Small styling */
+@media only screen and (max-width: 885px) {
+    header {
+        padding: 0 10px;
+    }
+
+    .nav-dropdown {
+        position: relative;
+        display: inline-block;
+        border-radius: 8px;
+    }
+    
+    .nav-placeholder {   
+        background-color: #97d0ff; 
+        height: 100%;
+        padding: 8px 24px;
+    
+        display: flex;
+        justify-self: center;
+        align-items: center;
+    
+        transition: all ease-in-out 0.1s;
+    }
+
+    nav {
+        display: none;
+        height: unset;
+        background-color: #ABD9FF;
+        position: absolute;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 12px 0px;
+        z-index: 1;
+    }
+
+    nav a {
+        padding: 20px 24px;
+    }
+
+    .nav-dropdown:hover nav {
+        display: block;
+    }
 }
