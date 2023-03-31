@@ -2,13 +2,11 @@ package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.api.IInviteAPI;
 import nl.itvitae.coachem.dto.InviteDto;
+import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.service.InviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,6 +41,13 @@ public class InviteController implements IInviteAPI {
         return inviteService.addInvite(invite, traineeId, receiverId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @Override
+    public ResponseEntity<InviteDto> updateInviteById(@PathVariable("id") Long id, @RequestBody InviteDto invite){
+        return inviteService.updateInviteById(invite, id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
