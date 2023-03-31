@@ -16,7 +16,6 @@ public record InviteDto(Long id, Boolean accepted, Integer questionOne, Integer 
                 questionThree != null &&
                 questionFour != null &&
                 questionFive != null &&
-                questionSix != null &&
                 accepted != null;
     }
 
