@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.dto.InviteDto;
 import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.SkillDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,19 @@ public interface IInviteAPI {
     })
     @GetMapping(value = "/received/{personid}", produces = "application/json")
     List<InviteDto> getReceivedInvitesByPersonId(@PathVariable("personid") Long personId);
+
+    @Operation(
+            summary = "Get Invite By Id",
+            description = "Gets the invite by id.",
+            tags = {"Invite"}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = SkillDto.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Invite not found", content = @Content)
+    })
+    @GetMapping(value = "/get/{id}", produces = "application/json")
+    ResponseEntity<InviteDto> getInviteById(@PathVariable("id") Long id);
 
     @Operation(
             summary = "Accept Invite",
