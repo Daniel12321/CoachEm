@@ -394,6 +394,9 @@ export default function SkillPage({ home, logout, reloadNotifications }) {
                                 )}
                             </div>
                         ))}
+                        {progress.length < 1 && (
+                            <p className="emptylist">no progress</p>
+                        )}
                     </div>
                     {trainee && (
                         <form id="commentform" onSubmit={(e) => addProgress(e)}>
@@ -443,6 +446,9 @@ export default function SkillPage({ home, logout, reloadNotifications }) {
                                 )}
                             </div>
                         ))}
+                        {feedback.length < 1 && (
+                            <p className="emptylist">no feedback</p>
+                        )}
                     </div>
                     {!trainee && (
                         <form id="commentform" onSubmit={(e) => addFeedback(e)}>

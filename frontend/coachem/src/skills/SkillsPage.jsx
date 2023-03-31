@@ -408,6 +408,9 @@ export default function SkillsPage({ home, logout, ownSkills, notifications }) {
                             />
                         )
                     )}
+                    {filteredSkills.length < 1 && (
+                        <p className="emptylist">no skills</p>
+                    )}
                 </div>
             </div>
         </div>

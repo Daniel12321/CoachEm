@@ -108,6 +108,7 @@ export default function EvaluationsPage({ home, logout, reloadNotifications }) {
                 .map((evalu) => (
                     <Evaluation key={evalu.id} evaluation={evalu} />
                 ))}
+            {trainee.length < 1 && <p className="emptylist">no evaluations</p>}
         </div>
     );
 
@@ -124,6 +125,7 @@ export default function EvaluationsPage({ home, logout, reloadNotifications }) {
                         addAttendee={addAttendee}
                     />
                 ))}
+            {attendee.length < 1 && <p className="emptylist">no evaluations</p>}
         </div>
     );
 

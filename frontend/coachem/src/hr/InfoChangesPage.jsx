@@ -68,6 +68,7 @@ export default function InfoChangesPage({ home, logout }) {
                             <h5>{infoChange.personemail}</h5>
                         </div>
                     ))}
+                    {filteredInfoChanges.length < 1 && <p className='emptylist'>no infochanges</p>}
                 </div>
             </div>
         </div>

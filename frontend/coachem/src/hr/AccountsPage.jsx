@@ -63,6 +63,9 @@ export default function AccountsPage({ home, logout }) {
                             <h4>{account.user.email}</h4>
                         </div>
                     ))}
+                    {filteredAccounts.length < 1 && (
+                        <p className="emptylist">no accounts</p>
+                    )}
                 </div>
             </div>
         </div>
