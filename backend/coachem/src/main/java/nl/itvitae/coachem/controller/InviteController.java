@@ -3,6 +3,7 @@ package nl.itvitae.coachem.controller;
 import nl.itvitae.coachem.api.IInviteAPI;
 import nl.itvitae.coachem.dto.InviteDto;
 import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.service.InviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,13 @@ public class InviteController implements IInviteAPI {
     @Override
     public List<InviteDto> getReceivedInvitesByPersonId(@PathVariable("personid") Long personId) {
         return inviteService.getReceivedInvitesByPersonId(personId);
+    }
+
+    @Override
+    public ResponseEntity<InviteDto> getInviteById(@PathVariable("id") Long id) {
+        return inviteService.getInviteById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
