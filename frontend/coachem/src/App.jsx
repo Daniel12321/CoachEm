@@ -16,6 +16,7 @@ import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
 import NewInvitePage from './invitations/NewInvitePage';
 import NewSkill from './skills/NewSkill';
+import Invite from './invitations/Invite';
 import { useLocalStorage } from './common/LocalStorage';
 import InfoChangesPage from './hr/InfoChangesPage';
 import InfoChangeControlPage from './hr/InfoChangeControlPage';
@@ -197,6 +198,10 @@ export default function App() {
                     <Route
                         path={`${route}/new-skill`}
                         element={<NewSkill home={home} logout={logout} />}
+                    />
+                    <Route
+                        path={`${route}/invite/:id`}
+                        element={<Invite home={home} logout={logout} />}
                     />
                 </Routes>
             </div>

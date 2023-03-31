@@ -155,33 +155,35 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
             {invites
                 .filter((invite) => !invite.accepted)
                 .map((inv) => (
-                    <div key={inv.id} className="invite">
-                        <div className="invite-time">
-                            <h3>Time: </h3>
-                            <p>
-                                {new Date(inv.time).toLocaleString(
-                                    'en-EN',
-                                    options
-                                )}
-                            </p>
+                    <Link className="invite" to={`${route}/invite/${inv.id}`}>
+                        <div key={inv.id} className="invite">
+                            <div className="invite-time">
+                                <h3>Time: </h3>
+                                <p>
+                                    {new Date(inv.time).toLocaleString(
+                                        'en-EN',
+                                        options
+                                    )}
+                                </p>
+                            </div>
+                            <div className="invite-trainee">
+                                <h3>Trainee:</h3>
+                                <p>{inv.trainee.name}</p>
+                            </div>
+                            <div className="accept">
+                                <img
+                                    src="./../../img/checkmark.png"
+                                    alt="checkmark"
+                                    onClick={() => acceptInvite(inv.id)}
+                                />
+                                <img
+                                    src="./../../img/cross.png"
+                                    alt="cross"
+                                    onClick={() => denyInvite(inv.id)}
+                                />
+                            </div>
                         </div>
-                        <div className="invite-trainee">
-                            <h3>Trainee:</h3>
-                            <p>{inv.trainee.name}</p>
-                        </div>
-                        <div className="accept">
-                            <img
-                                src="./../../img/checkmark.png"
-                                alt="checkmark"
-                                onClick={() => acceptInvite(inv.id)}
-                            />
-                            <img
-                                src="./../../img/cross.png"
-                                alt="cross"
-                                onClick={() => denyInvite(inv.id)}
-                            />
-                        </div>
-                    </div>
+                    </Link>
                 ))}
             {invites.filter((invite) => !invite.accepted).length < 1 && (
                 <p className="emptylist">no invites</p>
