@@ -13,25 +13,20 @@ export default function InfoChangesPage({ logout }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function getAllInfoChanges() {
-            await fetch(`${api}/api/infochange/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+        fetch(`${api}/api/infochange/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => setInfoChanges(data));
-        }
-        getAllInfoChanges();
+            .then((data) => setInfoChanges(data));
     }, [logout, api]);
 
     const filteredInfoChanges = infoChanges
