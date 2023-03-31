@@ -1,7 +1,8 @@
 package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.*;
-import nl.itvitae.coachem.model.*;
+import nl.itvitae.coachem.model.InfoChange;
+import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.repository.*;
 import nl.itvitae.coachem.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class PersonService {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private PersonRepository personRepository;
@@ -73,8 +77,11 @@ public class PersonService {
                 infoChange.getZipcode(),
                 infoChange.getPhonenumber(),
                 null);
-        infoChangeService.deleteInfoChangeById(infoChangeId);
+        infoChangeService.deleteInfoChangeById(infoChangeId, false);
         person = personRepository.save(mapper.update(personDto, person));
+
+        this.emailService.sendInfoChangeAcceptedEmail(person);
+
         return Optional.of(mapper.get(person));
     }
 

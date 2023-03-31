@@ -17,6 +17,9 @@ import java.util.Optional;
 public class InviteService {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private InviteRepository inviteRepository;
 
     @Autowired
@@ -39,17 +42,20 @@ public class InviteService {
                 .toList();
     }
 
-    public Optional<InviteDto> addInvite(InviteDto dto, Long senderId, Long receiverId) {
-        Person inviter = personRepository.findById(senderId).orElse(null);
+    public Optional<InviteDto> addInvite(InviteDto dto, Long traineeId, Long receiverId) {
+        Person trainee = personRepository.findById(traineeId).orElse(null);
         Person invited = personRepository.findById(receiverId).orElse(null);
-        if (inviter == null || invited == null)
+        if (trainee == null || invited == null)
             return Optional.empty();
 
         Invite invite = mapper.post(dto);
         invite.setAccepted(false);
-        invite.setTrainee(inviter);
+        invite.setTrainee(trainee);
         invite.setInvited(invited);
         Invite invite2 = inviteRepository.save(invite);
+
+        this.emailService.send360InviteEmail(invited, trainee);
+
         return Optional.of(mapper.get(invite2));
     }
 

@@ -39,8 +39,8 @@ public class InviteController implements IInviteAPI {
     }
 
     @Override
-    public ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("senderid") Long senderId, @PathVariable("receiverid") Long receiverId) {
-        return inviteService.addInvite(invite, senderId, receiverId)
+    public ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("traineeid") Long traineeId, @PathVariable("receiverid") Long receiverId) {
+        return inviteService.addInvite(invite, traineeId, receiverId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }

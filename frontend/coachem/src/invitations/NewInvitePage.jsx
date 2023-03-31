@@ -5,6 +5,7 @@ import './NewInvitePage.css';
 
 export default function InvitationsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const navigate = useNavigate();
     const [people, setPeople] = useState([]);
     const loggedInPerson = JSON.parse(localStorage.getItem('person'));
@@ -38,7 +39,7 @@ export default function InvitationsPage({ home, logout }) {
                 }
             ).then((resp) => {
                 if (resp.ok) {
-                    navigate('/invites');
+                    navigate(`${route}/invites`);
                 } else if (resp.status === 401) {
                     logout();
                 } else if (resp.status === 403) {

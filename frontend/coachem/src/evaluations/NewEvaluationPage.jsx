@@ -6,6 +6,7 @@ import './NewEvaluationPage.css';
 
 export default function NewEvaluationPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const navigate = useNavigate();
 
     const submit = (e) => {
@@ -34,7 +35,7 @@ export default function NewEvaluationPage({ home, logout }) {
             } else if (resp.status === 403) {
                 home();
             } else if (resp.ok) {
-                navigate('/evals');
+                navigate(`${route}/evals`);
             }
         });
     };
