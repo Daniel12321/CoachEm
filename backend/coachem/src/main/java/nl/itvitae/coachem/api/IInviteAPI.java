@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import nl.itvitae.coachem.dto.InfoChangeDto;
 import nl.itvitae.coachem.dto.InviteDto;
+import nl.itvitae.coachem.dto.PersonDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,8 +70,21 @@ public interface IInviteAPI {
             @ApiResponse(responseCode = "404", description = "Sender not found", content = @Content),
             @ApiResponse(responseCode = "404", description = "Receiver not found", content = @Content)
     })
-    @PostMapping(value = "/new/{senderid}/{receiverid}", produces = "application/json")
-    ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("senderid") Long senderId, @PathVariable("receiverid") Long receiverId);
+    @PostMapping(value = "/new/{traineeid}/{receiverid}", produces = "application/json")
+    ResponseEntity<InviteDto> addInvite(@RequestBody InviteDto invite, @PathVariable("traineeid") Long traineeId, @PathVariable("receiverid") Long receiverId);
+
+    @Operation(
+            summary = "Update Invite",
+            description = "Updates an invite, and gets the updated version.",
+            tags = {"Invite"}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = PersonDto.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid Authentication", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Invite not found", content = @Content)
+    })
+    @PutMapping(value = "/update/{id}", produces = "application/json")
+    ResponseEntity<InviteDto> updateInviteById(@PathVariable("id") Long id, @RequestBody InviteDto invite);
 
     @Operation(
             summary = "Delete Invite",

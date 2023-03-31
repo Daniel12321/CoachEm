@@ -1,38 +1,35 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import './InfoChangesPage.css';
-import { useNavigate} from 'react-router-dom';
-import { NameFilter, EmailFilter} from '../common/Components.jsx';
+import { useNavigate } from 'react-router-dom';
+import { NameFilter, EmailFilter } from '../common/Components.jsx';
 import { useLocalStorage } from '../common/LocalStorage';
 
-
-export default function InfoChangesPage({ logout }) {
+export default function InfoChangesPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [infoChanges, setInfoChanges] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function getAllInfoChanges() {
-            await fetch(`${api}/api/infochange/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+        fetch(`${api}/api/infochange/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => setInfoChanges(data));
-        }
-        getAllInfoChanges();
-    }, [logout, api]);
+            .then((data) => setInfoChanges(data));
+    }, [home, logout, api]);
 
     const filteredInfoChanges = infoChanges
         .filter(
@@ -62,7 +59,7 @@ export default function InfoChangesPage({ logout }) {
                             className="infoChange-item"
                             onClick={() => {
                                 navigate(
-                                    `/infoChange-control/${infoChange.id}/${infoChange.person.id}`
+                                    `${route}/infoChange-control/${infoChange.id}/${infoChange.person.id}`
                                 );
                             }}
                         >
@@ -71,6 +68,7 @@ export default function InfoChangesPage({ logout }) {
                             <h5>{infoChange.personemail}</h5>
                         </div>
                     ))}
+                    {filteredInfoChanges.length < 1 && <p className='emptylist'>no infochanges</p>}
                 </div>
             </div>
         </div>

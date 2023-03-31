@@ -14,8 +14,14 @@ public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private Integer questionOne;
+    private Integer questionTwo;
+    private Integer questionThree;
+    private Integer questionFour;
+    private Integer questionFive;
+    private String questionSix;
     private Boolean accepted;
-    private String time;
 
     @ManyToOne
     @JoinColumn(name = "trainee_id")
@@ -25,9 +31,8 @@ public class Invite {
     @JoinColumn(name = "invited_id")
     private Person invited;
 
-    public Invite(Boolean accepted, String time, Person trainee, Person invited) {
+    public Invite(Boolean accepted, Person trainee, Person invited) {
         this.accepted = accepted;
-        this.time = time;
         this.trainee = trainee;
         this.invited = invited;
     }

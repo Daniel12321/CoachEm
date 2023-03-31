@@ -1,23 +1,24 @@
 package nl.itvitae.coachem.service;
 
-import nl.itvitae.coachem.dto.InfoChangeDto;
-import nl.itvitae.coachem.dto.PersonDto;
+import nl.itvitae.coachem.dto.*;
 import nl.itvitae.coachem.model.InfoChange;
 import nl.itvitae.coachem.model.Person;
-import nl.itvitae.coachem.model.Skill;
-import nl.itvitae.coachem.repository.InfoChangeRepository;
-import nl.itvitae.coachem.repository.PersonRepository;
+import nl.itvitae.coachem.repository.*;
 import nl.itvitae.coachem.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class PersonService {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private PersonRepository personRepository;
@@ -27,6 +28,24 @@ public class PersonService {
 
     @Autowired
     private InfoChangeService infoChangeService;
+
+    @Autowired
+    private TraineeSkillRepository traineeSkillRepository;
+
+    @Autowired
+    private RecommendationRepository recommendationRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
+
+    @Autowired
+    private TraineeSkillDto.Mapper traineeskillMapper;
+
+    @Autowired
+    private RecommendationDto.Mapper recommendationMapper;
+
+    @Autowired
+    private SkillDto.Mapper skillMapper;
 
     @Autowired
     private PersonDto.Mapper mapper;
@@ -58,8 +77,11 @@ public class PersonService {
                 infoChange.getZipcode(),
                 infoChange.getPhonenumber(),
                 null);
-        infoChangeService.deleteInfoChangeById(infoChangeId);
+        infoChangeService.deleteInfoChangeById(infoChangeId, false);
         person = personRepository.save(mapper.update(personDto, person));
+
+        this.emailService.sendInfoChangeAcceptedEmail(person);
+
         return Optional.of(mapper.get(person));
     }
 
@@ -94,5 +116,31 @@ public class PersonService {
 
     public PersonDto getPersonByEmail(String email) {
         return mapper.get(personRepository.findByUserEmail(email).orElse(null));
+    }
+
+    public List<TraineeListDto> getTraineesForCoachRecommendations() {
+        List<SkillDto> skills = ListUtil.toList(skillRepository.findAll())
+                .stream()
+                .map(skillMapper::get)
+                .toList();
+
+        List<PersonDto> trainees = ListUtil.toList(personRepository.findByUser_Role("TRAINEE"))
+                .stream()
+                .map(mapper::get)
+                .toList();
+
+        List<TraineeListDto> possibleTrainees = new ArrayList<>();
+        skills.forEach((skill)->
+                possibleTrainees.add(new TraineeListDto(trainees.stream().filter((t)->this.filter(t, skill)).toList())));
+        return possibleTrainees;
+    }
+
+    private boolean filter(PersonDto t, SkillDto skill){
+        return traineeSkillRepository.findByUserId(t.id())
+                .stream()
+                .noneMatch((traineeskill)-> traineeskill.getSkill().getId().equals(skill.id()))
+                &&
+                recommendationRepository.findByPersonId((t.id()))
+                        .stream().noneMatch((recommendation)-> recommendation.getSkill().getId().equals(skill.id()));
     }
 }

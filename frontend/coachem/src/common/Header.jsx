@@ -21,8 +21,8 @@ export default function Header({ logout, role, notifications }) {
     return (
         <div className="header-wrapper">
             <header>
-                <Link className="header-logo" to={route}>
-                    <img src="" alt="Logo" />
+                <Link className="header-logo" to="/">
+                    <img src="./../../img/logo.png" alt="Logo" />
                 </Link>
                 {nav}
                 <Account
@@ -113,7 +113,7 @@ function NotificationList({ route, notifications }) {
                 count={arrayCount(notifications.feedback)}
             />
             <NotificationItem
-                to={`${route}/evals`}
+                to={`${route}/infoChanges`}
                 message="New Info Changes"
                 count={arrayCount(notifications.infoChanges)}
             />

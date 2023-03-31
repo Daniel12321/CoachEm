@@ -76,3 +76,17 @@
     border-radius: 4px;
     background-color: #eefdff;
 }
+
+
+.recommended{
+    color: red;
+    font-weight: 800;
+}
+
+.invisible{
+    visibility: hidden;
+}
+
+.invisible{
+    visibility: visible;
+}

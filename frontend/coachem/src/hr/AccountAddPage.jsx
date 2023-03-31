@@ -1,21 +1,19 @@
-import { useState } from 'react';
 import { useLocalStorage } from '../common/LocalStorage';
+import './AccountAddPage.css';
 
-export default function AccountAddPage(props) {
+export default function AccountAddPage({ home, logout }) {
     const [api] = useLocalStorage('api');
-    const [password, setPassword] = useState(generatePassword());
 
     function addAccount(e) {
-        e.preventDefault();
         const data = {
             name: e.target[0].value,
             email: e.target[1].value,
-            password: e.target[2].value,
-            city: e.target[3].value,
-            address: e.target[4].value,
-            zipcode: e.target[5].value,
-            phonenumber: e.target[6].value,
-            role: e.target[7].value,
+            city: e.target[2].value,
+            address: e.target[3].value,
+            zipcode: e.target[4].value,
+            phonenumber: e.target[5].value,
+            role: e.target[6].value,
+            password: generatePassword(),
         };
         let dataJSON = JSON.stringify(data);
         fetch(`${api}/api/auth/register`, {
@@ -28,15 +26,13 @@ export default function AccountAddPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .catch((error) => console.log(error));
-    }
-
-    function refreshPassword() {
-        setPassword(generatePassword());
     }
 
     function generatePassword() {
@@ -48,7 +44,11 @@ export default function AccountAddPage(props) {
         <div className="addAccountsPage">
             <h1>Account Add Page!</h1>
             <div>
-                <form id="my-form" onSubmit={(e) => addAccount(e)}>
+                <form
+                    id="my-form"
+                    className="new-account-form"
+                    onSubmit={(e) => addAccount(e)}
+                >
                     <label htmlFor="name">Name: </label>
                     <input
                         id="name"
@@ -56,8 +56,7 @@ export default function AccountAddPage(props) {
                         placeholder="name"
                         maxLength={30}
                         required
-                    />{' '}
-                    <br />
+                    />
                     <label htmlFor="email">Email: </label>
                     <input
                         id="email"
@@ -65,24 +64,8 @@ export default function AccountAddPage(props) {
                         placeholder="email"
                         maxLength={50}
                         required
-                    />{' '}
-                    <br />
-                    <label htmlFor="password">Password: </label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        maxLength={20}
-                        minLength={8}
-                        readOnly
-                        required
-                    />{' '}
-                    <img
-                        src=""
-                        alt="refresh"
-                        onClick={() => refreshPassword()}
-                    ></img>
-                    <br />
+                    />
+                    <div className="account-add-form__flex"></div>
                     <label htmlFor="city">City: </label>
                     <input
                         id="city"
@@ -90,8 +73,7 @@ export default function AccountAddPage(props) {
                         placeholder="city"
                         maxLength={30}
                         required
-                    />{' '}
-                    <br />
+                    />
                     <label htmlFor="address">Address: </label>
                     <input
                         id="address"
@@ -99,8 +81,7 @@ export default function AccountAddPage(props) {
                         placeholder="address"
                         maxLength={30}
                         required
-                    />{' '}
-                    <br />
+                    />
                     <label htmlFor="zipcode">Zipcode: </label>
                     <input
                         id="zipcode"
@@ -108,25 +89,22 @@ export default function AccountAddPage(props) {
                         placeholder="zipcode"
                         maxLength={30}
                         required
-                    />{' '}
-                    <br />
+                    />
                     <label htmlFor="phonenumber">Phonenumber: </label>
                     <input
                         id="phonenumber"
                         type="text"
                         placeholder="phonenumber (optional)"
                         maxLength={15}
-                    />{' '}
-                    <br />
+                    />
                     <label htmlFor="role">Role: </label>
                     <select name="role" id="role">
                         <option value="TRAINEE">TRAINEE</option>
                         <option value="MANAGER">MANAGER</option>
                         <option value="COACH">COACH</option>
                         <option value="HR">HR</option>
-                    </select>{' '}
-                    <br />
-                    <button type="submit">add account</button>
+                    </select>
+                    <input value="add account" type="submit"></input>
                 </form>
             </div>
         </div>

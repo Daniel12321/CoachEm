@@ -39,12 +39,51 @@ public class AuthenticationConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
+                    .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                     .requestMatchers("/error").anonymous() // Allow anonymous access to /error to enable throwing status exceptions
-                    .requestMatchers("/api/auth/login").permitAll()
+
                     .requestMatchers("/api/auth/register").hasAuthority("HR")
-                    .requestMatchers("/api/skills/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER", "HR")
+                    .requestMatchers("/api/auth/login").permitAll()
+                    .requestMatchers("/api/auth/change_password").hasAuthority("USER")
+
+                    .requestMatchers("/api/category/all").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/category/new", "/api/category/delete/**").hasAnyAuthority("COACH", "MANAGER")
+
+                    .requestMatchers("/api/evaluation/trainee", "/api/evaluation/attendee").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/evaluation/new", "/api/evaluation/attendee/**").hasAnyAuthority("COACH", "MANAGER")
+                    .requestMatchers("/api/evaluation/seen").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/evaluation/update/**", "/api/evaluation/delete/**").hasAnyAuthority("COACH", "MANAGER")
+
+                    .requestMatchers("/api/feedback/get/**", "/api/feedback/traineeskill/**").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/feedback/seen/**").hasAuthority("TRAINEE")
+                    .requestMatchers("/api/feedback/new/**", "/api/feedback/update/**", "/api/feedback/delete/**").hasAnyAuthority("COACH", "MANAGER")
+
+                    .requestMatchers("/api/infochange/new").hasAuthority("USER")
+                    .requestMatchers("/api/infochange/get/**", "/api/infochange/all", "/api/infochange/delete/**").hasAuthority("HR")
+
+                    .requestMatchers("/api/invite/new/**").hasAuthority("TRAINEE")
+                    .requestMatchers("/api/invite/sent/**", "/api/invite/received/**").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/invite/accept/**", "/api/invite/delete/**").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+
+                    .requestMatchers("/api/notification/all").hasAuthority("USER")
+
+                    .requestMatchers("/api/person/all").hasAuthority("HR")
+                    .requestMatchers("/api/person/update/**", "/api/person/delete/**").hasAuthority("HR")
+                    .requestMatchers("/api/person/infochange/**").hasAuthority("HR")
+                    .requestMatchers("/api/person/trainees").hasAnyAuthority("COACH", "MANAGER")
+                    .requestMatchers("/api/person/**", "/api/person/email/**").hasAuthority("USER")
+
+                    .requestMatchers("/api/progress/new/**", "/api/progress/delete/**").hasAuthority("TRAINEE")
+                    .requestMatchers("/api/progress/traineeskill/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER")
+
+                    .requestMatchers("/api/skill/update/**", "/api/skill/new/**", "/api/skill/delete/**").hasAnyAuthority("COACH", "MANAGER")
+                    .requestMatchers("/api/skill/all", "/api/skill/get/**").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+
+                    .requestMatchers("/api/traineeskill/user/**", "/api/traineeskill/get/**").hasAnyAuthority("TRAINEE", "COACH", "MANAGER")
+                    .requestMatchers("/api/traineeskill/update/**", "/api/traineeskill/download/**").hasAnyAuthority("TRAINEE", "MANAGER", "COACH")
+                    .requestMatchers("/api/traineeskill/new/**", "/api/traineeskill/upload/**").hasAuthority("TRAINEE")
+                    .requestMatchers("/api/traineeskill/delete/**").hasAnyAuthority("COACH", "MANAGER")
                 .anyRequest().authenticated()
-//                .anyRequest().permitAll()
                 .and().build();
     }
 

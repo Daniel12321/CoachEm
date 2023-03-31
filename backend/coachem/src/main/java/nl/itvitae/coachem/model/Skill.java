@@ -33,6 +33,10 @@ public class Skill {
     @JoinColumn(name="category_id")
     private Category category;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
+    private List<Recommendation> recommendations = new ArrayList<>();
+
     public Skill(String name, Boolean type, String description, String time, Integer duration, Category category) {
         this.name = name;
         this.type = type;

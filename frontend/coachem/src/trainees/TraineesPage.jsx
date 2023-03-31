@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
-import './TraineesPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function TraineesPage(props) {
+import './TraineesPage.css';
+
+export default function TraineesPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [trainees, setTrainees] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
-        getAllTrainees();
-    });
-
-    async function getAllTrainees() {
-        await fetch(`${api}/api/person/trainees`, {
+        fetch(`${api}/api/person/trainees`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,12 +22,14 @@ export default function TraineesPage(props) {
         })
             .then((response) => {
                 if (response.status === 401) {
-                    props.logout();
+                    logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then((data) => setTrainees(data));
-    }
+    }, [api, home, logout]);
 
     const filteredTrainees = trainees
         .filter(
@@ -57,13 +57,16 @@ export default function TraineesPage(props) {
                             key={trainee.id}
                             className="trainee-item"
                             onClick={() => {
-                                navigate(`/skills/${trainee.id}`);
+                                navigate(`${route}/skills/${trainee.id}`);
                             }}
                         >
                             <h3>{trainee.name}</h3>
                             <h4>{trainee.user.email}</h4>
                         </div>
                     ))}
+                    {filteredTrainees.length < 1 && (
+                        <p className="emptylist">no trainees</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,0 +1,22 @@
+.new-skill-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-skill-form input {
+    font-size: 1.8rem;
+    height: 32px;
+    margin-bottom: 16px;
+}
+
+.new-skill-form input[type='submit'] {
+    margin-top: 0px;
+}
+
+.new-skill-form select {
+    font-size: 2rem;
+}
+
+.new-skill-form label{
+    font-weight: 600;
+}

@@ -12,7 +12,7 @@ const options = {
     minute: 'numeric',
 };
 
-export default function EvaluationsPage({ logout, reloadNotifications }) {
+export default function EvaluationsPage({ home, logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const [trainee, setTrainee] = useState([]);
@@ -28,6 +28,8 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -41,11 +43,13 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then(setAttendee);
-    }, [logout, api]);
+    }, [home, logout, api]);
 
     useEffect(() => {
         fetch(`${api}/api/evaluation/seen`, {
@@ -56,11 +60,13 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
         }).then((resp) => {
             if (resp.status === 401) {
                 logout();
+            } else if (resp.status === 403) {
+                home();
             } else if (resp.ok) {
                 reloadNotifications();
             }
         });
-    }, [logout, reloadNotifications, api]);
+    }, [home, logout, reloadNotifications, api]);
 
     const addAttendee = (id, e) => {
         e.preventDefault();
@@ -78,6 +84,8 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
             .then((resp) => {
                 if (resp.status === 401) {
                     logout();
+                } else if (resp.status === 403) {
+                    home();
                 } else if (!resp.ok) {
                     throw new Error(resp.statusText);
                 }
@@ -100,6 +108,7 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                 .map((evalu) => (
                     <Evaluation key={evalu.id} evaluation={evalu} />
                 ))}
+            {trainee.length < 1 && <p className="emptylist">no evaluations</p>}
         </div>
     );
 
@@ -116,6 +125,7 @@ export default function EvaluationsPage({ logout, reloadNotifications }) {
                         addAttendee={addAttendee}
                     />
                 ))}
+            {attendee.length < 1 && <p className="emptylist">no evaluations</p>}
         </div>
     );
 
