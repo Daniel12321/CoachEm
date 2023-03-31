@@ -1,4 +1,3 @@
-import './InfoChangeControlPage.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -6,48 +5,53 @@ import {
     NewDataViewComponent,
 } from '../common/Components';
 import { useLocalStorage } from '../common/LocalStorage';
+import './InfoChangeControlPage.css';
 
-export default function InfoChangeControlPage({ logout, reloadNotifications }) {
+export default function InfoChangeControlPage({
+    home,
+    logout,
+    reloadNotifications,
+}) {
     const [api] = useLocalStorage('api');
     const [newDetails, setNewDetails] = useState([]);
     const [oldDetails, setOldDetails] = useState([]);
-    const {infoChangeId, personId} = useParams();
+    const { infoChangeId, personId } = useParams();
 
     useEffect(() => {
-            fetch(`${api}/api/infochange/get/${infoChangeId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+        fetch(`${api}/api/infochange/get/${infoChangeId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => setNewDetails(data));
+            .then((data) => setNewDetails(data));
 
-            fetch(`${api}/api/person/${personId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
+        fetch(`${api}/api/person/${personId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (response.status === 401) {
-                        logout();
-                    }
-                    return response.json();
-                })
-                .then((data) => setOldDetails(data));
-    }, [infoChangeId, personId, logout, api]);
+            .then((data) => setOldDetails(data));
+    }, [infoChangeId, personId, home, logout, api]);
 
     const updateInfoChange = async (e) => {
         e.preventDefault();
@@ -61,12 +65,12 @@ export default function InfoChangeControlPage({ logout, reloadNotifications }) {
         }).then((response) => {
             if (response.status === 401) {
                 logout();
-            }
-            if (response.status === 404) {
+            } else if (response.status === 403) {
+                home();
+            } else if (response.status === 404) {
                 e.target.form[6].value =
                     'the info change you are trying to procces has been removed';
-            }
-            if (response.status === 200) {
+            } else if (response.status === 200) {
                 reloadNotifications();
                 e.target.form[6].value = 'saved';
             }
@@ -86,6 +90,8 @@ export default function InfoChangeControlPage({ logout, reloadNotifications }) {
         }).then((response) => {
             if (response.status === 401) {
                 logout();
+            } else if (response.status === 403) {
+                home();
             }
             if (response.status === 404) {
                 e.target.form[5].value = 'already removed';

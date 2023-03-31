@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountUpdatePage({ logout }) {
+export default function AccountUpdatePage({ home, logout }) {
     const [api] = useLocalStorage('api');
     const [account, setAccounts] = useState([]);
     const { id } = useParams();
@@ -19,11 +19,13 @@ export default function AccountUpdatePage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then((data) => setAccounts(data));
-    }, [id, logout, api]);
+    }, [id, home, logout, api]);
 
     const updateInfo = async (e) => {
         e.preventDefault();
@@ -45,6 +47,8 @@ export default function AccountUpdatePage({ logout }) {
         }).then((response) => {
             if (response.status === 401) {
                 logout();
+            } else if (response.status === 403) {
+                home();
             }
             return response.json();
         });

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './SkillsPage.css';
 
-export default function SkillsPage({ logout, ownSkills, notifications }) {
+export default function SkillsPage({ home, logout, ownSkills, notifications }) {
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const { id } = useParams();
@@ -34,6 +34,8 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -41,28 +43,9 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-        fetch(`${api}/api/person/trainees/forcoach`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        })
-            .then((response) => {
-                if (response.status === 401) {
-                    logout();
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setTrainees(data);
-            })
-            .catch((error) => console.log(error));
-    }, [logout, api]);
 
-    const getSkillById = useCallback(
-        (id) => {
-            fetch(`${api}/api/traineeskill/user/${id}`, {
+        if (!trainee) {
+            fetch(`${api}/api/person/trainees/forcoach`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,11 +61,37 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                     return response.json();
                 })
                 .then((data) => {
+                    setTrainees(data);
+                })
+                .catch((error) => console.log(error));
+        }
+    }, [home, logout, api, trainee]);
+
+    const getSkillById = useCallback(
+        (id) => {
+            fetch(`${api}/api/traineeskill/user/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem(
+                        'access_token'
+                    )}`,
+                },
+            })
+                .then((response) => {
+                    if (response.status === 401) {
+                        logout();
+                    } else if (response.status === 403) {
+                        home();
+                    }
+                    return response.json();
+                })
+                .then((data) => {
                     setTraineeSkills(data);
                 })
                 .catch((error) => console.log(error));
         },
-        [logout, api]
+        [home, logout, api]
     );
 
     useEffect(() => {
@@ -104,6 +113,8 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -129,7 +140,7 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
                 setRecommendations(data);
             })
             .catch((error) => console.log(error));
-    }, [ownSkills, logout, api, person.id]);
+    }, [ownSkills, home, logout, api, person.id]);
 
     function signUp(skillId) {
         fetch(`${api}/api/traineeskill/new/${person.id}/${skillId}`, {
@@ -143,6 +154,8 @@ export default function SkillsPage({ logout, ownSkills, notifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })

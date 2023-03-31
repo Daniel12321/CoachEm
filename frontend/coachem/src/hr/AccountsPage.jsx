@@ -3,8 +3,9 @@ import './AccountsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountsPage({ logout }) {
+export default function AccountsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [accounts, setAccounts] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
@@ -21,11 +22,13 @@ export default function AccountsPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
+                    return response.json();
                 }
-                return response.json();
             })
             .then((data) => setAccounts(data));
-    }, [logout, api]);
+    }, [home, logout, api]);
 
     const filteredAccounts = accounts
         .filter(
@@ -53,7 +56,7 @@ export default function AccountsPage({ logout }) {
                             key={account.id}
                             className="account-item"
                             onClick={() => {
-                                navigate(`/account-view/${account.id}`);
+                                navigate(`${route}/account-view/${account.id}`);
                             }}
                         >
                             <h3>{account.name}</h3>

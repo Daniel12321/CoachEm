@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './InvitationsPage.css';
 
-export default function InvitationsPage({ logout, reloadNotifications }) {
+export default function InvitationsPage({ home, logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const [yourInvites, setYourInvites] = useState([]);
@@ -30,6 +30,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -54,13 +56,15 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then((data) => {
                 setInvites(data);
             });
-    }, [logout, person.id, reload, api]);
+    }, [home, logout, person.id, reload, api]);
 
     function acceptInvite(id) {
         fetch(`${api}/api/invite/accept/${id}`, {
@@ -73,6 +77,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
             })
             .then(() => reloadNotifications())
@@ -90,6 +96,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
             })
             .then(() => reloadNotifications())

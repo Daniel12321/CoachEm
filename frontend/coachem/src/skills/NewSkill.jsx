@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocalStorage } from '../common/LocalStorage';
 import './NewSkill.css';
 
-export default function SkillPage({ logout }) {
+export default function SkillPage({ home, logout }) {
     const [api] = useLocalStorage('api');
     const [categories, setCategories] = useState([]);
 
@@ -33,6 +33,8 @@ export default function SkillPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -55,6 +57,8 @@ export default function SkillPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -76,6 +80,8 @@ export default function SkillPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -83,7 +89,7 @@ export default function SkillPage({ logout }) {
                 setCategories(data);
             })
             .catch((error) => console.log(error));
-    }, [logout, api]);
+    }, [home, logout, api]);
 
     function categoryOptions() {
         if (categories.length === 0) {
