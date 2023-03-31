@@ -9,25 +9,22 @@ export default function AccountUpdatePage({ home, logout }) {
     const { id } = useParams();
 
     useEffect(() => {
-        async function getAccount() {
-            const res = await fetch(`${api}/api/person/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            });
-            if (res.status === 401) {
-                logout();
-            } else if (res.status === 403) {
-                home();
-            }
-            const data = await res.json();
-            setAccounts(data);
-        }
-        getAccount();
+        fetch(`${api}/api/person/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
+            })
+            .then((data) => setAccounts(data));
     }, [id, home, logout, api]);
 
     const updateInfo = async (e) => {

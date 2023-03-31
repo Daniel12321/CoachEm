@@ -12,25 +12,22 @@ export default function AccountsPage({ home, logout }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function getAllAccounts() {
-            const res = await fetch(`${api}/api/person/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            });
-            if (res.status === 401) {
-                logout();
-            } else if (res.status === 403) {
-                home();
-            }
-            const data = await res.json();
-            setAccounts(data);
-        }
-        getAllAccounts();
+        fetch(`${api}/api/person/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                    return response.json();
+                }
+            })
+            .then((data) => setAccounts(data));
     }, [home, logout, api]);
 
     const filteredAccounts = accounts
