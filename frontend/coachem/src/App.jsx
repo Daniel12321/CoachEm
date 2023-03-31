@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import Header from './common/Header';
 import LoginPage from './login/LoginPage';
@@ -16,6 +16,7 @@ import AccountUpdatePage from './hr/AccountUpdatePage';
 import AccountViewPage from './hr/AccountViewPage';
 import NewInvitePage from './invitations/NewInvitePage';
 import NewSkill from './skills/NewSkill';
+import Invite from './invitations/Invite';
 import { useLocalStorage } from './common/LocalStorage';
 import InfoChangesPage from './hr/InfoChangesPage';
 import InfoChangeControlPage from './hr/InfoChangeControlPage';
@@ -26,12 +27,17 @@ export default function App() {
     const [route] = useLocalStorage('route', '');
     const [role, setRole] = useState(localStorage.getItem('user_role'));
     const [notifications, setNotifications] = useState();
+    const navigate = useNavigate();
 
     const logout = useCallback(() => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_role');
         setRole(undefined);
     }, []);
+
+    const home = useCallback(() => {
+        navigate(route);
+    }, [route, navigate]);
 
     const reloadNotifications = useCallback(() => {
         if (role) {
@@ -64,37 +70,43 @@ export default function App() {
     const skillsPage = (
         <SkillsPage
             ownSkills={true}
+            home={home}
             logout={logout}
             notifications={notifications}
         />
     );
-    const traineesPage = <TraineesPage logout={logout} />;
+    const traineesPage = <TraineesPage home={home} logout={logout} />;
+    const accountsPage = <AccountsPage home={home} logout={logout} />;
+    const homePage =
+        role === 'TRAINEE'
+            ? skillsPage
+            : role === 'HR'
+            ? accountsPage
+            : traineesPage;
 
     return (
         <div className="app">
             <Header
+                home={home}
                 logout={logout}
                 role={role.toLowerCase()}
                 notifications={notifications}
             />
             <div className="container">
                 <Routes>
-                    <Route
-                        path={route}
-                        element={
-                            role.toLowerCase() === 'trainee'
-                                ? skillsPage
-                                : traineesPage
-                        }
-                    />
+                    <Route path={route} element={homePage} />
                     <Route
                         path={`${route}/account`}
-                        element={<AccountPage logout={logout} />}
+                        element={<AccountPage home={home} logout={logout} />}
                     />
                     <Route
                         path={`${route}/skills-all`}
                         element={
-                            <SkillsPage ownSkills={false} logout={logout} />
+                            <SkillsPage
+                                ownSkills={false}
+                                home={home}
+                                logout={logout}
+                            />
                         }
                     />
                     <Route path={`${route}/skills`} element={skillsPage} />
@@ -104,6 +116,7 @@ export default function App() {
                             <SkillsPage
                                 ownSkills={true}
                                 coachView
+                                home={home}
                                 logout={logout}
                             />
                         }
@@ -112,6 +125,7 @@ export default function App() {
                         path={`${route}/skill/:id`}
                         element={
                             <SkillPage
+                                home={home}
                                 logout={logout}
                                 reloadNotifications={reloadNotifications}
                             />
@@ -121,6 +135,7 @@ export default function App() {
                         path={`${route}/evals`}
                         element={
                             <EvaluationsPage
+                                home={home}
                                 logout={logout}
                                 reloadNotifications={reloadNotifications}
                             />
@@ -130,49 +145,63 @@ export default function App() {
                         path={`${route}/invites`}
                         element={
                             <InvitationsPage
+                                home={home}
                                 logout={logout}
                                 reloadNotifications={reloadNotifications}
                             />
                         }
                     />
                     <Route path={`${route}/trainees`} element={traineesPage} />
-                    <Route
-                        path={`${route}/accounts`}
-                        element={<AccountsPage logout={logout} />}
-                    />
+                    <Route path={`${route}/accounts`} element={accountsPage} />
                     <Route
                         path={`${route}/account-add`}
-                        element={<AccountAddPage logout={logout} />}
+                        element={<AccountAddPage home={home} logout={logout} />}
                     />
                     <Route
                         path={`${route}/account-update/:id`}
-                        element={<AccountUpdatePage logout={logout} />}
+                        element={
+                            <AccountUpdatePage home={home} logout={logout} />
+                        }
                     />
                     <Route
                         path={`${route}/account-view/:id`}
-                        element={<AccountViewPage logout={logout} />}
+                        element={
+                            <AccountViewPage home={home} logout={logout} />
+                        }
                     />
                     <Route
                         path={`${route}/infoChanges`}
-                        element={<InfoChangesPage logout={logout} />}
+                        element={
+                            <InfoChangesPage home={home} logout={logout} />
+                        }
                     />
                     <Route
                         path={`${route}/infoChange-control/:infoChangeId/:personId`}
-                        element={<InfoChangeControlPage 
-                        logout={logout} 
-                        reloadNotifications={reloadNotifications}/>}
+                        element={
+                            <InfoChangeControlPage
+                                home={home}
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path={`${route}/new-eval`}
-                        element={<NewEvaluationPage logout={logout} />}
+                        element={
+                            <NewEvaluationPage home={home} logout={logout} />
+                        }
                     />
                     <Route
                         path={`${route}/new-invite`}
-                        element={<NewInvitePage logout={logout} />}
+                        element={<NewInvitePage home={home} logout={logout} />}
                     />
                     <Route
                         path={`${route}/new-skill`}
-                        element={<NewSkill logout={logout} />}
+                        element={<NewSkill home={home} logout={logout} />}
+                    />
+                    <Route
+                        path={`${route}/invite/:id`}
+                        element={<Invite home={home} logout={logout} />}
                     />
                 </Routes>
             </div>

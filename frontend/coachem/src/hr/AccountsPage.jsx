@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react';
-import './AccountsPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
+import './AccountsPage.css';
 
-export default function AccountsPage({ logout }) {
+export default function AccountsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const [accounts, setAccounts] = useState([]);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function getAllAccounts() {
-            const res = await fetch(`${api}/api/person/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                },
-            });
-            if (res.status === 401) {
-                logout();
-            }
-            const data = await res.json();
-            setAccounts(data);
-        }
-        getAllAccounts();
-    }, [logout, api]);
-
-
+        fetch(`${api}/api/person/all`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
+            })
+            .then((data) => setAccounts(data));
+    }, [home, logout, api]);
 
     const filteredAccounts = accounts
         .filter(
@@ -56,13 +56,16 @@ export default function AccountsPage({ logout }) {
                             key={account.id}
                             className="account-item"
                             onClick={() => {
-                                navigate(`/account-view/${account.id}`);
+                                navigate(`${route}/account-view/${account.id}`);
                             }}
                         >
                             <h3>{account.name}</h3>
                             <h4>{account.user.email}</h4>
                         </div>
                     ))}
+                    {filteredAccounts.length < 1 && (
+                        <p className="emptylist">no accounts</p>
+                    )}
                 </div>
             </div>
         </div>

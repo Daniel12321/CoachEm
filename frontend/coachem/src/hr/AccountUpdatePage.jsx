@@ -3,30 +3,29 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '../common/LocalStorage';
 
-export default function AccountUpdatePage({ logout }) {
+export default function AccountUpdatePage({ home, logout }) {
     const [api] = useLocalStorage('api');
     const [account, setAccounts] = useState([]);
     const { id } = useParams();
 
     useEffect(() => {
-        async function getAccount() {
-            const res = await fetch(`${api}/api/person/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem(
-                        'access_token'
-                    )}`,
-                },
-            });
-            if (res.status === 401) {
-                logout();
-            }
-            const data = await res.json();
-            setAccounts(data);
-        }
-        getAccount();
-    }, [id, logout, api]);
+        fetch(`${api}/api/person/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    logout();
+                } else if (response.status === 403) {
+                    home();
+                }
+                return response.json();
+            })
+            .then((data) => setAccounts(data));
+    }, [id, home, logout, api]);
 
     const updateInfo = async (e) => {
         e.preventDefault();
@@ -48,6 +47,8 @@ export default function AccountUpdatePage({ logout }) {
         }).then((response) => {
             if (response.status === 401) {
                 logout();
+            } else if (response.status === 403) {
+                home();
             }
             return response.json();
         });

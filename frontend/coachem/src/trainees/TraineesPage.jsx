@@ -4,7 +4,7 @@ import { useLocalStorage } from '../common/LocalStorage';
 
 import './TraineesPage.css';
 
-export default function TraineesPage({ logout }) {
+export default function TraineesPage({ home, logout }) {
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const [trainees, setTrainees] = useState([]);
@@ -23,11 +23,13 @@ export default function TraineesPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then((data) => setTrainees(data));
-    }, [api, logout]);
+    }, [api, home, logout]);
 
     const filteredTrainees = trainees
         .filter(
@@ -62,6 +64,9 @@ export default function TraineesPage({ logout }) {
                             <h4>{trainee.user.email}</h4>
                         </div>
                     ))}
+                    {filteredTrainees.length < 1 && (
+                        <p className="emptylist">no trainees</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -4,8 +4,9 @@ import { useLocalStorage } from '../common/LocalStorage';
 
 import './NewEvaluationPage.css';
 
-export default function NewEvaluationPage({ logout }) {
+export default function NewEvaluationPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const navigate = useNavigate();
 
     const submit = (e) => {
@@ -29,10 +30,12 @@ export default function NewEvaluationPage({ logout }) {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         }).then((resp) => {
-            if (resp.ok) {
-                navigate('/evals');
-            } else if (resp.status === 401) {
+            if (resp.status === 401) {
                 logout();
+            } else if (resp.status === 403) {
+                home();
+            } else if (resp.ok) {
+                navigate(`${route}/evals`);
             }
         });
     };

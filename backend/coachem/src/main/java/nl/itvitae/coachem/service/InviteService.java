@@ -1,20 +1,29 @@
 package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.dto.InviteDto;
+import nl.itvitae.coachem.dto.PersonDto;
 import nl.itvitae.coachem.model.Invite;
 import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.repository.InviteRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.DoubleStream;
 
 @Service
 @Transactional
+@EnableScheduling
 public class InviteService {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private InviteRepository inviteRepository;
@@ -39,17 +48,20 @@ public class InviteService {
                 .toList();
     }
 
-    public Optional<InviteDto> addInvite(InviteDto dto, Long senderId, Long receiverId) {
-        Person inviter = personRepository.findById(senderId).orElse(null);
+    public Optional<InviteDto> addInvite(InviteDto dto, Long traineeId, Long receiverId) {
+        Person trainee = personRepository.findById(traineeId).orElse(null);
         Person invited = personRepository.findById(receiverId).orElse(null);
-        if (inviter == null || invited == null)
+        if (trainee == null || invited == null)
             return Optional.empty();
 
         Invite invite = mapper.post(dto);
         invite.setAccepted(false);
-        invite.setTrainee(inviter);
+        invite.setTrainee(trainee);
         invite.setInvited(invited);
         Invite invite2 = inviteRepository.save(invite);
+
+        this.emailService.send360InviteEmail(invited, trainee);
+
         return Optional.of(mapper.get(invite2));
     }
 
@@ -62,6 +74,15 @@ public class InviteService {
         inviteRepository.save(invite);
 
         return true;
+    }
+
+    public Optional<InviteDto> updateInviteById(InviteDto dto, Long id) {
+        Invite invite = inviteRepository.findById(id).orElse(null);
+        if (invite == null || !dto.isValid())
+            return Optional.empty();
+
+        invite = inviteRepository.save(mapper.update(dto, invite));
+        return Optional.of(mapper.get(invite));
     }
 
     public boolean deleteInviteById(Long id) {
@@ -79,4 +100,15 @@ public class InviteService {
     public List<Invite> getAllUnaccepted(){
         return inviteRepository.getAllUnaccepted().stream().toList();
     }
+
+    @Scheduled(cron = "0 0 8 * * *", zone= "Europe/Paris") //at 8 in the morning
+    public void sentReminder(){
+        List<Invite> invites = getAllUnaccepted();
+        for (Invite invite: invites) {
+            System.out.println("mailsent");
+                emailService.send360InviteReminderEmail(invite.getInvited(), invite.getTrainee());
+        }
+    }
+
 }
+

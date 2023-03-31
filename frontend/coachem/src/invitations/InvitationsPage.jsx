@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './InvitationsPage.css';
 
-export default function InvitationsPage({ logout, reloadNotifications }) {
+export default function InvitationsPage({ home, logout, reloadNotifications }) {
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const [yourInvites, setYourInvites] = useState([]);
@@ -30,6 +30,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -54,13 +56,15 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
             .then((data) => {
                 setInvites(data);
             });
-    }, [logout, person.id, reload, api]);
+    }, [home, logout, person.id, reload, api]);
 
     function acceptInvite(id) {
         fetch(`${api}/api/invite/accept/${id}`, {
@@ -73,6 +77,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
             })
             .then(() => reloadNotifications())
@@ -90,6 +96,8 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
             })
             .then(() => reloadNotifications())
@@ -140,39 +148,46 @@ export default function InvitationsPage({ logout, reloadNotifications }) {
                         </div>
                     </div>
                 ))}
+                {yourInvites.concat(invites.filter((invite) => invite.accepted))
+                    .length < 1 && <p className="emptylist">no invites</p>}
             </div>
             <h2>invites</h2>
             {invites
                 .filter((invite) => !invite.accepted)
                 .map((inv) => (
-                    <div key={inv.id} className="invite">
-                        <div className="invite-time">
-                            <h3>Time: </h3>
-                            <p>
-                                {new Date(inv.time).toLocaleString(
-                                    'en-EN',
-                                    options
-                                )}
-                            </p>
+                    <Link className="invite" to={`${route}/invite/${inv.id}`}>
+                        <div key={inv.id} className="invite">
+                            <div className="invite-time">
+                                <h3>Time: </h3>
+                                <p>
+                                    {new Date(inv.time).toLocaleString(
+                                        'en-EN',
+                                        options
+                                    )}
+                                </p>
+                            </div>
+                            <div className="invite-trainee">
+                                <h3>Trainee:</h3>
+                                <p>{inv.trainee.name}</p>
+                            </div>
+                            <div className="accept">
+                                <img
+                                    src="./../../img/checkmark.png"
+                                    alt="checkmark"
+                                    onClick={() => acceptInvite(inv.id)}
+                                />
+                                <img
+                                    src="./../../img/cross.png"
+                                    alt="cross"
+                                    onClick={() => denyInvite(inv.id)}
+                                />
+                            </div>
                         </div>
-                        <div className="invite-trainee">
-                            <h3>Trainee:</h3>
-                            <p>{inv.trainee.name}</p>
-                        </div>
-                        <div className="accept">
-                            <img
-                                src="./../../img/checkmark.png"
-                                alt="checkmark"
-                                onClick={() => acceptInvite(inv.id)}
-                            />
-                            <img
-                                src="./../../img/cross.png"
-                                alt="cross"
-                                onClick={() => denyInvite(inv.id)}
-                            />
-                        </div>
-                    </div>
+                    </Link>
                 ))}
+            {invites.filter((invite) => !invite.accepted).length < 1 && (
+                <p className="emptylist">no invites</p>
+            )}
         </>
     );
 }

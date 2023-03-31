@@ -2,11 +2,13 @@ package nl.itvitae.coachem.controller;
 
 import nl.itvitae.coachem.api.IInfoChangeAPI;
 import nl.itvitae.coachem.dto.InfoChangeDto;
-import nl.itvitae.coachem.dto.SkillDto;
 import nl.itvitae.coachem.service.InfoChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class InfoChangeController implements IInfoChangeAPI {
 
     @Override
     public ResponseEntity<Void> deleteInfoChangeById(@PathVariable("id") Long id) {
-        if (infoChangeService.deleteInfoChangeById(id)) {
+        if (infoChangeService.deleteInfoChangeById(id, true)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './NewInvitePage.css';
 
-export default function InvitationsPage({ logout }) {
+export default function InvitationsPage({ home, logout }) {
     const [api] = useLocalStorage('api');
+    const [route] = useLocalStorage('route', '');
     const navigate = useNavigate();
     const [people, setPeople] = useState([]);
     const loggedInPerson = JSON.parse(localStorage.getItem('person'));
@@ -14,12 +15,13 @@ export default function InvitationsPage({ logout }) {
         if (people.length < 1) {
             alert('you have to add people to the list to send the invite to');
         }
-        if (new Date(e.target[0].value) < new Date()) {
-            alert('must use a future date');
-            return;
-        }
         const body = {
-            time: new Date(e.target[0].value + ' ' + e.target[1].value),
+            questionOne: 0,
+            questionTwo: 0,
+            questionThree: 0,
+            questionFour: 0,
+            questionFive: 0,
+            questionSix: '',
             accepted: false,
         };
 
@@ -38,9 +40,11 @@ export default function InvitationsPage({ logout }) {
                 }
             ).then((resp) => {
                 if (resp.ok) {
-                    navigate('/invites');
+                    navigate(`${route}/invites`);
                 } else if (resp.status === 401) {
                     logout();
+                } else if (resp.status === 403) {
+                    home();
                 }
                 return resp;
             });
@@ -59,6 +63,8 @@ export default function InvitationsPage({ logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
+                } else if (response.status === 403) {
+                    home();
                 }
                 return response.json();
             })
@@ -96,13 +102,7 @@ export default function InvitationsPage({ logout }) {
                 id="invite-form"
                 className="new-invite-form"
                 onSubmit={submit}
-            >
-                <label htmlFor="date">Date</label>
-                <input type="date" name="date" id="date" required />
-
-                <label htmlFor="time">Time</label>
-                <input type="time" name="time" id="time" required />
-            </form>
+            ></form>
 
             <form className="new-person" onSubmit={addPerson}>
                 <label htmlFor="email">Add people by email</label>

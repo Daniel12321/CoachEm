@@ -19,6 +19,9 @@ import java.util.Optional;
 public class InfoChangeService {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private InfoChangeRepository infoChangeRepository;
 
     @Autowired
@@ -57,7 +60,7 @@ public class InfoChangeService {
         return mapper.get(infoChange);
     }
 
-    public boolean deleteInfoChangeById(Long id) {
+    public boolean deleteInfoChangeById(Long id, boolean sendEmail) {
         InfoChange infoChange = infoChangeRepository.findById(id).orElse(null);
         if (infoChange == null)
             return false;
@@ -66,6 +69,10 @@ public class InfoChangeService {
         person.setInfoChange(null);
         personRepository.save(person);
         infoChangeRepository.deleteById(id);
+
+        if (sendEmail)
+            this.emailService.sendInfoChangeRejectedEmail(person);
+
         return true;
     }
 
