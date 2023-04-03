@@ -161,9 +161,13 @@ export default function EvaluationsPage({ home, logout, reloadNotifications }) {
 
 const Evaluation = ({ evaluation }) => (
     <div className="evaluation">
-        <div className="evaluation-time">
-            <h3>Time: </h3>
-            <p>{new Date(evaluation.time).toLocaleString('en-EN', options)}</p>
+        <div className="evaluation-info">
+            <div className="evaluation-time">
+                <h3>Time: </h3>
+                <p>
+                    {new Date(evaluation.time).toLocaleString('en-EN', options)}
+                </p>
+            </div>
         </div>
         <div className="evaluation-attendees">
             <h3>Attendees:</h3>

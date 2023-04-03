@@ -6,21 +6,21 @@
     gap: 64px;
 }
 
-.green{
+.green {
     color: green;
 }
 
-.orange{
+.orange {
     color: orange;
 }
 
-.signup{
+.signup {
     padding: 2px 10px;
     border-radius: 8px;
     border: 1px black solid;
 }
 
-.signup:hover{
+.signup:hover {
     cursor: pointer;
 }
 
@@ -68,6 +68,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
+    width: 100%;
 }
 
 .skill-item {
@@ -77,16 +78,29 @@
     background-color: #eefdff;
 }
 
-
-.recommended{
+.recommended {
     color: red;
     font-weight: 800;
 }
 
-.invisible{
-    visibility: hidden;
+/* Tablet Styling */
+@media only screen and (max-width: 1000px) {
+    .skill-list {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-.invisible{
-    visibility: visible;
+/* Mobile Styling */
+@media only screen and (max-width: 767px) {
+    .skills {
+        flex-direction: column;
+    }
+
+    .skill-filters {
+        width: 100%;
+    }
+
+    .skill-list {
+        grid-template-columns: 1fr;
+    }
 }

@@ -18,13 +18,25 @@ export default function Header({ logout, role, notifications }) {
             <nav />
         );
 
+    const test = (
+        <div className="header-dropdown">
+            {'Account'}
+            <div className="header-dropdown-content"></div>
+        </div>
+    );
+
     return (
         <div className="header-wrapper">
             <header>
                 <Link className="header-logo" to="/">
-                    <img src="./../../img/logo.png" alt="Logo" />
+                    <img src="./img/logo.png" alt="Logo" />
                 </Link>
-                {nav}
+
+                <div className="nav-dropdown">
+                    <div className="nav-placeholder">Navigation</div>
+                    {nav}
+                </div>
+
                 <Account
                     route={route}
                     logout={logout}
