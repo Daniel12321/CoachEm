@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/CoachEm/static/css/main.ff42ec77.css",
-    "main.js": "/CoachEm/static/js/main.acf402b7.js",
+    "main.css": "/CoachEm/static/css/main.2530309a.css",
+    "main.js": "/CoachEm/static/js/main.fb1142fb.js",
     "index.html": "/CoachEm/index.html",
-    "main.ff42ec77.css.map": "/CoachEm/static/css/main.ff42ec77.css.map",
-    "main.acf402b7.js.map": "/CoachEm/static/js/main.acf402b7.js.map"
+    "main.2530309a.css.map": "/CoachEm/static/css/main.2530309a.css.map",
+    "main.fb1142fb.js.map": "/CoachEm/static/js/main.fb1142fb.js.map"
   },
   "entrypoints": [
-    "static/css/main.ff42ec77.css",
-    "static/js/main.acf402b7.js"
+    "static/css/main.2530309a.css",
+    "static/js/main.fb1142fb.js"
   ]
 }
