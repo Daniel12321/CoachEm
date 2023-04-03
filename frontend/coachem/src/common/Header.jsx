@@ -18,13 +18,6 @@ export default function Header({ logout, role, notifications }) {
             <nav />
         );
 
-    const test = (
-        <div className="header-dropdown">
-            {'Account'}
-            <div className="header-dropdown-content"></div>
-        </div>
-    );
-
     return (
         <div className="header-wrapper">
             <header>
