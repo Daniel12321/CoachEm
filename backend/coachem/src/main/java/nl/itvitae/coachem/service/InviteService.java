@@ -110,7 +110,6 @@ public class InviteService {
     public void sentReminder(){
         List<Invite> invites = getAllUnaccepted();
         for (Invite invite: invites) {
-            System.out.println("mailsent");
                 emailService.send360InviteReminderEmail(invite.getInvited(), invite.getTrainee());
         }
     }
