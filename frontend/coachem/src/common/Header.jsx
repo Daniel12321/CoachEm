@@ -22,7 +22,7 @@ export default function Header({ logout, role, notifications }) {
         <div className="header-wrapper">
             <header>
                 <Link className="header-logo" to="/">
-                    <img src="./img/logo.png" alt="Logo" />
+                    <img src="/img/logo.png" alt="Logo" />
                 </Link>
 
                 <div className="nav-dropdown">

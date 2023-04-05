@@ -1,28 +1,28 @@
-.infoChangePage {
-    display: flex;
-    flex-direction: column;
-}
-.infoChangePage form {
+.infochangepage {
     display: flex;
     flex-direction: column;
 }
 
-.formsbox{
+.infochangepage form {
+    display: flex;
+    flex-direction: column;
+}
+
+.infochange-formsbox {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
-.formsbox-left{
-    min-width: 550px;
-}
-.formsbox-right{
-    min-width: 550px;
-}
-
-.infoChangePage form input {
+.infochangepage form input {
     font-size: 1.8rem;
     height: 32px;
     margin-bottom: 16px;
 }
 
+/* Mobile styling */
+@media only screen and (max-width: 500px) {
+    .infochange-formsbox {
+        flex-direction: column;
+    }
+}

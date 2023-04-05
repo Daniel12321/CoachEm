@@ -14,7 +14,7 @@ button:hover {
 }   
 
 .skill-page>div {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
     position: relative;
 }
 
@@ -43,80 +43,82 @@ button:hover {
 
 /* Uploads */
 
-.upload-box {
+.upload-container {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 100px;
+    gap: max(calc(2vw + 4px), 64px);
 }
 
-.upload-form {
+.updown-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     width: 100%;
+    overflow-x: hidden;
+    gap: 8px;
 }
 
-.upload-form input[type='submit'], .uploaded-file button {
+.upload-form input[type='submit'], .updown-box button {
     font-size: 1.6rem;
     background-color: #65baff;
     padding: 8px 24px;
     border-radius: 8px;
-}
-
-.uploaded-file {
-    width: 100%;
-
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 50px;
+    justify-content: center;
+    align-items: center;
 }
 
-/* flex */
+/* Comments Sections */
 
-.flex-container {
+.comments-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
+    gap: max(calc(2vw + 4px), 64px);
 }
 
-.flex-container>div {
-    width: calc(50vw - 100px);
-}
-
-.flex-item {
-    overflow-y: auto;
-    background-color: white;
-    border: 1px solid black;
+.comments-item {
     width: 100%;
 }
 
-.flex-singleitem {
+/* Comments Boxes */
+
+.comments-box {
+    height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.comments-box-small {
+    height: 300px;
+}
+
+.single-comment-item {
+    background-color: #f5f5f5;    
     margin: 4px;
     padding: 10px;
-    background-color: #f5f5f5;
-    position: relative;
     word-wrap: break-word;
-    width: 98%;
 }
 
-.flex-singleitem .text{
-    width: 85%;
-}
-
-/* flex-item with comment box */
-
-.comment-items {
-    height: 30vh;
-}
-
-.comment-date{
+.comment-date {
     font-size: 1rem;
 }
 
-.flex-singleitem button {
-    position: absolute;
-    right: 10px;
-    bottom: 25%;
+.single-comment-box {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.comment-text {
+    width: 100%;
+}
+
+.single-comment-item button {
     height: 20px;
     background-color: red;
     color: white;
@@ -124,17 +126,7 @@ button:hover {
     border-radius: 10px;
 }
 
-/* flex-item without comment box */
-
-.nocomment-items {
-    height: calc(30vh + 89.6px);
-}
-
-.nocomment-date{
-    font-size: 1rem;
-}
-
-/* comment box */
+/* Comment Input Form */
 
 #commentform {
     margin-top: 0px;
@@ -142,6 +134,7 @@ button:hover {
 
 #commentform textarea {
     width: 100%;
+    height: 100px;
     resize: none;
     border: 1px solid black;
     padding: 4px;
@@ -155,6 +148,19 @@ button:hover {
     background-color: gray;
     color: white;
     padding: 4px 16px;
+    margin-top: 8px;
     border-radius: 10px;
 }
 
+/* Mobile styling */
+@media only screen and (max-width: 767px) {
+    .comments-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .upload-container {
+        flex-direction: column;
+        gap: 24px;
+    }
+}

@@ -1,7 +1,7 @@
 .accounts {
     display: flex;
     flex-direction: row;
-    justify-content:flex-start;
+    justify-content: flex-start;
     align-items: flex-start;
     gap: 64px;
 }
@@ -56,4 +56,17 @@
     padding: 8px 16px;
     border-radius: 4px;
     background-color: #eefdff;
+}
+
+/* Mobile Styling */
+@media only screen and (max-width: 767px) {
+    .accounts {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .account-list {
+        grid-template-columns: 1fr;
+    }
 }

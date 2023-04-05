@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import './InfoChangesPage.css';
 import { useNavigate } from 'react-router-dom';
-import { NameFilter, EmailFilter } from '../common/Components.jsx';
 import { useLocalStorage } from '../common/LocalStorage';
+import './InfoChangesPage.css';
 
 export default function InfoChangesPage({ home, logout }) {
     const [api] = useLocalStorage('api');
@@ -41,36 +40,65 @@ export default function InfoChangesPage({ home, logout }) {
         );
 
     return (
-        <div className="infoChanges-page">
+        <div className="infochanges-page">
             <h1>infoChanges Dashboard</h1>
-            <div className="infoChanges">
-                <div className="infoChange-filters">
+            <div className="infochanges">
+                <div className="infochange-filters">
                     <h2>Filters</h2>
 
-                    <div className="infoChange-filter-box">
+                    <div className="infochange-filter-box">
                         <NameFilter setName={setName} />
                         <EmailFilter setEmail={setEmail} />
                     </div>
                 </div>
-                <div className="infoChange-list"> 
+                <div className="infochange-list">
                     {filteredInfoChanges.map((infoChange) => (
                         <div
                             key={infoChange.id}
-                            className="infoChange-item"
+                            className="infochange-item"
                             onClick={() => {
                                 navigate(
-                                    `${route}/infoChange-control/${infoChange.id}/${infoChange.person.id}`
+                                    `${route}/infochange-control/${infoChange.id}/${infoChange.person.id}`
                                 );
                             }}
                         >
-                            <h3>Infochange ID: {infoChange.id}</h3>
-                            <h4>{infoChange.person.name}</h4>
-                            <h5>{infoChange.personemail}</h5>
+                            <h3>{infoChange.person.name}</h3>
+                            <h4>{infoChange.person.user.email}</h4>
                         </div>
                     ))}
-                    {filteredInfoChanges.length < 1 && <p className='emptylist'>no infochanges</p>}
+                    {filteredInfoChanges.length < 1 && (
+                        <p className="emptylist">no infochanges</p>
+                    )}
                 </div>
             </div>
+        </div>
+    );
+}
+
+function NameFilter({ setName }) {
+    return (
+        <div className="infochange-filter infochange-filter-name">
+            <p>Name</p>
+            <input
+                type="text"
+                name="name"
+                id="name"
+                onChange={(e) => setName(e.target.value)}
+            />
+        </div>
+    );
+}
+
+function EmailFilter({ setEmail }) {
+    return (
+        <div className="infochange-filter infochange-filter-email">
+            <p>Email</p>
+            <input
+                type="text"
+                name="email"
+                id="email"
+                onChange={(e) => setEmail(e.target.value)}
+            />
         </div>
     );
 }
