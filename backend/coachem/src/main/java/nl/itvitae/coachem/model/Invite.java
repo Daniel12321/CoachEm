@@ -21,6 +21,7 @@ public class Invite {
     private Integer questionFour;
     private Integer questionFive;
     private String questionSix;
+    private String time;
     private Boolean accepted;
 
     @ManyToOne
@@ -31,9 +32,10 @@ public class Invite {
     @JoinColumn(name = "invited_id")
     private Person invited;
 
-    public Invite(Boolean accepted, Person trainee, Person invited) {
+    public Invite(Boolean accepted, Person trainee, Person invited, String time) {
         this.accepted = accepted;
         this.trainee = trainee;
         this.invited = invited;
+        this.time = time;
     }
 }

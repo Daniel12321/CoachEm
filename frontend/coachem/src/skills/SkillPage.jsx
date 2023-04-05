@@ -340,58 +340,57 @@ export default function SkillPage({ home, logout, reloadNotifications }) {
 
             <div className="upload">
                 {trainee && <h3>Upload {typeReportText}</h3>}
-                <div className="upload-box">
+                <div className="upload-container">
                     {trainee && (
-                        <form className="upload-form" onSubmit={uploadFile}>
+                        <form
+                            className="updown-box upload-form"
+                            onSubmit={uploadFile}
+                        >
                             <input type="file" name="file" id="file" />
                             <input type="submit" value="Upload" />
                         </form>
                     )}
                     {traineeSkill.report && (
-                        <div className="uploaded-file">
+                        <div className="updown-box uploaded-file">
                             <div>
                                 <h4>Uploaded {typeReportText}</h4>
                                 <p>{traineeSkill.report}</p>
                             </div>
-                            <div>
-                                <button onClick={downloadFile}>Download</button>
-                            </div>
+                            <button onClick={downloadFile}>Download</button>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="flex-container">
-                <div>
+            <div className="comments-container">
+                <div className="comments-item">
                     <h2>Progress</h2>
                     <div
                         className={
-                            'flex-item ' +
-                            (trainee ? 'comment-items' : 'nocomment-items')
+                            'comments-box' +
+                            (trainee ? ' comments-box-small' : '')
                         }
                     >
                         {progress.map((prog, index) => (
-                            <div key={index} className="flex-singleitem">
-                                <p
-                                    className={
-                                        trainee
-                                            ? 'comment-date'
-                                            : 'nocomment-date'
-                                    }
-                                >
+                            <div key={index} className="single-comment-item">
+                                <p className="comment-date">
                                     {new Date(prog.time).toLocaleString(
                                         'en-EN',
                                         options
                                     )}
                                 </p>
-                                <p className="text">{prog.text}</p>
-                                {trainee && (
-                                    <button
-                                        onClick={() => deleteProgress(index)}
-                                    >
-                                        remove
-                                    </button>
-                                )}
+                                <div className="single-comment-box">
+                                    <p className="comment-text">{prog.text}</p>
+                                    {trainee && (
+                                        <button
+                                            onClick={() =>
+                                                deleteProgress(index)
+                                            }
+                                        >
+                                            remove
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         ))}
                         {progress.length < 1 && (
@@ -405,7 +404,7 @@ export default function SkillPage({ home, logout, reloadNotifications }) {
                                 rows="4"
                                 form="commentform"
                                 placeholder={trainee ? 'progress' : 'feedback'}
-                            ></textarea>{' '}
+                            ></textarea>
                             <br />
                             <button id="commentAddButton" type="submit">
                                 add progress comment
@@ -413,57 +412,59 @@ export default function SkillPage({ home, logout, reloadNotifications }) {
                         </form>
                     )}
                 </div>
-                <div>
+                <div className="comments-item">
                     <h2>Feedback</h2>
                     <div
                         className={
-                            'flex-item ' +
-                            (!trainee ? 'comment-items' : 'nocomment-items')
+                            'comments-box ' +
+                            (!trainee ? ' comments-box-small' : '')
                         }
                     >
                         {feedback.map((feedb, index) => (
-                            <div key={index} className="flex-singleitem">
-                                <p
-                                    className={
-                                        !trainee
-                                            ? 'comment-date'
-                                            : 'nocomment-date'
-                                    }
-                                >
+                            <div key={index} className="single-comment-item">
+                                <p className="comment-date">
                                     {new Date(feedb.time).toLocaleString(
                                         'en-EN',
                                         options
-                                    )}{' '}
+                                    )}
                                     {person.name}
                                 </p>
-                                <p className="text">{feedb.text}</p>
-                                {!trainee && (
-                                    <button
-                                        onClick={() => deleteFeedback(index)}
-                                    >
-                                        remove
-                                    </button>
-                                )}
+                                <div className="single-comment-box">
+                                    <p className="comment-text">{feedb.text}</p>
+
+                                    {!trainee && (
+                                        <button
+                                            onClick={() =>
+                                                deleteFeedback(index)
+                                            }
+                                        >
+                                            remove
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         ))}
+                        {!trainee && (
+                            <form
+                                id="commentform"
+                                onSubmit={(e) => addFeedback(e)}
+                            >
+                                <textarea
+                                    name="Text1"
+                                    rows="4"
+                                    form="commentform"
+                                    placeholder="feedback"
+                                ></textarea>{' '}
+                                <br />
+                                <button id="commentAddButton" type="submit">
+                                    add feedback comment
+                                </button>
+                            </form>
+                        )}
                         {feedback.length < 1 && (
                             <p className="emptylist">no feedback</p>
                         )}
                     </div>
-                    {!trainee && (
-                        <form id="commentform" onSubmit={(e) => addFeedback(e)}>
-                            <textarea
-                                name="Text1"
-                                rows="4"
-                                form="commentform"
-                                placeholder="feedback"
-                            ></textarea>{' '}
-                            <br />
-                            <button id="commentAddButton" type="submit">
-                                add feedback comment
-                            </button>
-                        </form>
-                    )}
                 </div>
             </div>
         </div>

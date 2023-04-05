@@ -15,4 +15,7 @@ public interface InviteRepository extends CrudRepository<Invite, Long> {
 
     @Query("SELECT i FROM Invite i WHERE i.invited.id = ?1 AND i.accepted = 0")
     List<Invite> getAllUnseen(Long personId);
+
+    @Query("SELECT i FROM Invite i WHERE i.accepted = 0")
+    List<Invite> getAllUnaccepted();
 }

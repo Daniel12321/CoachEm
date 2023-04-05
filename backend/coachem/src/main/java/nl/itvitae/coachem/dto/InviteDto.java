@@ -7,7 +7,7 @@ import nl.itvitae.coachem.model.Person;
 import java.util.List;
 
 public record InviteDto(Long id, Boolean accepted, Integer questionOne, Integer questionTwo, Integer questionThree,
-                        Integer questionFour, Integer questionFive, String questionSix, PersonDto trainee, PersonDto invited) {
+                        Integer questionFour, Integer questionFive, String questionSix, PersonDto trainee, PersonDto invited, String time) {
 
     @JsonIgnore
     public boolean isValid() {

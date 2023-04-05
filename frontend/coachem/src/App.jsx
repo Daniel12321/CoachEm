@@ -9,6 +9,7 @@ import SkillPage from './skills/SkillPage';
 import EvaluationsPage from './evaluations/EvaluationsPage';
 import NewEvaluationPage from './evaluations/NewEvaluationPage';
 import InvitationsPage from './invitations/InvitationsPage';
+import MyInvites from './invitations/MyInvites';
 import TraineesPage from './trainees/TraineesPage';
 import AccountsPage from './hr/AccountsPage';
 import AccountAddPage from './hr/AccountAddPage';
@@ -201,7 +202,17 @@ export default function App() {
                     />
                     <Route
                         path={`${route}/invite/:id`}
-                        element={<Invite home={home} logout={logout} />}
+                        element={
+                            <Invite
+                                home={home}
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
+                    />
+                    <Route
+                        path={`${route}/invite/my-invites/:id/:date`}
+                        element={<MyInvites home={home} logout={logout} />}
                     />
                 </Routes>
             </div>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLocalStorage } from '../common/LocalStorage';
 import './InvitationsPage.css';
 
-export default function InvitationsPage({ home, logout, reloadNotifications }) {
+export default function InvitationsPage({ home, logout }) {
+    const { id, date } = useParams();
     const [api] = useLocalStorage('api');
     const [route] = useLocalStorage('route', '');
     const [yourInvites, setYourInvites] = useState([]);
-    const [invites, setInvites] = useState([]);
     const role = localStorage.getItem('user_role').toLowerCase();
     const person = JSON.parse(localStorage.getItem('person'));
     const options = {
@@ -19,7 +19,7 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
     };
 
     useEffect(() => {
-        fetch(`${api}/api/invite/sent/${person.id}`, {
+        fetch(`${api}/api/invite/sent/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,35 +35,9 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
                 return response.json();
             })
             .then((data) => {
-                const uniqueDates = {};
-                const filteredData = data.filter((item) => {
-                    if (!uniqueDates[item.time]) {
-                        uniqueDates[item.time] = true;
-                        return true;
-                    }
-                    return false;
-                });
-                setYourInvites(filteredData);
+                setYourInvites(data);
             });
-        fetch(`${api}/api/invite/received/${person.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-        })
-            .then((response) => {
-                if (response.status === 401) {
-                    logout();
-                } else if (response.status === 403) {
-                    home();
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setInvites(data);
-            });
-    }, [home, logout, person.id, api]);
+    }, [home, logout, person.id, api, id]);
 
     function sortByDate(arr) {
         return arr.sort((a, b) => new Date(a.time) - new Date(b.time));
@@ -84,21 +58,23 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
                     </div>
                 )}
             </div>
-            {role === 'trainee' && (
-                <div>
-                    <div className="">
-                        <h2>my invites</h2>
-                    </div>
-                    {sortByDate(yourInvites).map((invite) => (
+            <div>
+                <div className="">
+                    <h2>filled in</h2>
+                </div>
+                {sortByDate(yourInvites)
+                    .filter((inv) => inv.accepted)
+                    .filter((invite) => invite.time === date)
+                    .map((invite) => (
                         <Link
                             key={invite.id}
                             className="invite"
-                            to={`${route}/invite/my-invites/${person.id}/${invite.time}`}
+                            to={`${route}/invite/${invite.id}`}
                         >
                             <div className="invite">
                                 <div className="invite-trainee">
-                                    <h3>trainee:</h3>
-                                    <p>{invite.trainee.name}</p>
+                                    <h3>Invited:</h3>
+                                    <p>{invite.invited.name}</p>
                                 </div>
                             </div>
                             <div>
@@ -112,14 +88,16 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
                             </div>
                         </Link>
                     ))}
-                    {yourInvites.concat(
-                        invites.filter((invite) => invite.accepted)
-                    ).length < 1 && <p className="emptylist">no invites</p>}
-                </div>
-            )}
-            <h2>invites</h2>
-            {invites
+                {yourInvites
+                    .filter((invite) => invite.accepted)
+                    .filter((invite) => invite.time === date).length < 1 && (
+                    <p className="emptylist">no invites</p>
+                )}
+            </div>
+            <h2>awaiting</h2>
+            {yourInvites
                 .filter((invite) => !invite.accepted)
+                .filter((invite) => invite.time === date)
                 .map((inv) => (
                     <Link
                         key={inv.id}
@@ -128,8 +106,8 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
                     >
                         <div className="invite">
                             <div className="invite-trainee">
-                                <h3>Trainee:</h3>
-                                <p>{inv.trainee.name}</p>
+                                <h3>Invited:</h3>
+                                <p>{inv.invited.name}</p>
                             </div>
                         </div>
                         <div>
@@ -143,7 +121,9 @@ export default function InvitationsPage({ home, logout, reloadNotifications }) {
                         </div>
                     </Link>
                 ))}
-            {invites.filter((invite) => !invite.accepted).length < 1 && (
+            {yourInvites
+                .filter((invite) => !invite.accepted)
+                .filter((invite) => invite.time === date).length < 1 && (
                 <p className="emptylist">no invites</p>
             )}
         </>

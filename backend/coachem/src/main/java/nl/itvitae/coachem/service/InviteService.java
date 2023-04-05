@@ -7,6 +7,8 @@ import nl.itvitae.coachem.model.Person;
 import nl.itvitae.coachem.repository.InviteRepository;
 import nl.itvitae.coachem.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.stream.DoubleStream;
 
 @Service
 @Transactional
+@EnableScheduling
 public class InviteService {
 
     @Autowired
@@ -98,4 +101,18 @@ public class InviteService {
     public Optional<InviteDto> getInviteById(Long id) {
         return inviteRepository.findById(id).map(mapper::get);
     }
+
+    public List<Invite> getAllUnaccepted(){
+        return inviteRepository.getAllUnaccepted().stream().toList();
+    }
+
+    @Scheduled(cron = "0 0 8 * * *", zone= "Europe/Paris") //at 8 in the morning
+    public void sentReminder(){
+        List<Invite> invites = getAllUnaccepted();
+        for (Invite invite: invites) {
+                emailService.send360InviteReminderEmail(invite.getInvited(), invite.getTrainee());
+        }
+    }
+
 }
+

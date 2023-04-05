@@ -1,9 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import {
-    OldDataViewComponent,
-    NewDataViewComponent,
-} from '../common/Components';
 import { useLocalStorage } from '../common/LocalStorage';
 import './InfoChangeControlPage.css';
 
@@ -73,6 +69,7 @@ export default function InfoChangeControlPage({
             } else if (response.status === 200) {
                 reloadNotifications();
                 e.target.form[6].value = 'saved';
+                home();
             }
             return response.json();
         });
@@ -92,11 +89,9 @@ export default function InfoChangeControlPage({
                 logout();
             } else if (response.status === 403) {
                 home();
-            }
-            if (response.status === 404) {
+            } else if (response.status === 404) {
                 e.target.form[5].value = 'already removed';
-            }
-            if (response.status === 200) {
+            } else if (response.status === 200) {
                 e.target.form[5].value = 'changes rejected';
                 reloadNotifications();
             }
@@ -105,16 +100,16 @@ export default function InfoChangeControlPage({
     };
 
     return (
-        <div className="infoChangePage">
-            <h1>Info change request: {infoChangeId}</h1>
-            <div className="formsbox">
-                <div className="formsbox-left">
+        <div className="infochangepage">
+            <h1>Info Change Request</h1>
+            <div className="infochange-formsbox">
+                <div>
                     <OldDataViewComponent
                         data={oldDetails}
                         updateInfo={updateInfoChange}
                     />
                 </div>
-                <div className="formsbox-right">
+                <div>
                     <NewDataViewComponent
                         data={newDetails}
                         updateInfo={updateInfoChange}
@@ -122,6 +117,118 @@ export default function InfoChangeControlPage({
                     />
                 </div>
             </div>
+        </div>
+    );
+}
+
+function OldDataViewComponent({ data, updateInfo }) {
+    return (
+        <div className="personal-info">
+            <h2>Current</h2>
+            <form onSubmit={updateInfo}>
+                <label htmlFor="name">Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    defaultValue={data.name}
+                    readOnly
+                />
+                <label htmlFor="address">Address</label>
+                <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    defaultValue={data.address}
+                    readOnly
+                />
+                <label htmlFor="city">City</label>
+                <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    defaultValue={data.city}
+                    readOnly
+                />
+                <label htmlFor="zipcode">Zipcode</label>
+                <input
+                    type="text"
+                    name="zipcode"
+                    id="zipcode"
+                    defaultValue={data.zipcode}
+                    readOnly
+                />
+                <label htmlFor="phonenumber">Phonenumber</label>
+                <input
+                    type="text"
+                    name="phonenumber"
+                    id="phonenumber"
+                    defaultValue={data.phonenumber}
+                    readOnly
+                />
+            </form>
+        </div>
+    );
+}
+
+function NewDataViewComponent({ data, updateInfo, rejectInfoChange }) {
+    return (
+        <div className="personal-info">
+            <h2>New</h2>
+            <form onSubmit={updateInfo}>
+                <label htmlFor="name">Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    defaultValue={data.name}
+                    readOnly
+                />
+                <label htmlFor="address">Address</label>
+                <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    defaultValue={data.address}
+                    readOnly
+                />
+                <label htmlFor="city">City</label>
+                <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    defaultValue={data.city}
+                    readOnly
+                />
+                <label htmlFor="zipcode">Zipcode</label>
+                <input
+                    type="text"
+                    name="zipcode"
+                    id="zipcode"
+                    defaultValue={data.zipcode}
+                    readOnly
+                />
+                <label htmlFor="phonenumber">Phonenumber</label>
+                <input
+                    type="text"
+                    name="phonenumber"
+                    id="phonenumber"
+                    defaultValue={data.phonenumber}
+                    readOnly
+                />
+                <input
+                    className="reject dark-on-hover"
+                    type="submit"
+                    value="reject Changes"
+                    onClick={rejectInfoChange}
+                />
+                <input
+                    className="accept dark-on-hover"
+                    type="button"
+                    value="accept Changes"
+                    onClick={updateInfo}
+                />
+            </form>
         </div>
     );
 }

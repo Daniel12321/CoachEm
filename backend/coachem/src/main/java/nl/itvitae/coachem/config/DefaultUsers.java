@@ -101,8 +101,8 @@ public class DefaultUsers {
         Evaluation evaluation = evaluationRepo.save(new Evaluation("2023-03-23T10:35:12.967Z", traineeP));
         EvaluationAttendee evaluationAttendee = evaluationAttendeeRepo.save(new EvaluationAttendee(evaluation, coachP));
 
-        inviteRepo.save(new Invite(false, traineeP, coachP));
-        inviteRepo.save(new Invite(false, traineeP, managerP));
+        inviteRepo.save(new Invite(false, traineeP, coachP, "2023-03-23T10:35:12.967Z"));
+        inviteRepo.save(new Invite(false, traineeP, managerP, "2023-03-23T10:35:12.967Z"));
 
         infoChangeRepo.save(new InfoChange(null, null, null, null, null, "4353234242", traineeP));
     }
