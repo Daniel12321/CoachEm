@@ -22,9 +22,14 @@ export default function Header({ logout, role, notifications }) {
         <div className="header-wrapper">
             <header>
                 <Link className="header-logo" to="/">
-                    <img src="./../../img/logo.png" alt="Logo" />
+                    <img src="./img/logo.png" alt="Logo" />
                 </Link>
-                {nav}
+
+                <div className="nav-dropdown">
+                    <div className="nav-placeholder">Navigation</div>
+                    {nav}
+                </div>
+
                 <Account
                     route={route}
                     logout={logout}

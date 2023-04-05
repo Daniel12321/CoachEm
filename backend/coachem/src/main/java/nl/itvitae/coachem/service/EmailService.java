@@ -2,16 +2,23 @@ package nl.itvitae.coachem.service;
 
 import nl.itvitae.coachem.model.Evaluation;
 import nl.itvitae.coachem.model.Feedback;
+import nl.itvitae.coachem.model.Invite;
 import nl.itvitae.coachem.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Async("threadPoolTaskExecutor")
+
 public class EmailService {
 
     @Value("${spring.mail.enabled}")
