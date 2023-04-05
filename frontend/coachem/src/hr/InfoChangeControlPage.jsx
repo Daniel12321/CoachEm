@@ -73,6 +73,7 @@ export default function InfoChangeControlPage({
             } else if (response.status === 200) {
                 reloadNotifications();
                 e.target.form[6].value = 'saved';
+                home();
             }
             return response.json();
         });
@@ -99,6 +100,7 @@ export default function InfoChangeControlPage({
             if (response.status === 200) {
                 e.target.form[5].value = 'changes rejected';
                 reloadNotifications();
+                
             }
             return response.json();
         });

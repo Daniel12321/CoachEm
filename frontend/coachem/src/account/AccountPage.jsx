@@ -23,6 +23,9 @@ export default function AccountPage(props) {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
         }).then((response) => {
+            if (response.status === 200) {
+                e.target[5].value = "request sent"
+            }
             if (response.status === 401) {
                 props.logout();
             }

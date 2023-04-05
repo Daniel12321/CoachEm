@@ -52,7 +52,7 @@ export default function InfoChangesPage({ home, logout }) {
                         <EmailFilter setEmail={setEmail} />
                     </div>
                 </div>
-                <div className="infoChange-list">
+                <div className="infoChange-list"> 
                     {filteredInfoChanges.map((infoChange) => (
                         <div
                             key={infoChange.id}
