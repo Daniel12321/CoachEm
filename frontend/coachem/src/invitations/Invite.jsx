@@ -4,7 +4,7 @@ import { useLocalStorage } from '../common/LocalStorage';
 import { useNavigate } from 'react-router-dom';
 import './Invite.css';
 
-export default function Invite({ home, logout }) {
+export default function Invite({ home, logout, reloadNotifications }) {
     const questionOne = 'has eye for detail';
     const questionTwo = 'is on time with deadlines';
     const questionThree = 'follows procedures';
@@ -86,6 +86,7 @@ export default function Invite({ home, logout }) {
             } else if (!response.ok) {
                 alert('fill in all fields');
             } else if (response.ok) {
+                reloadNotifications();
                 navigate(`${route}/invites`);
             }
             return response.json();
