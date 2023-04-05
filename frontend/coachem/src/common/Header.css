@@ -167,3 +167,10 @@ nav a {
         display: block;
     }
 }
+
+/* No Logo */
+@media only screen and (max-width: 500px) {
+    .header-logo {
+        display: none;
+    }
+}

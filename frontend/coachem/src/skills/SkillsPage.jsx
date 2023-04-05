@@ -367,12 +367,12 @@ export default function SkillsPage({ home, logout, ownSkills, notifications }) {
 
     return (
         <div className="skills-page">
-            <div className="eval-heading-box">
+            <div className="skill-heading-box">
                 <h1>Skills Dashboard</h1>
                 {role !== 'TRAINEE' && (
                     <div>
                         <Link
-                            className="new-eval-button"
+                            className="new-skill-button"
                             to={`${route}/new-skill`}
                         >
                             New Skill

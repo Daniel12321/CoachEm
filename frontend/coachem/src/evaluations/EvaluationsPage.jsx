@@ -101,7 +101,7 @@ export default function EvaluationsPage({ home, logout, reloadNotifications }) {
     const role = localStorage.getItem('user_role').toLowerCase();
 
     const evaluationList = role === 'trainee' && (
-        <div className="trainee-evaluationss">
+        <div className="trainee-evaluations">
             <h2>Your Evaluations</h2>
             {trainee
                 .sort((t1, t2) => t1.time - t2.time)
@@ -142,14 +142,9 @@ export default function EvaluationsPage({ home, logout, reloadNotifications }) {
                 </div>
 
                 {role !== 'trainee' && (
-                    <div>
-                        <Link
-                            className="new-eval-button"
-                            to={`${route}/new-eval`}
-                        >
-                            New Evaluation
-                        </Link>
-                    </div>
+                    <Link className="new-eval-button" to={`${route}/new-eval`}>
+                        New Evaluation
+                    </Link>
                 )}
             </div>
 
