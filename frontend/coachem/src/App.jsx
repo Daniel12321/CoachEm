@@ -202,7 +202,13 @@ export default function App() {
                     />
                     <Route
                         path={`${route}/invite/:id`}
-                        element={<Invite home={home} logout={logout} />}
+                        element={
+                            <Invite
+                                home={home}
+                                logout={logout}
+                                reloadNotifications={reloadNotifications}
+                            />
+                        }
                     />
                     <Route
                         path={`${route}/invite/my-invites/:id/:date`}
