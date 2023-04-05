@@ -16,13 +16,14 @@ export default function InvitationsPage({ home, logout }) {
             alert('you have to add people to the list to send the invite to');
         }
         const body = {
-            questionOne: 0,
-            questionTwo: 0,
-            questionThree: 0,
-            questionFour: 0,
-            questionFive: 0,
-            questionSix: '',
+            questionOne: null,
+            questionTwo: null,
+            questionThree: null,
+            questionFour: null,
+            questionFive: null,
+            questionSix: null,
             accepted: false,
+            time: new Date(),
         };
 
         people.map((person) => {
