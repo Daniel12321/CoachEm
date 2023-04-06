@@ -10,11 +10,11 @@ spring:
     hibernate.ddl-auto: create-drop # update create-only
 
   mail:
-    enabled: false
+    enabled: true
     host: smtp.gmail.com
     port: 587
     username: 'noreply.coachem@gmail.com'
-    password: password
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         transport:
