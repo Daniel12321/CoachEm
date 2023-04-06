@@ -5,6 +5,8 @@ export default function AccountAddPage({ home, logout }) {
     const [api] = useLocalStorage('api');
 
     function addAccount(e) {
+        e.preventDefault();
+
         const data = {
             name: e.target[0].value,
             email: e.target[1].value,
@@ -27,10 +29,9 @@ export default function AccountAddPage({ home, logout }) {
             .then((response) => {
                 if (response.status === 401) {
                     logout();
-                } else if (response.status === 403) {
+                } else if (response.status === 403 || response.ok) {
                     home();
                 }
-                return response.json();
             })
             .catch((error) => console.log(error));
     }
